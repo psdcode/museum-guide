@@ -4,8 +4,18 @@ body {
   height: 100%;
   margin: 0;
   padding: 0;
+  background-color: black;
+  color: lightblue;
+}
+
+.display {
+  display: inline-block;
 }
 
 #map {
-  height: 100%;
+  display: inline-block;
+  color: black;
+  /*left: 300px;*/
+  height: 500px;
+  width: 700px;
 }
