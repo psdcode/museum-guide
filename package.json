@@ -1,0 +1,27 @@
+{
+  "name": "Neighborhood Map",
+  "version": "1.0.0",
+  "description": "Udacity FrontEnd Nanodegree Final Project",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/effluxation/fend-neighborhood-map.git"
+  },
+  "keywords": [],
+  "author": "Patryk Dorosz",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/effluxation/fend-neighborhood-map/issues"
+  },
+  "homepage": "https://github.com/effluxation/fend-neighborhood-map#readme",
+  "devDependencies": {
+    "grunt": "latest",
+    "grunt-contrib-watch": "latest",
+    "grunt-contrib-jshint": "latest",
+    "jshint-stylish": "latest",
+    "load-grunt-tasks": "latest"
+  }
+}
