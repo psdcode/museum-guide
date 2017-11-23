@@ -11,16 +11,16 @@
   <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
-  <div class="display">
+  <section class="display">
     <h1>博物館 - Tokyo Museum Map Guide</h1>
     <input placeholder="Filter..." type="search" data-bind="textInput: query" />
-    <ul data-bind="foreach: filteredList">
-      <li data-bind="text: $data, click: $root.callFindMarkerForBounce"></li>
+    <ul data-bind="foreach: markersObservable">
+      <li data-bind="text: title, click: $root.selectMarker"></li>
     </ul>
-  </div>
-  <div id="map"></div>
+  </section>
+  <section id="map"></section>
   <script type="text/javascript" src="js/vendor/knockout-3.4.2.js"></script>
-  <script type="text/javascript" src="js/map.js"></script>
+  <!-- <script type="text/javascript" src="js/map.js"></script> -->
   <script type="text/javascript" src="js/app.js"></script>
 </body>
 </html>
