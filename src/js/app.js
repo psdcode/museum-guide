@@ -72,9 +72,11 @@ class MapViewModel {
 
   toggleBounceMarker (marker) {
     if (marker.getAnimation()) {
+      // If click again during animation marker will stop
       marker.setAnimation(null);
     } else {
       markers.forEach(otherMarker => otherMarker.setAnimation(null));
+      // Set temporary bounce on selected marker
       marker.setAnimation(google.maps.Animation.BOUNCE);
       setTimeout(() => marker.setAnimation(null), 1500);
     }
@@ -83,12 +85,39 @@ class MapViewModel {
   popInfoWindow (marker) {
     if (mainInfoWindow.marker !== marker) {
       mainInfoWindow.marker = marker;
-      mainInfoWindow.setContent(`<div>${marker.title}</div>`);
+
+      let markerContent = `<div>${marker.title}</div>`;
+      this.getYelp(marker);
+      mainInfoWindow.setContent(markerContent);
       mainInfoWindow.open(museumMap, marker);
-      mainInfoWindow.addListener('closeclick', function () {
-        mainInfoWindow.setMarker = null;
-      });
+      // mainInfoWindow.addListener('closeclick', function () {
+      //   mainInfoWindow.setMarker = null;
+      // });
     }
+  }
+
+  getYelp (museumMarker) {
+    // Since client-side requests to Yelp V3 API are not possible due to lack of support for CORS and JSONP, 'cors-anywhere' app hack is employed as a proxy
+    fetch(`https://cors-anywhere.herokuapp.com/https://api.yelp.com/v3/businesses/search?term=${this.getSearchString(museumMarker.title)}&latitude=${museumMarker.position.lat()}&longitude=${museumMarker.position.lng()}`,
+      {
+        method: 'GET',
+        headers: {
+          'authorization': 'Bearer n9BZFWy_zC3jyQyNV9u0Tdc6IhfkwyV8b4JBg2NYD9AaQuHaUx6II9ukiEQp2Z03m7Cmycz29Lu2n4Gc5LPu1wDjVVCGyignkEoZn167yyq07sbPEN7gF5GzE20YWnYx'
+        }
+      })
+      .then((res) => res.json())
+      .then((resJSON) => {
+        console.log('resJSON', resJSON);
+      })
+      .catch((err) => {
+        console.log('err', err);
+      });
+  }
+
+  getSearchString (museumTitle) {
+    console.log(museumTitle);
+    console.log(museumTitle.replace(' ', '+'));
+    return museumTitle.replace(/\s+/g, '+');
   }
 }
 
@@ -111,6 +140,9 @@ function initMap () {
   const museumIconImage = 'img/museum_24_2x.png';
 
   mainInfoWindow = new google.maps.InfoWindow();
+  mainInfoWindow.addListener('closeclick', function () {
+    mainInfoWindow.setMarker = null;
+  });
 
   for (const museum of museums) {
     const newMarker = new google.maps.Marker({
@@ -134,8 +166,6 @@ function initMap () {
   // Notify MapViewModel that google map initialization is complete
   currentViewModel.mapReady(true);
 }
-
-
 
 // function popInfoWindow (marker) {
 //   if (mainInfoWindow.marker !== marker) {
