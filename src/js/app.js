@@ -24,29 +24,42 @@ class MapViewModel {
     this.selectMarker = function (clickedMarkerTitle) {
       for (const marker of self.markersObservable()) {
         if (marker.title === clickedMarkerTitle.title) {
-          popInfoWindow(marker, mainInfoWindow);
-          toggleBounceMarker(marker);
+          popInfoWindow(marker);
+          self.toggleBounceMarker(marker);
           return;
         }
       }
     };
 
     this.filterMarkerList = function (searchInput) {
+      // Search query is a non-empty string
       if (searchInput) {
-        console.log(markers[0].title);
+        // Empty list
         self.markersObservable([]);
-        console.log(markers[0].title + ' after');
         for (const marker of markers) {
+          // Remove each marker
           if (marker.title.toUpperCase().indexOf(searchInput.toUpperCase()) >= 0) {
             self.markersObservable.push(marker);
+            marker.setMap(museumMap);
+          } else {
+            marker.setMap(null);
           }
         }
         self.sort(self.markersObservable);
+
+      // Search query is ''
       } else {
+        // Display all markers on map
+        for (const marker of markers) {
+          marker.setMap(museumMap);
+        }
+        // Display all list items
         self.markersObservable(markers);
         self.sort(self.markersObservable);
       }
     };
+
+    // Observable Subscriptions
     this.query.subscribe(self.filterMarkerList);
   }
 
@@ -54,6 +67,16 @@ class MapViewModel {
     observableArray.sort((first, second) => {
       return first.title === second.title ? 0 : (first.title > second.title ? 1 : -1);
     });
+  }
+
+  toggleBounceMarker (marker) {
+    if (marker.getAnimation()) {
+      marker.setAnimation(null);
+    } else {
+      markers.forEach(otherMarker => otherMarker.setAnimation(null));
+      marker.setAnimation(google.maps.Animation.BOUNCE);
+      setTimeout(() => marker.setAnimation(null), 1500);
+    }
   }
 }
 
@@ -82,8 +105,8 @@ function initMap () {
       map: museumMap
     });
     newMarker.addListener('click', function () {
-      popInfoWindow(this, mainInfoWindow);
-      toggleBounceMarker(this);
+      popInfoWindow(this);
+      currentViewModel.toggleBounceMarker(this);
     });
     markers.push(newMarker);
     mapBounds.extend(newMarker.position);
@@ -96,28 +119,26 @@ function initMap () {
 const currentViewModel = new MapViewModel();
 ko.applyBindings(currentViewModel);
 
-// 2: Creating your markers as a part of your ViewModel is allowed (and recommended). Creating them as Knockout observables is not.
-
-function popInfoWindow (marker, infoWindow) {
-  if (infoWindow.marker !== marker) {
-    infoWindow.marker = marker;
-    infoWindow.setContent(`<div>${marker.title}</div>`);
-    infoWindow.open(museumMap, marker);
-    infoWindow.addListener('closeclick', function () {
-      infoWindow.setMarker = null;
+function popInfoWindow (marker) {
+  if (mainInfoWindow.marker !== marker) {
+    mainInfoWindow.marker = marker;
+    mainInfoWindow.setContent(`<div>${marker.title}</div>`);
+    mainInfoWindow.open(museumMap, marker);
+    mainInfoWindow.addListener('closeclick', function () {
+      mainInfoWindow.setMarker = null;
     });
   }
 }
 
-function toggleBounceMarker (marker) {
-  if (marker.getAnimation()) {
-    marker.setAnimation(null);
-  } else {
-    markers.forEach(otherMarker => otherMarker.setAnimation(null));
-    marker.setAnimation(google.maps.Animation.BOUNCE);
-    setTimeout(() => marker.setAnimation(null), 1500);
-  }
-}
+// function toggleBounceMarker (marker) {
+//   if (marker.getAnimation()) {
+//     marker.setAnimation(null);
+//   } else {
+//     markers.forEach(otherMarker => otherMarker.setAnimation(null));
+//     marker.setAnimation(google.maps.Animation.BOUNCE);
+//     setTimeout(() => marker.setAnimation(null), 1500);
+//   }
+// }
 
 // function findMarkerForBounce (viewModel, clickedMarkerTitle) {
 //   for (const marker of viewModel.markersObservable()) {
