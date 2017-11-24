@@ -24,7 +24,7 @@ class MapViewModel {
     this.selectMarker = function (clickedMarkerTitle) {
       for (const marker of self.markersObservable()) {
         if (marker.title === clickedMarkerTitle.title) {
-          popInfoWindow(marker);
+          self.popInfoWindow(marker);
           self.toggleBounceMarker(marker);
           return;
         }
@@ -34,20 +34,21 @@ class MapViewModel {
     this.filterMarkerList = function (searchInput) {
       // Search query is a non-empty string
       if (searchInput) {
-        // Empty list
+        // Empty the observable list
         self.markersObservable([]);
         for (const marker of markers) {
           // Remove each marker
           if (marker.title.toUpperCase().indexOf(searchInput.toUpperCase()) >= 0) {
             self.markersObservable.push(marker);
-            marker.setMap(museumMap);
+            // Check if marker not already displayed to prevent blinking due to setting map again
+            if (!marker.getMap()) marker.setMap(museumMap);
           } else {
             marker.setMap(null);
           }
         }
         self.sort(self.markersObservable);
 
-      // Search query is ''
+      // Search query is empty string ''
       } else {
         // Display all markers on map
         for (const marker of markers) {
@@ -78,9 +79,24 @@ class MapViewModel {
       setTimeout(() => marker.setAnimation(null), 1500);
     }
   }
+
+  popInfoWindow (marker) {
+    if (mainInfoWindow.marker !== marker) {
+      mainInfoWindow.marker = marker;
+      mainInfoWindow.setContent(`<div>${marker.title}</div>`);
+      mainInfoWindow.open(museumMap, marker);
+      mainInfoWindow.addListener('closeclick', function () {
+        mainInfoWindow.setMarker = null;
+      });
+    }
+  }
 }
 
-// Initialize Map function
+// KOjs ViewModel initialization
+const currentViewModel = new MapViewModel();
+ko.applyBindings(currentViewModel);
+
+// Map initalization function called by maps script
 function initMap () {
   // Create new map centering on Tokyo, Japan
   museumMap = new google.maps.Map(document.querySelector('#map'), {
@@ -105,30 +121,32 @@ function initMap () {
       map: museumMap
     });
     newMarker.addListener('click', function () {
-      popInfoWindow(this);
+      currentViewModel.popInfoWindow(this);
       currentViewModel.toggleBounceMarker(this);
     });
     markers.push(newMarker);
     mapBounds.extend(newMarker.position);
   }
+
+  // Adjust map bounds to fit all markers
   museumMap.fitBounds(mapBounds);
 
+  // Notify MapViewModel that google map initialization is complete
   currentViewModel.mapReady(true);
 }
 
-const currentViewModel = new MapViewModel();
-ko.applyBindings(currentViewModel);
 
-function popInfoWindow (marker) {
-  if (mainInfoWindow.marker !== marker) {
-    mainInfoWindow.marker = marker;
-    mainInfoWindow.setContent(`<div>${marker.title}</div>`);
-    mainInfoWindow.open(museumMap, marker);
-    mainInfoWindow.addListener('closeclick', function () {
-      mainInfoWindow.setMarker = null;
-    });
-  }
-}
+
+// function popInfoWindow (marker) {
+//   if (mainInfoWindow.marker !== marker) {
+//     mainInfoWindow.marker = marker;
+//     mainInfoWindow.setContent(`<div>${marker.title}</div>`);
+//     mainInfoWindow.open(museumMap, marker);
+//     mainInfoWindow.addListener('closeclick', function () {
+//       mainInfoWindow.setMarker = null;
+//     });
+//   }
+// }
 
 // function toggleBounceMarker (marker) {
 //   if (marker.getAnimation()) {

@@ -15,7 +15,7 @@
     <h1>博物館 - Tokyo Museum Map Guide</h1>
     <input placeholder="Filter..." type="search" data-bind="textInput: query" />
     <ul data-bind="foreach: markersObservable">
-      <li data-bind="text: title, click: $root.selectMarker"></li>
+      <li class="list-item" data-bind="text: title, click: $root.selectMarker"></li>
     </ul>
   </section>
   <section id="map"></section>

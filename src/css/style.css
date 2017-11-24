@@ -19,3 +19,10 @@ body {
   height: 500px;
   width: 700px;
 }
+
+.list-item {
+  list-style: none;
+  cursor: pointer;
+  padding: 2px;
+  margin: 6px 0;
+}
