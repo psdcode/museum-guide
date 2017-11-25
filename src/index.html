@@ -14,6 +14,7 @@
   <section class="display">
     <h1>博物館 - Tokyo Museum Map Guide</h1>
     <input placeholder="Filter..." type="search" data-bind="textInput: query" />
+    <button data-bind="click: resetMap">Reset Map</button>
     <ul data-bind="foreach: markersObservable">
       <li class="list-item" data-bind="text: title, click: $root.selectMarker"></li>
     </ul>

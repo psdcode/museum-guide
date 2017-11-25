@@ -16,7 +16,7 @@ body {
   display: inline-block;
   color: black;
   /*left: 300px;*/
-  height: 500px;
+  height: 100%;
   width: 700px;
 }
 
@@ -25,4 +25,15 @@ body {
   cursor: pointer;
   padding: 2px;
   margin: 6px 0;
+}
+
+.title {
+  font-size: 15px;
+  margin-bottom: 4px;
+}
+
+.museum-img {
+  width: 100%;
+
+  /*width: 200px;*/
 }

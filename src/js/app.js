@@ -1,7 +1,7 @@
 // Main google map variable
 let museumMap;
 let mainInfoWindow;
-
+let mapBounds;
 // Array of map markers holding default locations
 const markers = [];
 
@@ -57,6 +57,9 @@ class MapViewModel {
         // Display all list items
         self.markersObservable(markers);
         self.sort(self.markersObservable);
+
+        // TODO: check after responsive
+        //museumMap.fitBounds(mapBounds);
       }
     };
 
@@ -64,6 +67,7 @@ class MapViewModel {
     this.query.subscribe(self.filterMarkerList);
   }
 
+  // ViewModel Methods
   sort (observableArray) {
     observableArray.sort((first, second) => {
       return first.title === second.title ? 0 : (first.title > second.title ? 1 : -1);
@@ -86,28 +90,48 @@ class MapViewModel {
     if (mainInfoWindow.marker !== marker) {
       mainInfoWindow.marker = marker;
 
-      let markerContent = `<div>${marker.title}</div>`;
-      this.getYelp(marker);
+      // TODO: after build responsive decide if center on marker
+      museumMap.panTo(marker.position);
+      museumMap.panBy(0, -250);
+
+      let markerContent = `<div class="title"><strong>${marker.title}</strong></div>`;
       mainInfoWindow.setContent(markerContent);
       mainInfoWindow.open(museumMap, marker);
-      // mainInfoWindow.addListener('closeclick', function () {
-      //   mainInfoWindow.setMarker = null;
-      // });
+      const yelpInfoPromise = this.getYelp(marker);
+      yelpInfoPromise.then((yelpInfo) => {
+        markerContent += `<img class="museum-img" src=${yelpInfo.image_url} alt=${marker.title}>`;
+        markerContent += `<p class="rating">Rating: ${yelpInfo.rating}</p>`;
+        markerContent += `<p>Currently ${yelpInfo.is_closed ? 'CLOSED' : 'OPEN'}</p>`;
+        markerContent += `<p>Phone: ${yelpInfo.display_phone}</p>`;
+        markerContent += `<a href="${yelpInfo.url}" target="_blank"><strong>\
+${yelpInfo.review_count}</strong> review${yelpInfo.review_count > 1 ? 's' : ''} available</a>`;
+        mainInfoWindow.setContent(markerContent);
+      })
+      .catch((err) => {
+        console.log('err', err);
+      });
     }
   }
 
   getYelp (museumMarker) {
-    // Since client-side requests to Yelp V3 API are not possible due to lack of support for CORS and JSONP, 'cors-anywhere' app hack is employed as a proxy
-    fetch(`https://cors-anywhere.herokuapp.com/https://api.yelp.com/v3/businesses/search?term=${this.getSearchString(museumMarker.title)}&latitude=${museumMarker.position.lat()}&longitude=${museumMarker.position.lng()}`,
+    // Since client-side requests to Yelp V3 API are not possible due to lack
+    // of support for CORS and JSONP, 'cors-anywhere' app hack is employed as a proxy
+    return fetch(`https://cors-anywhere.herokuapp.com/https://api.yelp.com/v3/\
+businesses/search?term=${this.getSearchString(museumMarker.title)}&latitude=\
+${museumMarker.position.lat()}&longitude=${museumMarker.position.lng()}`,
       {
         method: 'GET',
         headers: {
-          'authorization': 'Bearer n9BZFWy_zC3jyQyNV9u0Tdc6IhfkwyV8b4JBg2NYD9AaQuHaUx6II9ukiEQp2Z03m7Cmycz29Lu2n4Gc5LPu1wDjVVCGyignkEoZn167yyq07sbPEN7gF5GzE20YWnYx'
+          'authorization': `Bearer n9BZFWy_zC3jyQyNV9u0Tdc6IhfkwyV8b4JBg2NYD9AaQuHaUx6II\
+9ukiEQp2Z03m7Cmycz29Lu2n4Gc5LPu1wDjVVCGyignkEoZn167yyq07sbPEN7gF5GzE20YWnYx`
         }
       })
-      .then((res) => res.json())
-      .then((resJSON) => {
-        console.log('resJSON', resJSON);
+      .then((response) => response.json())
+      .then((responseJSON) => {
+        if (responseJSON.businesses) {
+          console.log(responseJSON.businesses[0]);
+          return responseJSON.businesses[0];
+        }
       })
       .catch((err) => {
         console.log('err', err);
@@ -115,9 +139,14 @@ class MapViewModel {
   }
 
   getSearchString (museumTitle) {
-    console.log(museumTitle);
-    console.log(museumTitle.replace(' ', '+'));
     return museumTitle.replace(/\s+/g, '+');
+  }
+
+  resetMap () {
+    museumMap.fitBounds(mapBounds);
+    museumMap.panBy(0, -100);
+    mainInfoWindow.setMarker = null;
+    mainInfoWindow.close();
   }
 }
 
@@ -129,20 +158,20 @@ ko.applyBindings(currentViewModel);
 function initMap () {
   // Create new map centering on Tokyo, Japan
   museumMap = new google.maps.Map(document.querySelector('#map'), {
-    center: {
-      lat: 35.6732619,
-      lng: 139.5703029
-    },
+    // center: {
+    //   lat: 35.6732619,
+    //   lng: 139.5703029
+    // },
     zoom: 11
   });
-
-  const mapBounds = new google.maps.LatLngBounds();
-  const museumIconImage = 'img/museum_24_2x.png';
-
-  mainInfoWindow = new google.maps.InfoWindow();
-  mainInfoWindow.addListener('closeclick', function () {
-    mainInfoWindow.setMarker = null;
+  mapBounds = new google.maps.LatLngBounds();
+  mainInfoWindow = new google.maps.InfoWindow({
+    maxWidth: 250
   });
+  mainInfoWindow.addListener('closeclick', function () {
+    mainInfoWindow.marker = null;
+  });
+  const museumIconImage = 'img/museum_24_2x.png';
 
   for (const museum of museums) {
     const newMarker = new google.maps.Marker({
@@ -162,7 +191,7 @@ function initMap () {
 
   // Adjust map bounds to fit all markers
   museumMap.fitBounds(mapBounds);
-
+  museumMap.panBy(0, -100);
   // Notify MapViewModel that google map initialization is complete
   currentViewModel.mapReady(true);
 }
