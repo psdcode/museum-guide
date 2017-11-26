@@ -95,16 +95,32 @@ class MapViewModel {
       museumMap.panBy(0, -250);
 
       let markerContent = `<div class="title"><strong>${marker.title}</strong></div>`;
+      markerContent += '<div id="sk-circle" class="sk-circle">\
+<div class="sk-circle1 sk-child"></div>\
+<div class="sk-circle2 sk-child"></div>\
+<div class="sk-circle3 sk-child"></div>\
+<div class="sk-circle4 sk-child"></div>\
+<div class="sk-circle5 sk-child"></div>\
+<div class="sk-circle6 sk-child"></div>\
+<div class="sk-circle7 sk-child"></div>\
+<div class="sk-circle8 sk-child"></div>\
+<div class="sk-circle9 sk-child"></div>\
+<div class="sk-circle10 sk-child"></div>\
+<div class="sk-circle11 sk-child"></div>\
+<div class="sk-circle12 sk-child"></div>\
+</div>';
       mainInfoWindow.setContent(markerContent);
       mainInfoWindow.open(museumMap, marker);
       const yelpInfoPromise = this.getYelp(marker);
       yelpInfoPromise.then((yelpInfo) => {
+        markerContent = `<div class="title"><strong>${marker.title}</strong></div>`;
         markerContent += `<img class="yelp-img" src=${yelpInfo.image_url} alt=${marker.title}>`;
         markerContent += `<div class="yelp-container">${this.getRatingImg(yelpInfo.rating)}`;
         markerContent += `<a target="_blank" href="${yelpInfo.url}"><img class="yelp-logo" \
 src="img/yelp_trademark_rgb_outline.png" srcset="img/yelp_trademark_rgb_outline_2x.png 2x" alt="Yelp Logo"></a>`;
         markerContent += `<a class="yelp-reviews" href="${yelpInfo.url}" target="_blank">Based on <strong>\
 ${yelpInfo.review_count}</strong> review${yelpInfo.review_count > 1 ? 's' : ''}</a>`;
+        markerContent += `<p><address>${this.getYelpAddress(yelpInfo.location.display_address)}</address></p>`;
         markerContent += `<p class="yelp-info">Currently <strong>${yelpInfo.is_closed ? 'CLOSED' : 'OPEN'}</strong><br>`;
         markerContent += `Phone: ${yelpInfo.display_phone}</p></div>`;
         mainInfoWindow.setContent(markerContent);
@@ -113,6 +129,11 @@ ${yelpInfo.review_count}</strong> review${yelpInfo.review_count > 1 ? 's' : ''}<
         console.log('err', err);
       });
     }
+  }
+
+  getYelpAddress (yelpAddress) {
+    if (yelpAddress[yelpAddress.length - 1] === 'Japan') yelpAddress = yelpAddress.slice(0, yelpAddress.length - 1);
+    return yelpAddress.join('<br>');
   }
 
   getRatingImg (rating) {
@@ -138,6 +159,7 @@ ${museumMarker.position.lat()}&longitude=${museumMarker.position.lng()}`,
       .then((response) => response.json())
       .then((responseJSON) => {
         if (responseJSON.businesses) {
+          console.log(responseJSON.businesses[0]);
           return responseJSON.businesses[0];
         }
       })
