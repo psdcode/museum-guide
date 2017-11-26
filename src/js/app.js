@@ -99,18 +99,27 @@ class MapViewModel {
       mainInfoWindow.open(museumMap, marker);
       const yelpInfoPromise = this.getYelp(marker);
       yelpInfoPromise.then((yelpInfo) => {
-        markerContent += `<img class="museum-img" src=${yelpInfo.image_url} alt=${marker.title}>`;
-        markerContent += `<p class="rating">Rating: ${yelpInfo.rating}</p>`;
-        markerContent += `<p>Currently ${yelpInfo.is_closed ? 'CLOSED' : 'OPEN'}</p>`;
-        markerContent += `<p>Phone: ${yelpInfo.display_phone}</p>`;
-        markerContent += `<a href="${yelpInfo.url}" target="_blank"><strong>\
-${yelpInfo.review_count}</strong> review${yelpInfo.review_count > 1 ? 's' : ''} available</a>`;
+        markerContent += `<img class="yelp-img" src=${yelpInfo.image_url} alt=${marker.title}>`;
+        markerContent += `<div class="yelp-container">${this.getRatingImg(yelpInfo.rating)}`;
+        markerContent += `<a target="_blank" href="${yelpInfo.url}"><img class="yelp-logo" \
+src="img/yelp_trademark_rgb_outline.png" srcset="img/yelp_trademark_rgb_outline_2x.png 2x" alt="Yelp Logo"></a>`;
+        markerContent += `<a class="yelp-reviews" href="${yelpInfo.url}" target="_blank">Based on <strong>\
+${yelpInfo.review_count}</strong> review${yelpInfo.review_count > 1 ? 's' : ''}</a>`;
+        markerContent += `<p class="yelp-info">Currently <strong>${yelpInfo.is_closed ? 'CLOSED' : 'OPEN'}</strong><br>`;
+        markerContent += `Phone: ${yelpInfo.display_phone}</p></div>`;
         mainInfoWindow.setContent(markerContent);
       })
       .catch((err) => {
         console.log('err', err);
       });
     }
+  }
+
+  getRatingImg (rating) {
+    const ratingWhole = Math.floor(rating);
+    const ratingHalf = (rating - ratingWhole === 0.5 ? '_half' : '');
+    return `<img class="yelp-rating" src="img/yelp_stars_reg/regular_${ratingWhole}${ratingHalf}.png"\
+    srcset="img/yelp_stars_reg/regular_${ratingWhole}${ratingHalf}@2x.png 2x">`;
   }
 
   getYelp (museumMarker) {
@@ -129,7 +138,6 @@ ${museumMarker.position.lat()}&longitude=${museumMarker.position.lng()}`,
       .then((response) => response.json())
       .then((responseJSON) => {
         if (responseJSON.businesses) {
-          console.log(responseJSON.businesses[0]);
           return responseJSON.businesses[0];
         }
       })
@@ -145,7 +153,7 @@ ${museumMarker.position.lat()}&longitude=${museumMarker.position.lng()}`,
   resetMap () {
     museumMap.fitBounds(mapBounds);
     museumMap.panBy(0, -100);
-    mainInfoWindow.setMarker = null;
+    mainInfoWindow.marker = null;
     mainInfoWindow.close();
   }
 }

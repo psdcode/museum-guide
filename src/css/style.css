@@ -32,8 +32,40 @@ body {
   margin-bottom: 4px;
 }
 
-.museum-img {
-  width: 100%;
+.yelp-img {
+  margin: 4px 0;
+  width: 230px;
+  max-height: 375px;
+}
 
-  /*width: 200px;*/
+.yelp-container {
+  position: relative;
+}
+
+.yelp-rating {
+  margin: 4px 0;
+}
+
+.yelp-reviews {
+  color: #999;
+  display: block;
+  text-decoration: none;
+}
+
+.yelp-reviews:hover {
+  color: #696969;
+}
+
+.yelp-reviews:visited {
+  color: #999;
+}
+
+.yelp-logo {
+  position: absolute;
+  right: 20px;
+  top: -3px;
+}
+
+.yelp-info {
+  line-height: 1.4;
 }
