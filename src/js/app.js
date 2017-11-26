@@ -95,81 +95,80 @@ class MapViewModel {
       museumMap.panBy(0, -250);
 
       let markerContent = `<div class="title"><strong>${marker.title}</strong></div>`;
-      markerContent += '<div id="sk-circle" class="sk-circle">\
-<div class="sk-circle1 sk-child"></div>\
-<div class="sk-circle2 sk-child"></div>\
-<div class="sk-circle3 sk-child"></div>\
-<div class="sk-circle4 sk-child"></div>\
-<div class="sk-circle5 sk-child"></div>\
-<div class="sk-circle6 sk-child"></div>\
-<div class="sk-circle7 sk-child"></div>\
-<div class="sk-circle8 sk-child"></div>\
-<div class="sk-circle9 sk-child"></div>\
-<div class="sk-circle10 sk-child"></div>\
-<div class="sk-circle11 sk-child"></div>\
-<div class="sk-circle12 sk-child"></div>\
-</div>';
+
+      // Spinner HTML below taken from http://tobiasahlin.com/spinkit/
+      markerContent += '<div class="sk-circle">';
+      for (let circleNum = 1; circleNum <= 12; circleNum++) {
+        markerContent += `<div class="sk-circle${circleNum} sk-child"></div>`;
+      }
+      markerContent += '</div>';
+      // END spinner HTML injection code
+
+      // Place title & spinner into InfoWindow & open it
       mainInfoWindow.setContent(markerContent);
       mainInfoWindow.open(museumMap, marker);
-      const yelpInfoPromise = this.getYelp(marker);
-      yelpInfoPromise.then((yelpInfo) => {
+
+      // Begin fetching data from Yelp
+      getYelp(marker).then((yelpInfo) => {
         markerContent = `<div class="title"><strong>${marker.title}</strong></div>`;
         markerContent += `<img class="yelp-img" src=${yelpInfo.image_url} alt=${marker.title}>`;
-        markerContent += `<div class="yelp-container">${this.getRatingImg(yelpInfo.rating)}`;
+        markerContent += `<div class="yelp-container">${getRatingImg(yelpInfo.rating)}`;
         markerContent += `<a target="_blank" href="${yelpInfo.url}"><img class="yelp-logo" \
 src="img/yelp_trademark_rgb_outline.png" srcset="img/yelp_trademark_rgb_outline_2x.png 2x" alt="Yelp Logo"></a>`;
         markerContent += `<a class="yelp-reviews" href="${yelpInfo.url}" target="_blank">Based on <strong>\
 ${yelpInfo.review_count}</strong> review${yelpInfo.review_count > 1 ? 's' : ''}</a>`;
-        markerContent += `<p><address>${this.getYelpAddress(yelpInfo.location.display_address)}</address></p>`;
+        markerContent += `<p><address>${getYelpAddressHtml(yelpInfo.location.display_address)}</address></p>`;
         markerContent += `<p class="yelp-info">Currently <strong>${yelpInfo.is_closed ? 'CLOSED' : 'OPEN'}</strong><br>`;
         markerContent += `Phone: ${yelpInfo.display_phone}</p></div>`;
         mainInfoWindow.setContent(markerContent);
       })
       .catch((err) => {
-        console.log('err', err);
+        console.log('error inside popInfoWindow', err);
       });
     }
-  }
 
-  getYelpAddress (yelpAddress) {
-    if (yelpAddress[yelpAddress.length - 1] === 'Japan') yelpAddress = yelpAddress.slice(0, yelpAddress.length - 1);
-    return yelpAddress.join('<br>');
-  }
+    // Helper method for formatting Yelp address html string
+    function getYelpAddressHtml (yelpAddress) {
+      // Remove 'Japan' from address since it's redundant in the context of a map of Tokyo
+      if (yelpAddress[yelpAddress.length - 1] === 'Japan') yelpAddress = yelpAddress.slice(0, yelpAddress.length - 1);
+      return yelpAddress.join('<br>');
+    }
 
-  getRatingImg (rating) {
-    const ratingWhole = Math.floor(rating);
-    const ratingHalf = (rating - ratingWhole === 0.5 ? '_half' : '');
-    return `<img class="yelp-rating" src="img/yelp_stars_reg/regular_${ratingWhole}${ratingHalf}.png"\
-    srcset="img/yelp_stars_reg/regular_${ratingWhole}${ratingHalf}@2x.png 2x">`;
-  }
+    // Helper method for selection and formatting of correct Yelp star rating img
+    function getRatingImg (rating) {
+      const ratingWhole = Math.floor(rating);
+      const ratingHalf = (rating - ratingWhole === 0.5 ? '_half' : '');
+      return `<img class="yelp-rating" src="img/yelp_stars_reg/regular_${ratingWhole}${ratingHalf}.png"\
+      srcset="img/yelp_stars_reg/regular_${ratingWhole}${ratingHalf}@2x.png 2x">`;
+    }
 
-  getYelp (museumMarker) {
-    // Since client-side requests to Yelp V3 API are not possible due to lack
-    // of support for CORS and JSONP, 'cors-anywhere' app hack is employed as a proxy
-    return fetch(`https://cors-anywhere.herokuapp.com/https://api.yelp.com/v3/\
-businesses/search?term=${this.getSearchString(museumMarker.title)}&latitude=\
-${museumMarker.position.lat()}&longitude=${museumMarker.position.lng()}`,
-      {
-        method: 'GET',
-        headers: {
-          'authorization': `Bearer n9BZFWy_zC3jyQyNV9u0Tdc6IhfkwyV8b4JBg2NYD9AaQuHaUx6II\
-9ukiEQp2Z03m7Cmycz29Lu2n4Gc5LPu1wDjVVCGyignkEoZn167yyq07sbPEN7gF5GzE20YWnYx`
-        }
-      })
-      .then((response) => response.json())
-      .then((responseJSON) => {
-        if (responseJSON.businesses) {
-          console.log(responseJSON.businesses[0]);
-          return responseJSON.businesses[0];
-        }
-      })
-      .catch((err) => {
-        console.log('err', err);
-      });
-  }
+    // Helper method for formatting search string from title
+    function getSearchString (museumTitle) {
+      return museumTitle.replace(/\s+/g, '+');
+    }
 
-  getSearchString (museumTitle) {
-    return museumTitle.replace(/\s+/g, '+');
+    // Helper method for fetching Yelp info
+    function getYelp (museumMarker) {
+      // Since client-side requests to Yelp V3 API are not possible due to lack
+      // of support for CORS and JSONP, 'cors-anywhere' app hack is employed as a proxy
+      return fetch(`https://cors-anywhere.herokuapp.com/https://api.yelp.com/v3/\
+  businesses/search?term=${getSearchString(museumMarker.title)}&latitude=\
+  ${museumMarker.position.lat()}&longitude=${museumMarker.position.lng()}`,
+        {
+          method: 'GET',
+          headers: {
+            'authorization': `Bearer n9BZFWy_zC3jyQyNV9u0Tdc6IhfkwyV8b4JBg2NYD9AaQuHaUx6II\
+  9ukiEQp2Z03m7Cmycz29Lu2n4Gc5LPu1wDjVVCGyignkEoZn167yyq07sbPEN7gF5GzE20YWnYx`
+          }
+        })
+        .then((response) => response.json())
+        .then((responseJSON) => {
+          if (responseJSON.businesses) {
+            console.log(responseJSON.businesses[0]);
+            return responseJSON.businesses[0];
+          }
+        }).catch((err) => console.log(err));
+    }
   }
 
   resetMap () {
@@ -201,7 +200,11 @@ function initMap () {
   mainInfoWindow.addListener('closeclick', function () {
     mainInfoWindow.marker = null;
   });
-  const museumIconImage = 'img/museum_24_2x.png';
+
+  // Icon image:
+  // Maps Icons Collection https://mapicons.mapsmarker.com
+  // CC BY SA 3.0
+  const museumIconImage = 'img/temple-2.png';
 
   for (const museum of museums) {
     const newMarker = new google.maps.Marker({
