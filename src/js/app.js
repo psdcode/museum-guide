@@ -139,7 +139,7 @@ ${yelpInfo.review_count}</strong> review${yelpInfo.review_count > 1 ? 's' : ''}<
       const ratingWhole = Math.floor(rating);
       const ratingHalf = (rating - ratingWhole === 0.5 ? '_half' : '');
       return `<img class="yelp-rating" src="img/yelp_stars_reg/regular_${ratingWhole}${ratingHalf}.png"\
-      srcset="img/yelp_stars_reg/regular_${ratingWhole}${ratingHalf}@2x.png 2x">`;
+srcset="img/yelp_stars_reg/regular_${ratingWhole}${ratingHalf}@2x.png 2x">`;
     }
 
     // Helper method for formatting search string from title
@@ -152,13 +152,13 @@ ${yelpInfo.review_count}</strong> review${yelpInfo.review_count > 1 ? 's' : ''}<
       // Since client-side requests to Yelp V3 API are not possible due to lack
       // of support for CORS and JSONP, 'cors-anywhere' app hack is employed as a proxy
       return fetch(`https://cors-anywhere.herokuapp.com/https://api.yelp.com/v3/\
-  businesses/search?term=${getSearchString(museumMarker.title)}&latitude=\
-  ${museumMarker.position.lat()}&longitude=${museumMarker.position.lng()}`,
+businesses/search?term=${getSearchString(museumMarker.title)}&latitude=\
+${museumMarker.position.lat()}&longitude=${museumMarker.position.lng()}`,
         {
           method: 'GET',
           headers: {
             'authorization': `Bearer n9BZFWy_zC3jyQyNV9u0Tdc6IhfkwyV8b4JBg2NYD9AaQuHaUx6II\
-  9ukiEQp2Z03m7Cmycz29Lu2n4Gc5LPu1wDjVVCGyignkEoZn167yyq07sbPEN7gF5GzE20YWnYx`
+9ukiEQp2Z03m7Cmycz29Lu2n4Gc5LPu1wDjVVCGyignkEoZn167yyq07sbPEN7gF5GzE20YWnYx`
           }
         })
         .then((response) => response.json())
