@@ -110,20 +110,28 @@ class MapViewModel {
 
       // Begin fetching data from Yelp
       getYelp(marker).then((yelpInfo) => {
-        markerContent = `<div class="title"><strong>${marker.title}</strong></div>`;
-        markerContent += `<img class="yelp-img" src=${yelpInfo.image_url} alt=${marker.title}>`;
-        markerContent += `<div class="yelp-container">${getRatingImg(yelpInfo.rating)}`;
-        markerContent += `<a target="_blank" href="${yelpInfo.url}"><img class="yelp-logo" \
-src="img/yelp_trademark_rgb_outline.png" srcset="img/yelp_trademark_rgb_outline_2x.png 2x" alt="Yelp Logo"></a>`;
-        markerContent += `<a class="yelp-reviews" href="${yelpInfo.url}" target="_blank">Based on <strong>\
-${yelpInfo.review_count}</strong> review${yelpInfo.review_count > 1 ? 's' : ''}</a>`;
-        markerContent += `<p><address>${getYelpAddressHtml(yelpInfo.location.display_address)}</address></p>`;
-        markerContent += `<p class="yelp-info">Currently <strong>${yelpInfo.is_closed ? 'CLOSED' : 'OPEN'}</strong><br>`;
-        markerContent += `Phone: ${yelpInfo.display_phone}</p></div>`;
-        mainInfoWindow.setContent(markerContent);
+        // Check if result exists (is not undefined)
+        if (yelpInfo) {
+          markerContent = `<div class="title"><strong>${marker.title}</strong></div>`;
+          markerContent += `<img class="yelp-img" src=${yelpInfo.image_url} alt=${marker.title}>`;
+          markerContent += `<div class="yelp-container">${getRatingImg(yelpInfo.rating)}`;
+          markerContent += `<a target="_blank" href="${yelpInfo.url}"><img class="yelp-logo" \
+  src="img/yelp_trademark_rgb_outline.png" srcset="img/yelp_trademark_rgb_outline_2x.png 2x" alt="Yelp Logo"></a>`;
+          markerContent += `<a class="yelp-reviews" href="${yelpInfo.url}" target="_blank">Based on <strong>\
+  ${yelpInfo.review_count}</strong> review${yelpInfo.review_count > 1 ? 's' : ''}</a>`;
+          markerContent += `<p><address>${getYelpAddressHtml(yelpInfo.location.display_address)}</address></p>`;
+          markerContent += `<p class="yelp-info">Currently <strong>${yelpInfo.is_closed ? 'CLOSED' : 'OPEN'}</strong><br>`;
+          markerContent += `Phone: ${yelpInfo.display_phone}</p></div>`;
+          mainInfoWindow.setContent(markerContent);
+        } else {
+        // Result is undefined, search term not in Yelp db
+          markerContent = `<div class="title"><strong>${marker.title}</strong></div>`;
+          markerContent += `<p>This museum's information is not found in Yelp.com's business directory. Try a different location.</p>`;
+          mainInfoWindow.setContent(markerContent);
+        }
       })
       .catch((err) => {
-        console.log('error inside popInfoWindow', err);
+        console.log('Error during Yelp information formatting: ', err);
       });
     }
 
@@ -167,7 +175,7 @@ ${museumMarker.position.lat()}&longitude=${museumMarker.position.lng()}`,
             console.log(responseJSON.businesses[0]);
             return responseJSON.businesses[0];
           }
-        }).catch((err) => console.log(err));
+        }).catch((err) => console.log('Error1: ' + err));
     }
   }
 
@@ -328,6 +336,14 @@ const museums = [{
   location: {
     lat: 35.6905432,
     lng: 139.7546932
+  },
+  place_id: 'ChIJL0kSfg2MGGARKv5KX53ZZ2Y'
+}, {
+  // TODO test entry
+  title: 'jfksldjf sdlkfjsldkjf',
+  location: {
+    lat: 40.761484,
+    lng: -73.977664
   },
   place_id: 'ChIJL0kSfg2MGGARKv5KX53ZZ2Y'
 }];
