@@ -2,6 +2,7 @@
 let museumMap;
 let mainInfoWindow;
 let mapBounds;
+let initialZoom;
 // Array of map markers holding default locations
 const markers = [];
 
@@ -93,7 +94,10 @@ class MapViewModel {
 
       // TODO: after build responsive decide if center on marker
       museumMap.panTo(marker.position);
-      museumMap.panBy(0, -250);
+
+      console.log(museumMap.getZoom());
+      museumMap.setZoom(14);
+      museumMap.panBy(0, -200);
 
       let markerContent = `<div class="title"><strong>${marker.title}</strong></div>`;
 
@@ -184,6 +188,10 @@ ${museumMarker.position.lat()}&longitude=${museumMarker.position.lng()}`,
 connection error. Please try again later.`);
           return Promise.reject(err);
         })
+        .then(response => {
+          if (response.ok) return response;
+          else return Promise.reject(new Error('api.yelp.com connection error'));
+        })
         .then(response => response.json())
         .then(responseJSON => responseJSON.businesses[0]);
     }
@@ -206,7 +214,11 @@ ko.applyBindings(currentViewModel);
 function initMap () {
   // Create new map
   museumMap = new google.maps.Map(document.querySelector('#map'), {
-    zoom: 11
+    center: {
+      lat: ,
+      lng:
+    },
+    zoom: 12
   });
   mapBounds = new google.maps.LatLngBounds();
   mainInfoWindow = new google.maps.InfoWindow({
@@ -214,6 +226,7 @@ function initMap () {
   });
   mainInfoWindow.addListener('closeclick', function () {
     mainInfoWindow.marker = null;
+    museumMap.setZoom(12);
   });
 
   // Icon image:
@@ -238,8 +251,9 @@ function initMap () {
   }
 
   // Adjust map bounds to fit all markers
-  museumMap.fitBounds(mapBounds);
+  museumMap.fitBounds(mapBounds, -50); //TODO
   museumMap.panBy(0, -100);
+  initialZoom = museumMap.getZoom();
   // Notify MapViewModel that google map initialization is complete
   currentViewModel.mapReady(true);
 }
@@ -314,12 +328,13 @@ const museums = [{
     lng: 139.7546932
   },
   place_id: 'ChIJL0kSfg2MGGARKv5KX53ZZ2Y'
-}, {
-  // TODO test entry
-  title: 'jfksldjf sdlkfjsldkjf',
-  location: {
-    lat: 40.761484,
-    lng: -73.977664
-  },
-  place_id: 'ChIJL0kSfg2MGGARKv5KX53ZZ2Y'
-}];
+}
+// , {
+//   // TODO test entry
+//   title: 'jfksldjf sdlkfjsldkjf',
+//   location: {
+//     lat: 40.761484,
+//     lng: -73.977664
+//   },
+//   place_id: 'ChIJL0kSfg2MGGARKv5KX53ZZ2Y'}
+];
