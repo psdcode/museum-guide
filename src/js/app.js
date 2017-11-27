@@ -38,9 +38,9 @@ class MapViewModel {
         // Empty the observable list
         self.markersObservable([]);
         for (const marker of markers) {
-          // Remove each marker
           const markerTitle = marker.title.toUpperCase();
           if (markerTitle.indexOf(searchInput.toUpperCase()) >= 0) {
+            // Readd markers to observable array only if title match search query
             self.markersObservable.push(marker);
             // Check if marker not already displayed to prevent blinking due to setting map again
             if (!marker.getMap()) marker.setMap(museumMap);
@@ -70,6 +70,8 @@ class MapViewModel {
   }
 
   // ViewModel Methods
+
+  // Alphabetically sort display of museums by title
   sort (observableArray) {
     observableArray.sort((first, second) => {
       return first.title === second.title ? 0 : (first.title > second.title ? 1 : -1);
@@ -205,6 +207,7 @@ connection error. Please try again later.`);
   }
 
   resetMap () {
+    this.query('');
     museumMap.fitBounds(mapBounds);
     museumMap.panBy(0, -100);
     mainInfoWindow.marker = null;
