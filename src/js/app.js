@@ -14,6 +14,7 @@ class MapViewModel {
 
     // Observable Markers Array that will determine display of list and markers
     this.markersObservable = ko.observableArray([]);
+    // Computed observable loads markers once map initialization complete
     this.createMarkersObservable = ko.computed(function () {
       if (self.mapReady()) {
         self.markersObservable(markers);
@@ -22,14 +23,9 @@ class MapViewModel {
       }
     }, self);
 
-    this.selectMarker = function (clickedMarkerTitle) {
-      for (const marker of self.markersObservable()) {
-        if (marker.title === clickedMarkerTitle.title) {
-          self.popInfoWindow(marker);
-          self.toggleBounceMarker(marker);
-          return;
-        }
-      }
+    this.clickMuseumList = function (clickedMarker) {
+      self.popInfoWindow(clickedMarker);
+      self.toggleBounceMarker(clickedMarker);
     };
 
     this.filterMarkerList = function (searchInput) {
@@ -79,11 +75,11 @@ class MapViewModel {
 
   toggleBounceMarker (marker) {
     if (marker.getAnimation()) {
-      // If click again during animation marker will stop
+      // If click again during animation marker, will stop
       marker.setAnimation(null);
     } else {
+      // Disable bounce on all markers and set temporary bounce on selected marker
       markers.forEach(otherMarker => { otherMarker.setAnimation(null); });
-      // Set temporary bounce on selected marker
       marker.setAnimation(google.maps.Animation.BOUNCE);
       setTimeout(() => marker.setAnimation(null), 1500);
     }
@@ -133,7 +129,7 @@ on <strong>${yelpInfo.review_count}</strong> review${yelpInfo.review_count > 1 ?
           markerContent += `Phone: ${yelpInfo.display_phone}</p></div>`;
           mainInfoWindow.setContent(markerContent);
         } else {
-        // Result is undefined, search term not in Yelp database
+        // Result undefined, search term not in Yelp database
           markerContent = `<div class="title"><strong>${marker.title}</strong></div>`;
           markerContent += `<p>This museum's information is not found in Yelp's business \
 directory. Try a different museum location.</p>`;
