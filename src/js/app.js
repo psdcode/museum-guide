@@ -1,8 +1,8 @@
-// Main google map variable
+// Main global google map variables accessed by ViewModel
 let museumMap;
 let mainInfoWindow;
 let mapBounds;
-let initialZoom;
+
 // Array of map markers holding default locations
 const markers = [];
 
@@ -81,7 +81,7 @@ class MapViewModel {
       // If click again during animation marker will stop
       marker.setAnimation(null);
     } else {
-      markers.forEach(otherMarker => otherMarker.setAnimation(null));
+      markers.forEach(otherMarker => { otherMarker.setAnimation(null); });
       // Set temporary bounce on selected marker
       marker.setAnimation(google.maps.Animation.BOUNCE);
       setTimeout(() => marker.setAnimation(null), 1500);
@@ -89,16 +89,15 @@ class MapViewModel {
   }
 
   popInfoWindow (marker) {
+    // First check if InfoWindow not already onen on clicked marker
     if (mainInfoWindow.marker !== marker) {
       mainInfoWindow.marker = marker;
 
-      // TODO: after build responsive decide if center on marker
+      // Center on marker & move up map to allow for info window display
       museumMap.panTo(marker.position);
-
-      console.log(museumMap.getZoom());
-      museumMap.setZoom(14);
       museumMap.panBy(0, -200);
 
+      // Begin construction of InfoWindow content
       let markerContent = `<div class="title"><strong>${marker.title}</strong></div>`;
 
       // Spinner HTML below taken from http://tobiasahlin.com/spinkit/
@@ -115,8 +114,9 @@ class MapViewModel {
 
       // Begin fetching data from Yelp
       getYelp(marker).then(yelpInfo => {
-        // Check if result exists (is not undefined)
+        // Only enter here if no connection issues
         if (yelpInfo) {
+          // Yelp result exists. Remove spinner by reassigning markerContent
           markerContent = `<div class="title"><strong>${marker.title}</strong></div>`;
           markerContent += `<img class="yelp-img" src=${yelpInfo.image_url} alt=${marker.title}>`;
           markerContent += `<div class="yelp-container">${getRatingImg(yelpInfo.rating)}`;
@@ -139,6 +139,8 @@ directory. Try a different museum location.</p>`;
           mainInfoWindow.setContent(markerContent);
         }
       })
+      // In case of connection error to cors-anywhere.herokuapp.com or
+      // api.yelp.com
       .catch((err) => {
         markerContent = `<div class="title"><strong>${marker.title}</strong></div>`;
         markerContent += `<p>Unable to retrieve this museum's Yelp data due to a \
@@ -183,13 +185,17 @@ ${museumMarker.position.lat()}&longitude=${museumMarker.position.lng()}`,
             'authorization': `Bearer n9BZFWy_zC3jyQyNV9u0Tdc6IhfkwyV8b4JBg2NYD9AaQuHaUx6II\
 9ukiEQp2Z03m7Cmycz29Lu2n4Gc5LPu1wDjVVCGyignkEoZn167yyq07sbPEN7gF5GzE20YWnYx`
           }
-        }).catch(err => {
+        })
+        .catch(err => {
+          // In case connection error to cors-anywhere.herokuapp.com
           window.alert(`Unable to retrieve this museum's Yelp data due to a \
 connection error. Please try again later.`);
           return Promise.reject(err);
         })
         .then(response => {
+          // Both cors-anywhere.herokuapp.com and api.yelp.com reachable
           if (response.ok) return response;
+          // In case connection to cors-anywhere.herokuapp.com ok but api.yelp.com fails
           else return Promise.reject(new Error('api.yelp.com connection error'));
         })
         .then(response => response.json())
@@ -214,19 +220,21 @@ ko.applyBindings(currentViewModel);
 function initMap () {
   // Create new map
   museumMap = new google.maps.Map(document.querySelector('#map'), {
+    // Center on Tokyo
     center: {
-      lat: ,
-      lng:
+      lat: 35.6732619,
+      lng: 139.5703029
     },
     zoom: 12
   });
   mapBounds = new google.maps.LatLngBounds();
+
+  // InfoWindow configuration
   mainInfoWindow = new google.maps.InfoWindow({
     maxWidth: 250
   });
   mainInfoWindow.addListener('closeclick', function () {
     mainInfoWindow.marker = null;
-    museumMap.setZoom(12);
   });
 
   // Icon image:
@@ -234,6 +242,7 @@ function initMap () {
   // CC BY SA 3.0
   const museumIconImage = 'img/temple-2.png';
 
+  // Create array of Markers from provided museum info
   for (const museum of museums) {
     const newMarker = new google.maps.Marker({
       position: museum.location,
@@ -251,9 +260,9 @@ function initMap () {
   }
 
   // Adjust map bounds to fit all markers
-  museumMap.fitBounds(mapBounds, -50); //TODO
-  museumMap.panBy(0, -100);
-  initialZoom = museumMap.getZoom();
+  museumMap.fitBounds(mapBounds, -50); // TODO
+  museumMap.panBy(0, -100); // TODO
+
   // Notify MapViewModel that google map initialization is complete
   currentViewModel.mapReady(true);
 }
