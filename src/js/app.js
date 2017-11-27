@@ -9,13 +9,13 @@ const markers = [];
 class MapViewModel {
   constructor () {
     const self = this;
-    this.mapReady = ko.observable('false');
-    this.query = ko.observable('');
+    self.mapReady = ko.observable('false');
+    self.query = ko.observable('');
 
     // Observable Markers Array that will determine display of list and markers
-    this.markersObservable = ko.observableArray([]);
+    self.markersObservable = ko.observableArray([]);
     // Computed observable loads markers once map initialization complete
-    this.createMarkersObservable = ko.computed(function () {
+    self.createMarkersObservable = ko.computed(function () {
       if (self.mapReady()) {
         self.markersObservable(markers);
         self.sort(self.markersObservable);
@@ -23,12 +23,12 @@ class MapViewModel {
       }
     }, self);
 
-    this.clickMuseumList = function (clickedMarker) {
+    self.clickMuseumList = function (clickedMarker) {
       self.popInfoWindow(clickedMarker);
       self.toggleBounceMarker(clickedMarker);
     };
 
-    this.filterMarkerList = function (searchInput) {
+    self.filterMarkerList = function (searchInput) {
       // Search query is a non-empty string
       if (searchInput) {
         // Empty the observable list
@@ -61,7 +61,7 @@ class MapViewModel {
     };
 
     // Observable Subscriptions
-    this.query.subscribe(self.filterMarkerList);
+    self.query.subscribe(self.filterMarkerList);
   }
 
   // ViewModel Methods
@@ -173,14 +173,16 @@ connection error. Please try again later.</p>`;
     function getYelp (museumMarker) {
       // Since client-side requests to Yelp V3 API are not possible due to lack
       // of support for CORS and JSONP, 'cors-anywhere' app hack is employed as a proxy
+      const YELP_TOKEN = `n9BZFWy_zC3jyQyNV9u0Tdc6IhfkwyV8b4JBg2NYD9AaQuHaUx6II9\
+ukiEQp2Z03m7Cmycz29Lu2n4Gc5LPu1wDjVVCGyignkEoZn167yyq07sbPEN7gF5GzE20YWnYx`;
+
       return fetch(`https://cors-anywhere.herokuapp.com/https://api.yelp.com/v3/\
 businesses/search?term=${getSearchString(museumMarker.title)}&latitude=\
 ${museumMarker.position.lat()}&longitude=${museumMarker.position.lng()}`,
         {
           method: 'GET',
           headers: {
-            'authorization': `Bearer n9BZFWy_zC3jyQyNV9u0Tdc6IhfkwyV8b4JBg2NYD9AaQuHaUx6II\
-9ukiEQp2Z03m7Cmycz29Lu2n4Gc5LPu1wDjVVCGyignkEoZn167yyq07sbPEN7gF5GzE20YWnYx`
+            'authorization': `Bearer ${YELP_TOKEN}`
           }
         })
         .catch(err => {
@@ -192,7 +194,7 @@ connection error. Please try again later.`);
         .then(response => {
           // Both cors-anywhere.herokuapp.com and api.yelp.com reachable
           if (response.ok) return response;
-          // In case connection to cors-anywhere.herokuapp.com ok but api.yelp.com fails
+          // cors-anywhere.herokuapp.com ok, api.yelp.com fails
           else return Promise.reject(new Error('api.yelp.com connection error'));
         })
         .then(response => response.json())
@@ -265,6 +267,12 @@ function initMap () {
   currentViewModel.mapReady(true);
 }
 
+// Google map initial loading error callback
+function errorLoadMap () {
+  alert('Unable to load Google Map at this time. Check your connection or try again later');
+}
+
+// Model
 const museums = [{
   title: 'Tokyo Metropolitan Art Museum',
   location: {
@@ -337,7 +345,7 @@ const museums = [{
   place_id: 'ChIJL0kSfg2MGGARKv5KX53ZZ2Y'
 }
 // , {
-//   // TODO test entry
+//   // TODO incorrect test entry
 //   title: 'jfksldjf sdlkfjsldkjf',
 //   location: {
 //     lat: 40.761484,

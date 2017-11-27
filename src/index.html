@@ -6,13 +6,13 @@
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
   <title>Neighborhood Map</title>
   <script defer
-      src="https://maps.googleapis.com/maps/api/js?libraries=places&key=AIzaSyCc5fWtTXIZ1Xoa3A6waJR-lLHNhXNfzBk&v=3&callback=initMap">
+      src="https://maps.googleapis.com/maps/api/js?libraries=places&key=AIzaSyCc5fWtTXIZ1Xoa3A6waJR-lLHNhXNfzBk&v=3&callback=initMap" onerror="errorLoadMap()">
   </script>
   <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
   <section class="list-view">
-    <h1>博物館 - Tokyo Museum Map Guide</h1>
+    <h1>東京博物館 - Tokyo Museum Map Guide</h1>
     <input placeholder="Filter..." type="search" data-bind="textInput: query" />
     <button data-bind="click: resetMap">Reset Map</button>
     <ul data-bind="foreach: markersObservable">
