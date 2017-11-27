@@ -45,23 +45,22 @@ class MapViewModel {
             // Check if marker not already displayed to prevent blinking due to setting map again
             if (!marker.getMap()) marker.setMap(museumMap);
           } else {
+            // Marker title did not match search query, remove it from map
             marker.setMap(null);
           }
         }
+        // Sort remaining markers after query
         self.sort(self.markersObservable);
 
       // Search query is empty string ''
       } else {
         // Display all markers on map
         for (const marker of markers) {
-          marker.setMap(museumMap);
+          if (!marker.getMap()) marker.setMap(museumMap);
         }
         // Display all list items
         self.markersObservable(markers);
         self.sort(self.markersObservable);
-
-        // TODO: check after responsive
-        // museumMap.fitBounds(mapBounds);
       }
     };
 
