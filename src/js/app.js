@@ -6,10 +6,10 @@ let mapBounds;
 // Array of map markers holding default locations
 const markers = [];
 
-class MapViewModel {
+class MuseumMapViewModel {
   constructor () {
     const self = this;
-    self.mapReady = ko.observable('false');
+    self.mapReady = ko.observable(false);
     self.query = ko.observable('');
 
     // Observable Markers Array that will determine display of list and markers
@@ -24,8 +24,8 @@ class MapViewModel {
     }, self);
 
     self.clickMuseumList = function (clickedMarker) {
-      self.popInfoWindow(clickedMarker);
-      self.toggleBounceMarker(clickedMarker);
+      MuseumMapViewModel.popInfoWindow(clickedMarker);
+      MuseumMapViewModel.toggleBounceMarker(clickedMarker);
     };
 
     self.filterMarkerList = function (searchInput) {
@@ -73,7 +73,7 @@ class MapViewModel {
     });
   }
 
-  toggleBounceMarker (marker) {
+  static toggleBounceMarker (marker) {
     if (marker.getAnimation()) {
       // If click again during animation marker, will stop
       marker.setAnimation(null);
@@ -85,7 +85,7 @@ class MapViewModel {
     }
   }
 
-  popInfoWindow (marker) {
+  static popInfoWindow (marker) {
     // First check if InfoWindow not already onen on clicked marker
     if (mainInfoWindow.marker !== marker) {
       mainInfoWindow.marker = marker;
@@ -203,6 +203,7 @@ connection error. Please try again later.`);
   // END of method popInfoWindow(marker)
   }
 
+  // Called by Reset <button>
   resetMap () {
     this.query('');
     museumMap.fitBounds(mapBounds);
@@ -213,9 +214,16 @@ connection error. Please try again later.`);
 }
 
 // KOjs ViewModel initialization
-const currentViewModel = new MapViewModel();
-ko.applyBindings(currentViewModel);
+const tokyoMuseumViewModel = new MuseumMapViewModel();
+ko.applyBindings(tokyoMuseumViewModel);
 
+function initMap () {
+  MuseumMapViewModel.initMap();
+}
+
+function errorInitMap () {
+  MuseumMapViewModel.errorInitMap();
+}
 // Map initalization function called by maps script
 function initMap () {
   // Create new map
@@ -252,8 +260,8 @@ function initMap () {
       map: museumMap
     });
     newMarker.addListener('click', function () {
-      currentViewModel.popInfoWindow(this);
-      currentViewModel.toggleBounceMarker(this);
+      MuseumMapViewModel.popInfoWindow(this);
+      MuseumMapViewModel.toggleBounceMarker(this);
     });
     markers.push(newMarker);
     mapBounds.extend(newMarker.position);
@@ -264,15 +272,15 @@ function initMap () {
   museumMap.panBy(0, -100); // TODO
 
   // Notify MapViewModel that google map initialization is complete
-  currentViewModel.mapReady(true);
+  tokyoMuseumViewModel.mapReady(true);
 }
 
 // Google map initial loading error callback
-function errorLoadMap () {
+MuseumMapViewModel.errorLoadMap = function () {
   alert('Unable to load Google Map at this time. Check your connection or try again later');
 }
 
-// Model
+// Initial Model
 const museums = [{
   title: 'Tokyo Metropolitan Art Museum',
   location: {
