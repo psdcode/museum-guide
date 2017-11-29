@@ -2,16 +2,39 @@ module.exports = function (grunt) {
   grunt.initConfig({
     pkg: grunt.file.readJSON('package.json'),
 
-    clean: {
-      dev: {
-        src: ['dist/*']
-      }
-    },
-    mkdir: {
+    babel: {
       options: {
-        create: ['dist/img']
+        sourceMap: false
+      },
+      dist: {
+        files: {
+          'dist/js/app.js': 'src/js/app.js'
+        }
       }
     },
+    copy: {
+      dev: {
+        files: [{
+          expand: true,
+          cwd: 'src',
+          src: ['img/**', 'data/**', 'css/**'],
+          dest: 'dist/'
+        }]
+      }
+    },
+    clean: {
+      prebuild: {
+        src: ['dist/*']
+      },
+      postuglify: {
+        src: ['dist/js/app.js']
+      }
+    },
+    // mkdir: {
+    //   options: {
+    //     create: ['dist']
+    //   }
+    // },
     jshint: {
       options: {
         force: true,
@@ -25,6 +48,24 @@ module.exports = function (grunt) {
       all: ['src/js/app.js', 'src/data/model.js']
     },
 
+    processhtml: {
+      dist: {
+        files: {
+          'dist/index.html': ['src/index.html']
+        }
+      }
+    },
+
+    uglify: {
+      options: {
+        sourceMap: false,
+        banner: '/*! <%= pkg.name %> | <%= pkg.author %> | <%= pkg.license %> */\n',
+      },
+      build: {
+        src: 'dist/js/app.js',
+        dest: 'dist/js/app.min.js'
+      }
+    },
     watch: {
       options: {
         livereload: true
@@ -37,10 +78,9 @@ module.exports = function (grunt) {
         }
       }
     }
-
   });
   require('load-grunt-tasks')(grunt);
-  grunt.registerTask('build', ['jshint', 'clean']); //,'jshint','babel','uglify'])
+  grunt.registerTask('build', ['jshint', 'clean:prebuild', 'copy', 'babel', 'uglify', 'clean:postuglify', 'processhtml']); //,'babel','uglify'])
 };
 
 // csslint: {
@@ -121,7 +161,7 @@ module.exports = function (grunt) {
 //                     }]
 //                   },
 //                 },
-//                 uglify: {
+//uglify: {
 // 			build: {
 // 				src: 'js/build/production.js',
 // 				dest: 'js/build/production.min.js'

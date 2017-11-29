@@ -28,6 +28,7 @@
     "grunt-contrib-uglify": "^3.2.1",
     "grunt-contrib-watch": "latest",
     "grunt-mkdir": "^1.0.0",
+    "grunt-processhtml": "^0.4.1",
     "jshint-stylish": "latest",
     "load-grunt-tasks": "latest"
   }
