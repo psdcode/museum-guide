@@ -243,6 +243,11 @@ function initMap () {
   // CC BY SA 3.0
   const museumIconImage = 'img/temple-2.png';
 
+  // Declare listener callback outside of loop to avoid jshint warning
+  const listenerPopInfo = function () {
+    MuseumMapViewModel.popInfoWindow(this);
+    MuseumMapViewModel.toggleBounceMarker(this);
+  };
   // Create array of Markers from provided museum info
   for (const museum of model.museums) {
     const newMarker = new google.maps.Marker({
@@ -252,10 +257,7 @@ function initMap () {
       icon: museumIconImage,
       map: museumMap
     });
-    newMarker.addListener('click', function () {
-      MuseumMapViewModel.popInfoWindow(this);
-      MuseumMapViewModel.toggleBounceMarker(this);
-    });
+    newMarker.addListener('click', listenerPopInfo);
     markers.push(newMarker);
     mapBounds.extend(newMarker.position);
   }

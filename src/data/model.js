@@ -75,4 +75,4 @@ const model = {
     },
     "place_id": "ChIJL0kSfg2MGGARKv5KX53ZZ2Y"
   }]
-}
+};
