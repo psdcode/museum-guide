@@ -92,7 +92,7 @@ class MuseumMapViewModel {
 
       // Center on marker & move up map to allow for info window display
       museumMap.panTo(marker.position);
-      museumMap.panBy(0, -200);
+      museumMap.panBy(0, -270);
 
       // Begin construction of InfoWindow content
       let markerContent = `<div class="title"><strong>${marker.title}</strong></div>`;
