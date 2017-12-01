@@ -1,4 +1,4 @@
-class MapViewModel {
+class DisplayViewModel {
   constructor () {
     const self = this;
     self.mapReady = ko.observable(false);
@@ -9,7 +9,7 @@ class MapViewModel {
     // Computed observable loads markers once map initialization complete
     self.createMarkersObservable = ko.computed(function () {
       if (self.mapReady()) {
-        self.markersObservable(markers);
+        self.markersObservable(GoogleMapView.markers);
         self.sort(self.markersObservable);
         return true;
       }
@@ -25,16 +25,16 @@ class MapViewModel {
       if (searchInput) {
         // Empty the observable list
         self.markersObservable([]);
-        for (const marker of markers) {
+        for (const marker of GoogleMapView.markers) {
           const markerTitle = marker.title.toUpperCase();
           if (markerTitle.indexOf(searchInput.toUpperCase()) >= 0) {
             // Readd markers to observable array only if title match search query
             self.markersObservable.push(marker);
             // Check if marker not already displayed to prevent blinking due to setting map again
-            if (!marker.getMap()) marker.setMap(map);
+            if (!marker.getMap()) GoogleMapView.setMarkerMap(marker, map);
           } else {
             // Marker title did not match search query, remove it from map
-            marker.setMap(null);
+            GoogleMapView.setMarkerMap(marker, null);
           }
         }
         // Sort remaining markers after query
@@ -43,11 +43,11 @@ class MapViewModel {
       // Search query is empty string ''
       } else {
         // Display all markers on map
-        for (const marker of markers) {
-          if (!marker.getMap()) marker.setMap(map);
+        for (const marker of GoogleMapView.markers) {
+          if (!marker.getMap()) GoogleMapView.setMarkerMap(marker, map);
         }
         // Display all list items
-        self.markersObservable(markers);
+        self.markersObservable(GoogleMapView.markers);
         self.sort(self.markersObservable);
       }
     };
@@ -72,6 +72,11 @@ class MapViewModel {
 
 // Class handling google map display
 class GoogleMapView {
+  // maps.googleapis.com script initial loading error callback
+  static errorLoadMap () {
+    alert('Unable to load Google Map at this time. Check your connection or try again later');
+  }
+
   // googleapis.com initalization success callback
   static initMap () {
     // Create new map
@@ -83,6 +88,9 @@ class GoogleMapView {
       },
       zoom: 12
     });
+
+    // Markers and bounds setup
+    GoogleMapView.markers = [];
     GoogleMapView.mapBounds = new google.maps.LatLngBounds();
 
     // InfoWindow configuration
@@ -108,7 +116,7 @@ class GoogleMapView {
         map
       });
       newMarker.addListener('click', listenerPopInfo);
-      markers.push(newMarker);
+      GoogleMapView.markers.push(newMarker);
       GoogleMapView.mapBounds.extend(newMarker.position);
     }
 
@@ -116,13 +124,8 @@ class GoogleMapView {
     map.fitBounds(GoogleMapView.mapBounds, -50); // TODO
     map.panBy(0, -100); // TODO
 
-    // Notify current instance of MapViewModel that google map initialization is complete
-    MapViewModel.instance.mapReady(true);
-  }
-
-  // maps.googleapis.com script initial loading error callback
-  static errorLoadMap () {
-    alert('Unable to load Google Map at this time. Check your connection or try again later');
+    // Notify current instance of DisplayViewModel that google map initialization is complete
+    DisplayViewModel.instance.mapReady(true);
   }
 
   static popInfoWindow (marker) {
@@ -247,23 +250,24 @@ connection error. Please try again later.`);
     GoogleMapView.mainInfoWindow.close();
   }
 
+  static setMarkerMap (marker, map) {
+    marker.setMap(map);
+  }
+
   static toggleBounceMarker (marker) {
     if (marker.getAnimation()) {
       // If click again during animation marker, will stop
       marker.setAnimation(null);
     } else {
       // Disable bounce on all markers and set temporary bounce on selected marker
-      markers.forEach(otherMarker => { otherMarker.setAnimation(null); });
+      GoogleMapView.markers.forEach(otherMarker => { otherMarker.setAnimation(null); });
       marker.setAnimation(google.maps.Animation.BOUNCE);
       setTimeout(() => marker.setAnimation(null), 1500);
     }
   }
 }
 
-
-
-
-// Main global google map variables accessed by ViewModel
+// Main global google map variables accessed by DisplayViewModel
 let map;
 
 // import model declared in model.js
@@ -277,6 +281,6 @@ const markers = [];
 GoogleMapView.YELP_TOKEN = `n9BZFWy_zC3jyQyNV9u0Tdc6IhfkwyV8b4JBg2NYD9AaQuHaUx6II9\
 ukiEQp2Z03m7Cmycz29Lu2n4Gc5LPu1wDjVVCGyignkEoZn167yyq07sbPEN7gF5GzE20YWnYx`;
 
-// KOjs ViewModel initialization
-MapViewModel.instance = new MapViewModel();
-ko.applyBindings(MapViewModel.instance);
+// KOjs DisplayViewModel initialization
+DisplayViewModel.instance = new DisplayViewModel();
+ko.applyBindings(DisplayViewModel.instance);
