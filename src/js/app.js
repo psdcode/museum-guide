@@ -3,7 +3,14 @@ class DisplayViewModel {
     const self = this;
     self.mapReady = ko.observable(false);
     self.query = ko.observable('');
-    self.mainTitle = `${currentModel.area.localname} - ${currentModel.area.city} ${currentModel.area.type} Map Guide`;
+
+    // Determine if to include local language heading in title
+    if (currentModel.area.locallang) {
+      self.mainTitle = `${currentModel.area.locallang} - ${currentModel.area.city} \
+${currentModel.area.type} Map Guide`;
+    } else {
+      self.mainTitle = `${currentModel.area.city} ${currentModel.area.type} Map Guide`;
+    }
     // Observable Markers Array that will determine display of list and markers
     self.markersObservable = ko.observableArray([]);
     // Computed observable loads markers once map initialization complete
@@ -52,7 +59,7 @@ class DisplayViewModel {
       }
     };
 
-    // Observable Subscriptions
+    // Observable subscription for instant filtering of query results
     self.query.subscribe(self.filterMarkerList);
   }
 
