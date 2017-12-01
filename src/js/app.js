@@ -1,10 +1,10 @@
 // Main global google map variables accessed by ViewModel
-let museumMap;
+let map;
 let mainInfoWindow;
 let mapBounds;
 
 // import model ceclared in model.js
-const currentModel = model;
+const currentModel = Object.assign({}, modelToImport);
 
 // Array of map markers holding default locations
 const markers = [];
@@ -14,7 +14,7 @@ class MapViewModel {
     const self = this;
     self.mapReady = ko.observable(false);
     self.query = ko.observable('');
-    self.mainTitle = `${currentModel.area.localname} - ${currentModel.area.city} ${currentModel.area.locationsType} Map Guide`;
+    self.mainTitle = `${currentModel.area.localname} - ${currentModel.area.city} ${currentModel.area.type} Map Guide`;
     // Observable Markers Array that will determine display of list and markers
     self.markersObservable = ko.observableArray([]);
     // Computed observable loads markers once map initialization complete
@@ -26,7 +26,7 @@ class MapViewModel {
       }
     }, self);
 
-    self.clickMuseumList = function (clickedMarker) {
+    self.clickLocationList = function (clickedMarker) {
       GoogleMapView.popInfoWindow(clickedMarker);
       GoogleMapView.toggleBounceMarker(clickedMarker);
     };
@@ -42,7 +42,7 @@ class MapViewModel {
             // Readd markers to observable array only if title match search query
             self.markersObservable.push(marker);
             // Check if marker not already displayed to prevent blinking due to setting map again
-            if (!marker.getMap()) marker.setMap(museumMap);
+            if (!marker.getMap()) marker.setMap(map);
           } else {
             // Marker title did not match search query, remove it from map
             marker.setMap(null);
@@ -55,7 +55,7 @@ class MapViewModel {
       } else {
         // Display all markers on map
         for (const marker of markers) {
-          if (!marker.getMap()) marker.setMap(museumMap);
+          if (!marker.getMap()) marker.setMap(map);
         }
         // Display all list items
         self.markersObservable(markers);
@@ -67,7 +67,7 @@ class MapViewModel {
     self.query.subscribe(self.filterMarkerList);
   }
 
-  // Alphabetically sort display of museums by title
+  // Alphabetically sort display of loations by title
   sort (observableArray) {
     observableArray.sort((first, second) => {
       return first.title === second.title ? 0 : (first.title > second.title ? 1 : -1);
@@ -90,7 +90,7 @@ class GoogleMapView {
   // googleapis.com initalization success callback
   static initMap () {
     // Create new map
-    museumMap = new google.maps.Map(document.querySelector('#map'), {
+    map = new google.maps.Map(document.querySelector('#map'), {
       // Center on city
       center: {
         lat: currentModel.area.position.lat,
@@ -108,24 +108,19 @@ class GoogleMapView {
       mainInfoWindow.marker = null;
     });
 
-    // Icon image:
-    // Maps Icons Collection https://mapicons.mapsmarker.com
-    // CC BY SA 3.0
-    const museumIconImage = 'img/temple-2.png';
-
     // Declare listener callback outside of loop to avoid jshint warning
     const listenerPopInfo = function () {
       GoogleMapView.popInfoWindow(this);
       GoogleMapView.toggleBounceMarker(this);
     };
-    // Create array of Markers from provided museum info
-    for (const museum of currentModel.locations) {
+    // Create array of Markers from provided location info
+    for (const location of currentModel.locations) {
       const newMarker = new google.maps.Marker({
-        position: museum.position,
-        title: museum.title,
+        position: location.position,
+        title: location.title,
         animation: google.maps.Animation.DROP,
-        icon: museumIconImage,
-        map: museumMap
+        icon: 'data/' + location.icon,
+        map
       });
       newMarker.addListener('click', listenerPopInfo);
       markers.push(newMarker);
@@ -133,8 +128,8 @@ class GoogleMapView {
     }
 
     // Adjust map bounds to fit all markers
-    museumMap.fitBounds(mapBounds, -50); // TODO
-    museumMap.panBy(0, -100); // TODO
+    map.fitBounds(mapBounds, -50); // TODO
+    map.panBy(0, -100); // TODO
 
     // Notify MapViewModel that google map initialization is complete
     // for (const property in window) {
@@ -158,8 +153,8 @@ class GoogleMapView {
       mainInfoWindow.marker = marker;
 
       // Center on marker & move up map to allow for info window display
-      museumMap.panTo(marker.position);
-      museumMap.panBy(0, -270);
+      map.panTo(marker.position);
+      map.panBy(0, -270);
 
       // Begin construction of InfoWindow content
       let markerContent = `<div class="title"><strong>${marker.title}</strong></div>`;
@@ -174,7 +169,7 @@ class GoogleMapView {
 
       // Place title & spinner into InfoWindow & open it
       mainInfoWindow.setContent(markerContent);
-      mainInfoWindow.open(museumMap, marker);
+      mainInfoWindow.open(map, marker);
 
       // Begin fetching data from Yelp
       getYelp(marker).then(yelpInfo => {
@@ -198,8 +193,8 @@ on <strong>${yelpInfo.review_count}</strong> review${yelpInfo.review_count > 1 ?
         } else {
         // Result undefined, search term not in Yelp database
           markerContent = `<div class="title"><strong>${marker.title}</strong></div>`;
-          markerContent += `<p>This museum's information is not found in Yelp's business \
-directory. Try a different museum location.</p>`;
+          markerContent += `<p>This location's information is not found in Yelp's business \
+directory. Try a different location.</p>`;
           mainInfoWindow.setContent(markerContent);
         }
       })
@@ -207,7 +202,7 @@ directory. Try a different museum location.</p>`;
       // api.yelp.com
       .catch((err) => {
         markerContent = `<div class="title"><strong>${marker.title}</strong></div>`;
-        markerContent += `<p>Unable to retrieve this museum's Yelp data due to a \
+        markerContent += `<p>Unable to retrieve this location's Yelp data due to a \
 connection error. Please try again later.</p>`;
         mainInfoWindow.setContent(markerContent);
         console.log(err);
@@ -232,20 +227,20 @@ connection error. Please try again later.</p>`;
     }
 
     // Helper method for formatting search string from title
-    function getSearchString (museumTitle) {
-      return museumTitle.replace(/\s+/g, '+');
+    function getSearchString (locationTitle) {
+      return locationTitle.replace(/\s+/g, '+');
     }
 
     // Helper method for fetching Yelp info
-    function getYelp (museumMarker) {
+    function getYelp (mapMarker) {
       // Since client-side requests to Yelp V3 API are not possible due to lack
       // of support for CORS and JSONP, 'cors-anywhere' app hack is employed as a proxy
       const YELP_TOKEN = `n9BZFWy_zC3jyQyNV9u0Tdc6IhfkwyV8b4JBg2NYD9AaQuHaUx6II9\
 ukiEQp2Z03m7Cmycz29Lu2n4Gc5LPu1wDjVVCGyignkEoZn167yyq07sbPEN7gF5GzE20YWnYx`;
 
       return fetch(`https://cors-anywhere.herokuapp.com/https://api.yelp.com/v3/\
-businesses/search?term=${getSearchString(museumMarker.title)}&latitude=\
-${museumMarker.position.lat()}&longitude=${museumMarker.position.lng()}`,
+businesses/search?term=${getSearchString(mapMarker.title)}&latitude=\
+${mapMarker.position.lat()}&longitude=${mapMarker.position.lng()}`,
         {
           method: 'GET',
           headers: {
@@ -254,7 +249,7 @@ ${museumMarker.position.lat()}&longitude=${museumMarker.position.lng()}`,
         })
         .catch(err => {
           // In case connection error to cors-anywhere.herokuapp.com
-          window.alert(`Unable to retrieve this museum's Yelp data due to a \
+          window.alert(`Unable to retrieve this locations's Yelp data due to a \
 connection error. Please try again later.`);
           return Promise.reject(err);
         })
@@ -271,8 +266,8 @@ connection error. Please try again later.`);
   }
 
   static resetMap () {
-    museumMap.fitBounds(mapBounds);
-    museumMap.panBy(0, -100);
+    map.fitBounds(mapBounds);
+    map.panBy(0, -100);
     mainInfoWindow.marker = null;
     mainInfoWindow.close();
   }
