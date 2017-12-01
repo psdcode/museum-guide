@@ -3,15 +3,18 @@ let museumMap;
 let mainInfoWindow;
 let mapBounds;
 
+// import model ceclared in model.js
+const currentModel = model;
+
 // Array of map markers holding default locations
 const markers = [];
 
-class MuseumMapViewModel {
+class MapViewModel {
   constructor () {
     const self = this;
     self.mapReady = ko.observable(false);
     self.query = ko.observable('');
-
+    self.mainTitle = `${currentModel.area.localname} - ${currentModel.area.city} ${currentModel.area.locationsType} Map Guide`;
     // Observable Markers Array that will determine display of list and markers
     self.markersObservable = ko.observableArray([]);
     // Computed observable loads markers once map initialization complete
@@ -24,8 +27,8 @@ class MuseumMapViewModel {
     }, self);
 
     self.clickMuseumList = function (clickedMarker) {
-      MuseumMapViewModel.popInfoWindow(clickedMarker);
-      MuseumMapViewModel.toggleBounceMarker(clickedMarker);
+      GoogleMapView.popInfoWindow(clickedMarker);
+      GoogleMapView.toggleBounceMarker(clickedMarker);
     };
 
     self.filterMarkerList = function (searchInput) {
@@ -64,8 +67,6 @@ class MuseumMapViewModel {
     self.query.subscribe(self.filterMarkerList);
   }
 
-  // ViewModel Methods
-
   // Alphabetically sort display of museums by title
   sort (observableArray) {
     observableArray.sort((first, second) => {
@@ -73,16 +74,82 @@ class MuseumMapViewModel {
     });
   }
 
-  static toggleBounceMarker (marker) {
-    if (marker.getAnimation()) {
-      // If click again during animation marker, will stop
-      marker.setAnimation(null);
-    } else {
-      // Disable bounce on all markers and set temporary bounce on selected marker
-      markers.forEach(otherMarker => { otherMarker.setAnimation(null); });
-      marker.setAnimation(google.maps.Animation.BOUNCE);
-      setTimeout(() => marker.setAnimation(null), 1500);
+  // Called by Reset <button>
+  resetMap () {
+    this.query('');
+    GoogleMapView.resetMap();
+  }
+}
+
+// KOjs ViewModel initialization
+const localMuseumViewModel = new MapViewModel();
+ko.applyBindings(localMuseumViewModel);
+
+// Class handling google map display
+class GoogleMapView {
+  // googleapis.com initalization success callback
+  static initMap () {
+    // Create new map
+    museumMap = new google.maps.Map(document.querySelector('#map'), {
+      // Center on city
+      center: {
+        lat: currentModel.area.position.lat,
+        lng: currentModel.area.position.lng
+      },
+      zoom: 12
+    });
+    mapBounds = new google.maps.LatLngBounds();
+
+    // InfoWindow configuration
+    mainInfoWindow = new google.maps.InfoWindow({
+      maxWidth: 250
+    });
+    mainInfoWindow.addListener('closeclick', function () {
+      mainInfoWindow.marker = null;
+    });
+
+    // Icon image:
+    // Maps Icons Collection https://mapicons.mapsmarker.com
+    // CC BY SA 3.0
+    const museumIconImage = 'img/temple-2.png';
+
+    // Declare listener callback outside of loop to avoid jshint warning
+    const listenerPopInfo = function () {
+      GoogleMapView.popInfoWindow(this);
+      GoogleMapView.toggleBounceMarker(this);
+    };
+    // Create array of Markers from provided museum info
+    for (const museum of currentModel.locations) {
+      const newMarker = new google.maps.Marker({
+        position: museum.position,
+        title: museum.title,
+        animation: google.maps.Animation.DROP,
+        icon: museumIconImage,
+        map: museumMap
+      });
+      newMarker.addListener('click', listenerPopInfo);
+      markers.push(newMarker);
+      mapBounds.extend(newMarker.position);
     }
+
+    // Adjust map bounds to fit all markers
+    museumMap.fitBounds(mapBounds, -50); // TODO
+    museumMap.panBy(0, -100); // TODO
+
+    // Notify MapViewModel that google map initialization is complete
+    // for (const property in window) {
+    //   if (window.hasOwnProperty(property)) {
+    //     if (property instanceof MapViewModel) {
+    //
+    //     }
+    //   }
+    // }
+    localMuseumViewModel.mapReady(true);
+  }
+
+  // maps.googleapis.com script initial loading error callback
+  static errorLoadMap () {
+    alert('Unable to load Google Map at this time. Check your connection or try again later');
   }
 
   static popInfoWindow (marker) {
@@ -149,8 +216,8 @@ connection error. Please try again later.</p>`;
 
     // Helper method for formatting Yelp address html string
     function getYelpAddressHtml (yelpAddress) {
-      // Remove 'Japan' from address since it's redundant in the context of a map of Tokyo
-      if (yelpAddress[yelpAddress.length - 1] === 'Japan') {
+      // Remove country from address since it's redundant in the context of a city map
+      if (yelpAddress[yelpAddress.length - 1] === currentModel.area.country) {
         yelpAddress = yelpAddress.slice(0, yelpAddress.length - 1);
       }
       return yelpAddress.join('<br>');
@@ -203,77 +270,22 @@ connection error. Please try again later.`);
   // END of method popInfoWindow(marker)
   }
 
-  // Called by Reset <button>
-  resetMap () {
-    this.query('');
+  static resetMap () {
     museumMap.fitBounds(mapBounds);
     museumMap.panBy(0, -100);
     mainInfoWindow.marker = null;
     mainInfoWindow.close();
   }
-}
 
-// KOjs ViewModel initialization
-const tokyoMuseumViewModel = new MuseumMapViewModel();
-ko.applyBindings(tokyoMuseumViewModel);
-
-
-// Map initalization function called by maps script
-function initMap () {
-  // Create new map
-  museumMap = new google.maps.Map(document.querySelector('#map'), {
-    // Center on Tokyo
-    center: {
-      lat: model.initial.lat,
-      lng: model.initial.lng
-    },
-    zoom: 12
-  });
-  mapBounds = new google.maps.LatLngBounds();
-
-  // InfoWindow configuration
-  mainInfoWindow = new google.maps.InfoWindow({
-    maxWidth: 250
-  });
-  mainInfoWindow.addListener('closeclick', function () {
-    mainInfoWindow.marker = null;
-  });
-
-  // Icon image:
-  // Maps Icons Collection https://mapicons.mapsmarker.com
-  // CC BY SA 3.0
-  const museumIconImage = 'img/temple-2.png';
-
-  // Declare listener callback outside of loop to avoid jshint warning
-  const listenerPopInfo = function () {
-    MuseumMapViewModel.popInfoWindow(this);
-    MuseumMapViewModel.toggleBounceMarker(this);
-  };
-  // Create array of Markers from provided museum info
-  for (const museum of model.museums) {
-    const newMarker = new google.maps.Marker({
-      position: museum.location,
-      title: museum.title,
-      animation: google.maps.Animation.DROP,
-      icon: museumIconImage,
-      map: museumMap
-    });
-    newMarker.addListener('click', listenerPopInfo);
-    markers.push(newMarker);
-    mapBounds.extend(newMarker.position);
+  static toggleBounceMarker (marker) {
+    if (marker.getAnimation()) {
+      // If click again during animation marker, will stop
+      marker.setAnimation(null);
+    } else {
+      // Disable bounce on all markers and set temporary bounce on selected marker
+      markers.forEach(otherMarker => { otherMarker.setAnimation(null); });
+      marker.setAnimation(google.maps.Animation.BOUNCE);
+      setTimeout(() => marker.setAnimation(null), 1500);
+    }
   }
-
-  // Adjust map bounds to fit all markers
-  museumMap.fitBounds(mapBounds, -50); // TODO
-  museumMap.panBy(0, -100); // TODO
-
-  // Notify MapViewModel that google map initialization is complete
-  tokyoMuseumViewModel.mapReady(true);
 }
-
-// Google map initial loading error callback
-function errorLoadMap () {
-  alert('Unable to load Google Map at this time. Check your connection or try again later');
-}
-
-//
