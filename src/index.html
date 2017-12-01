@@ -16,7 +16,7 @@
     <input placeholder="Filter..." type="search" data-bind="textInput: query" />
     <button data-bind="click: resetMap">Reset Map</button>
     <ul data-bind="foreach: markersObservable">
-      <li class="list-item" data-bind="text: title, click: $root.clickMuseumList"></li>
+      <li class="list-item" data-bind="text: title, click: $root.clickLocationList"></li>
     </ul>
   </section>
   <section id="map"></section>
