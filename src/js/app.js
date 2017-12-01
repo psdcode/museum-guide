@@ -3,11 +3,16 @@ let map;
 let mainInfoWindow;
 let mapBounds;
 
-// import model ceclared in model.js
+// import model declared in model.js
+// TODO may implement import data from server in future
 const currentModel = Object.assign({}, modelToImport);
 
 // Array of map markers holding default locations
 const markers = [];
+
+// Yelp service access token
+const YELP_TOKEN = `n9BZFWy_zC3jyQyNV9u0Tdc6IhfkwyV8b4JBg2NYD9AaQuHaUx6II9\
+ukiEQp2Z03m7Cmycz29Lu2n4Gc5LPu1wDjVVCGyignkEoZn167yyq07sbPEN7gF5GzE20YWnYx`;
 
 class MapViewModel {
   constructor () {
@@ -82,15 +87,15 @@ class MapViewModel {
 }
 
 // KOjs ViewModel initialization
-const localMuseumViewModel = new MapViewModel();
-ko.applyBindings(localMuseumViewModel);
+MapViewModel.instance = new MapViewModel();
+ko.applyBindings(MapViewModel.instance);
 
 // Class handling google map display
 class GoogleMapView {
   // googleapis.com initalization success callback
   static initMap () {
     // Create new map
-    map = new google.maps.Map(document.querySelector('#map'), {
+    map = new google.maps.Map(document.getElementById('map'), {
       // Center on city
       center: {
         lat: currentModel.area.position.lat,
@@ -131,15 +136,8 @@ class GoogleMapView {
     map.fitBounds(mapBounds, -50); // TODO
     map.panBy(0, -100); // TODO
 
-    // Notify MapViewModel that google map initialization is complete
-    // for (const property in window) {
-    //   if (window.hasOwnProperty(property)) {
-    //     if (property instanceof MapViewModel) {
-    //
-    //     }
-    //   }
-    // }
-    localMuseumViewModel.mapReady(true);
+    // Notify current instance of MapViewModel that google map initialization is complete
+    MapViewModel.instance.mapReady(true);
   }
 
   // maps.googleapis.com script initial loading error callback
@@ -235,9 +233,6 @@ connection error. Please try again later.</p>`;
     function getYelp (mapMarker) {
       // Since client-side requests to Yelp V3 API are not possible due to lack
       // of support for CORS and JSONP, 'cors-anywhere' app hack is employed as a proxy
-      const YELP_TOKEN = `n9BZFWy_zC3jyQyNV9u0Tdc6IhfkwyV8b4JBg2NYD9AaQuHaUx6II9\
-ukiEQp2Z03m7Cmycz29Lu2n4Gc5LPu1wDjVVCGyignkEoZn167yyq07sbPEN7gF5GzE20YWnYx`;
-
       return fetch(`https://cors-anywhere.herokuapp.com/https://api.yelp.com/v3/\
 businesses/search?term=${getSearchString(mapMarker.title)}&latitude=\
 ${mapMarker.position.lat()}&longitude=${mapMarker.position.lng()}`,
