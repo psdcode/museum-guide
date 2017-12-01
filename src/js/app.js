@@ -217,6 +217,7 @@ connection error. Please try again later.`);
 const tokyoMuseumViewModel = new MuseumMapViewModel();
 ko.applyBindings(tokyoMuseumViewModel);
 
+
 // Map initalization function called by maps script
 function initMap () {
   // Create new map
@@ -274,3 +275,5 @@ function initMap () {
 function errorLoadMap () {
   alert('Unable to load Google Map at this time. Check your connection or try again later');
 }
+
+//
