@@ -31,10 +31,10 @@ class DisplayViewModel {
             // Readd markers to observable array only if title match search query
             self.markersObservable.push(marker);
             // Check if marker not already displayed to prevent blinking due to setting map again
-            if (!marker.getMap()) GoogleMapView.setMarkerMap(marker, map);
+            if (!marker.getMap()) GoogleMapView.setMarkerMap(marker, true);
           } else {
             // Marker title did not match search query, remove it from map
-            GoogleMapView.setMarkerMap(marker, null);
+            GoogleMapView.setMarkerMap(marker, false);
           }
         }
         // Sort remaining markers after query
@@ -44,7 +44,7 @@ class DisplayViewModel {
       } else {
         // Display all markers on map
         for (const marker of GoogleMapView.markers) {
-          if (!marker.getMap()) GoogleMapView.setMarkerMap(marker, map);
+          if (!marker.getMap()) GoogleMapView.setMarkerMap(marker, GoogleMapView.map);
         }
         // Display all list items
         self.markersObservable(GoogleMapView.markers);
@@ -80,7 +80,7 @@ class GoogleMapView {
   // googleapis.com initalization success callback
   static initMap () {
     // Create new map
-    map = new google.maps.Map(document.getElementById('map'), {
+    GoogleMapView.map = new google.maps.Map(document.getElementById('map'), {
       // Center on city
       center: {
         lat: currentModel.area.position.lat,
@@ -89,8 +89,9 @@ class GoogleMapView {
       zoom: 12
     });
 
-    // Markers and bounds setup
+    // Markers corresponding to data locations
     GoogleMapView.markers = [];
+    // Map bounds
     GoogleMapView.mapBounds = new google.maps.LatLngBounds();
 
     // InfoWindow configuration
@@ -113,7 +114,7 @@ class GoogleMapView {
         title: location.title,
         animation: google.maps.Animation.DROP,
         icon: 'data/' + location.icon,
-        map
+        map: GoogleMapView.map
       });
       newMarker.addListener('click', listenerPopInfo);
       GoogleMapView.markers.push(newMarker);
@@ -121,8 +122,8 @@ class GoogleMapView {
     }
 
     // Adjust map bounds to fit all markers
-    map.fitBounds(GoogleMapView.mapBounds, -50); // TODO
-    map.panBy(0, -100); // TODO
+    GoogleMapView.map.fitBounds(GoogleMapView.mapBounds, -50); // TODO
+    GoogleMapView.map.panBy(0, -100); // TODO
 
     // Notify current instance of DisplayViewModel that google map initialization is complete
     DisplayViewModel.instance.mapReady(true);
@@ -134,8 +135,8 @@ class GoogleMapView {
       GoogleMapView.mainInfoWindow.marker = marker;
 
       // Center on marker & move up map to allow for info window display
-      map.panTo(marker.position);
-      map.panBy(0, -270);
+      GoogleMapView.map.panTo(marker.position);
+      GoogleMapView.map.panBy(0, -270);
 
       // Begin construction of InfoWindow content
       let markerContent = `<div class="title"><strong>${marker.title}</strong></div>`;
@@ -150,7 +151,7 @@ class GoogleMapView {
 
       // Place title & spinner into InfoWindow & open it
       GoogleMapView.mainInfoWindow.setContent(markerContent);
-      GoogleMapView.mainInfoWindow.open(map, marker);
+      GoogleMapView.mainInfoWindow.open(GoogleMapView.map, marker);
 
       // Begin fetching data from Yelp
       getYelp(marker).then(yelpInfo => {
@@ -244,14 +245,15 @@ connection error. Please try again later.`);
   }
 
   static resetMap () {
-    map.fitBounds(GoogleMapView.mapBounds);
-    map.panBy(0, -100);
+    GoogleMapView.map.fitBounds(GoogleMapView.mapBounds);
+    GoogleMapView.map.panBy(0, -100);
     GoogleMapView.mainInfoWindow.marker = null;
     GoogleMapView.mainInfoWindow.close();
   }
 
-  static setMarkerMap (marker, map) {
-    marker.setMap(map);
+  static setMarkerMap (marker, set) {
+    if (set) marker.setMap(GoogleMapView.map);
+    else marker.setMap(null);
   }
 
   static toggleBounceMarker (marker) {
@@ -267,15 +269,9 @@ connection error. Please try again later.`);
   }
 }
 
-// Main global google map variables accessed by DisplayViewModel
-let map;
-
 // import model declared in model.js
 // TODO may implement import data from server in future
 const currentModel = Object.assign({}, modelToImport);
-
-// Array of map markers holding default locations
-const markers = [];
 
 // Yelp service access token
 GoogleMapView.YELP_TOKEN = `n9BZFWy_zC3jyQyNV9u0Tdc6IhfkwyV8b4JBg2NYD9AaQuHaUx6II9\
