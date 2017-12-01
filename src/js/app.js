@@ -1,19 +1,3 @@
-// Main global google map variables accessed by ViewModel
-let map;
-let mainInfoWindow;
-let mapBounds;
-
-// import model declared in model.js
-// TODO may implement import data from server in future
-const currentModel = Object.assign({}, modelToImport);
-
-// Array of map markers holding default locations
-const markers = [];
-
-// Yelp service access token
-const YELP_TOKEN = `n9BZFWy_zC3jyQyNV9u0Tdc6IhfkwyV8b4JBg2NYD9AaQuHaUx6II9\
-ukiEQp2Z03m7Cmycz29Lu2n4Gc5LPu1wDjVVCGyignkEoZn167yyq07sbPEN7gF5GzE20YWnYx`;
-
 class MapViewModel {
   constructor () {
     const self = this;
@@ -86,10 +70,6 @@ class MapViewModel {
   }
 }
 
-// KOjs ViewModel initialization
-MapViewModel.instance = new MapViewModel();
-ko.applyBindings(MapViewModel.instance);
-
 // Class handling google map display
 class GoogleMapView {
   // googleapis.com initalization success callback
@@ -103,14 +83,14 @@ class GoogleMapView {
       },
       zoom: 12
     });
-    mapBounds = new google.maps.LatLngBounds();
+    GoogleMapView.mapBounds = new google.maps.LatLngBounds();
 
     // InfoWindow configuration
-    mainInfoWindow = new google.maps.InfoWindow({
+    GoogleMapView.mainInfoWindow = new google.maps.InfoWindow({
       maxWidth: 250
     });
-    mainInfoWindow.addListener('closeclick', function () {
-      mainInfoWindow.marker = null;
+    GoogleMapView.mainInfoWindow.addListener('closeclick', function () {
+      GoogleMapView.mainInfoWindow.marker = null;
     });
 
     // Declare listener callback outside of loop to avoid jshint warning
@@ -129,11 +109,11 @@ class GoogleMapView {
       });
       newMarker.addListener('click', listenerPopInfo);
       markers.push(newMarker);
-      mapBounds.extend(newMarker.position);
+      GoogleMapView.mapBounds.extend(newMarker.position);
     }
 
     // Adjust map bounds to fit all markers
-    map.fitBounds(mapBounds, -50); // TODO
+    map.fitBounds(GoogleMapView.mapBounds, -50); // TODO
     map.panBy(0, -100); // TODO
 
     // Notify current instance of MapViewModel that google map initialization is complete
@@ -147,8 +127,8 @@ class GoogleMapView {
 
   static popInfoWindow (marker) {
     // First check if InfoWindow not already onen on clicked marker
-    if (mainInfoWindow.marker !== marker) {
-      mainInfoWindow.marker = marker;
+    if (GoogleMapView.mainInfoWindow.marker !== marker) {
+      GoogleMapView.mainInfoWindow.marker = marker;
 
       // Center on marker & move up map to allow for info window display
       map.panTo(marker.position);
@@ -166,8 +146,8 @@ class GoogleMapView {
       // END spinner HTML injection code
 
       // Place title & spinner into InfoWindow & open it
-      mainInfoWindow.setContent(markerContent);
-      mainInfoWindow.open(map, marker);
+      GoogleMapView.mainInfoWindow.setContent(markerContent);
+      GoogleMapView.mainInfoWindow.open(map, marker);
 
       // Begin fetching data from Yelp
       getYelp(marker).then(yelpInfo => {
@@ -187,13 +167,13 @@ on <strong>${yelpInfo.review_count}</strong> review${yelpInfo.review_count > 1 ?
           markerContent += `<p class="yelp-info">Currently \
 <strong>${yelpInfo.is_closed ? 'CLOSED' : 'OPEN'}</strong><br>`;
           markerContent += `Phone: ${yelpInfo.display_phone}</p></div>`;
-          mainInfoWindow.setContent(markerContent);
+          GoogleMapView.mainInfoWindow.setContent(markerContent);
         } else {
         // Result undefined, search term not in Yelp database
           markerContent = `<div class="title"><strong>${marker.title}</strong></div>`;
           markerContent += `<p>This location's information is not found in Yelp's business \
 directory. Try a different location.</p>`;
-          mainInfoWindow.setContent(markerContent);
+          GoogleMapView.mainInfoWindow.setContent(markerContent);
         }
       })
       // In case of connection error to cors-anywhere.herokuapp.com or
@@ -202,7 +182,7 @@ directory. Try a different location.</p>`;
         markerContent = `<div class="title"><strong>${marker.title}</strong></div>`;
         markerContent += `<p>Unable to retrieve this location's Yelp data due to a \
 connection error. Please try again later.</p>`;
-        mainInfoWindow.setContent(markerContent);
+        GoogleMapView.mainInfoWindow.setContent(markerContent);
         console.log(err);
       });
     }
@@ -239,7 +219,7 @@ ${mapMarker.position.lat()}&longitude=${mapMarker.position.lng()}`,
         {
           method: 'GET',
           headers: {
-            'authorization': `Bearer ${YELP_TOKEN}`
+            'authorization': `Bearer ${GoogleMapView.YELP_TOKEN}`
           }
         })
         .catch(err => {
@@ -261,10 +241,10 @@ connection error. Please try again later.`);
   }
 
   static resetMap () {
-    map.fitBounds(mapBounds);
+    map.fitBounds(GoogleMapView.mapBounds);
     map.panBy(0, -100);
-    mainInfoWindow.marker = null;
-    mainInfoWindow.close();
+    GoogleMapView.mainInfoWindow.marker = null;
+    GoogleMapView.mainInfoWindow.close();
   }
 
   static toggleBounceMarker (marker) {
@@ -279,3 +259,24 @@ connection error. Please try again later.`);
     }
   }
 }
+
+
+
+
+// Main global google map variables accessed by ViewModel
+let map;
+
+// import model declared in model.js
+// TODO may implement import data from server in future
+const currentModel = Object.assign({}, modelToImport);
+
+// Array of map markers holding default locations
+const markers = [];
+
+// Yelp service access token
+GoogleMapView.YELP_TOKEN = `n9BZFWy_zC3jyQyNV9u0Tdc6IhfkwyV8b4JBg2NYD9AaQuHaUx6II9\
+ukiEQp2Z03m7Cmycz29Lu2n4Gc5LPu1wDjVVCGyignkEoZn167yyq07sbPEN7gF5GzE20YWnYx`;
+
+// KOjs ViewModel initialization
+MapViewModel.instance = new MapViewModel();
+ko.applyBindings(MapViewModel.instance);
