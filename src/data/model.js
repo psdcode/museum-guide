@@ -8,7 +8,7 @@ const modelToImport = {
   "area": {
     "city": "Tokyo",
     "country": "Japan",
-    "localname": "東京博物館",
+    "locallang": "東京博物館",
     "type": "Museum",
     "position": {
       "lat": 35.6732619,
@@ -21,7 +21,7 @@ const modelToImport = {
       "lat": 35.717181,
       "lng": 139.772818
     },
-    "type": "",
+    "type": "art",
     "icon": "icons/general.png",
     "place_id": "ChIJb_o7HiiMGGARUKu8uO7fGIQ"
   }, {
@@ -30,7 +30,7 @@ const modelToImport = {
       "lat": 35.7033346,
       "lng": 139.7604967
     },
-    "type": "",
+    "type": "history",
     "icon": "icons/general.png",
     "place_id": "ChIJrVm8DD2MGGARX70ZvbreBlQ"
   }, {
@@ -39,7 +39,7 @@ const modelToImport = {
       "lat": 35.67833169999999,
       "lng": 139.7632194
     },
-    "type": "",
+    "type": "art",
     "icon": "icons/general.png",
     "place_id": "ChIJuyY-ZfqLGGAREYR9A10IXPQ"
   }, {
@@ -48,7 +48,7 @@ const modelToImport = {
       "lat": 35.68973,
       "lng": 139.718039
     },
-    "type": "",
+    "type": "other",
     "icon": "icons/general.png",
     "place_id": "ChIJHeBCIOyMGGAR7BktETlUP_w"
   }, {
@@ -57,7 +57,7 @@ const modelToImport = {
       "lat": 35.7187026,
       "lng": 139.7763106
     },
-    "type": "",
+    "type": "history",
     "icon": "icons/general.png",
     "place_id": "ChIJycHKF4OOGGARZlm_joH52qI"
   }, {
@@ -66,7 +66,7 @@ const modelToImport = {
       "lat": 35.6649201,
       "lng": 139.7625548
     },
-    "type": "",
+    "type": "other",
     "icon": "icons/general.png",
     "place_id": "ChIJ2VtGysKLGGAR2oS8_Y_o-pk"
   }, {
@@ -75,7 +75,7 @@ const modelToImport = {
       "lat": 35.71538690000001,
       "lng": 139.7758138
     },
-    "type": "",
+    "type": "art",
     "icon": "icons/general.png",
     "place_id": "ChIJf8xB-pyOGGARizzhlNTcI7s"
   }, {
@@ -84,7 +84,7 @@ const modelToImport = {
       "lat": 35.6954844,
       "lng": 139.7035426
     },
-    "type": "",
+    "type": "history",
     "icon": "icons/general.png",
     "place_id": "ChIJ__-PU9iMGGAR6KHVhaRiqH8"
   }, {
@@ -93,7 +93,7 @@ const modelToImport = {
       "lat": 35.716357,
       "lng": 139.7763826
     },
-    "type": "",
+    "type": "science",
     "icon": "icons/general.png",
     "place_id": "ChIJ8Vuh65yOGGARyj4L5IBFiIk"
   }, {
@@ -102,7 +102,7 @@ const modelToImport = {
       "lat": 35.6905432,
       "lng": 139.7546932
     },
-    "type": "",
+    "type": "art",
     "icon": "icons/general.png",
     "place_id": "ChIJL0kSfg2MGGARKv5KX53ZZ2Y"
   }]
