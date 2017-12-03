@@ -13,11 +13,19 @@ module.exports = function (grunt) {
       }
     },
     copy: {
-      dev: {
+      build: {
         files: [{
           expand: true,
           cwd: 'src',
           src: ['img/**', 'data/**'],
+          dest: 'dist/'
+        }]
+      },
+      dev: {
+        files: [{
+          expand: true,
+          cwd: 'src',
+          src: ['img/**/*', 'data/**/*', 'index.html', 'css/**/*'],
           dest: 'dist/'
         }]
       }
@@ -89,7 +97,7 @@ module.exports = function (grunt) {
 
     watch: {
       reload: {
-        files: ['src/**/*'],
+        files: ['src/**/*', 'dist/css/*'],
         tasks: [],
         options: {
           livereload: true
@@ -107,14 +115,21 @@ module.exports = function (grunt) {
   });
 
   require('load-grunt-tasks')(grunt);
+
   grunt.registerTask('build', [
     'jshint',
     'stylelint',
     'clean:prebuild',
-    'copy',
+    'copy:build',
     'babel',
     'uglify',
     'clean:postuglify',
     'processhtml',
     'postcss']);
+
+  grunt.registerTask('dev', [
+    'clean:prebuild',
+    'copy:dev',
+    'babel'
+  ]);
 };
