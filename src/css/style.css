@@ -1,38 +1,127 @@
-@import 'normalize.css/normalize.css';
-
 html,
 body {
-  font-family: Arial, sans-serif;
+  font-family: 'Spectral SC', sans-serif;
   height: 100%;
   margin: 0;
-  padding: 0;
+  padding-top: 70px;
   background-color: black;
-  color: lightblue;
+  color: black;
+}
+
+.header {
+  display: block;
+  text-align: center;
+  height: 70px;
+}
+
+
+.header-title {
+  font-weight: 600;
 }
 
 .list-view {
-  display: inline-block;
+  font-weight: 400;
+  width: 300px;
+  right: auto;
+  position: fixed;
+
+  top: 0;
+  bottom: 0;
+  z-index: 2000;
+  overflow-y: auto;
+  border-radius: 0;
+  height: auto;
+  border-width: 1px;
+  border-style: solid;
+  background-color: white;
+  border-color: #999;
+
+  transform: translateX(-100%);
+  -webkit-transform: translateX(-100%);
 }
 
-#map {
-  display: inline-block;
-  color: black;
-
-  /* left: 300px; */
-  height: 100%;
-  width: 700px;
+.show {
+  -webkit-animation: show 0.5s forwards;
+    animation: show 0.5s forwards;
+}
+@-webkit-keyframes show {
+    100% { transform: translateX(0%); }
 }
 
-.list-item {
+@keyframes show {
+    100% { transform: translateX(0%); }
+}
+
+.hide {
+  -webkit-animation: hide 0.5s forwards;
+    animation: hide 0.5s forwards;
+}
+
+@keyframes hide {
+    0% { transform: translateX(0%); }
+    100% { transform: translateX(-100%); }
+}
+
+@-webkit-keyframes hide {
+    0% { -webkit-transform: translateX(0%); }
+    100% { -webkit-transform: translateX(-100%); }
+}
+
+.list-view ul {
+  padding: 22px 15px 0;
+}
+
+.list-view-filter {
+  border: 2px solid #696969;
+  border-radius: 4px;
+  padding: 5px 4px;
+  width: 62%;
+  margin: 22px 3px 0 6px;
+}
+
+.list-view-reset {
+  background-color: transparent;
+  border: 2px solid #696969;
+  border-radius: 4px;
+  padding: 5px 7px;
+  cursor: pointer;
+  transition-duration: 0.2s;
+  margin-left: 1px;
+}
+
+.list-view-reset:hover {
+    background-color: #696969;
+}
+
+.list-view-reset:active {
+    background-color: #FFF;
+}
+
+.list-view-reset:focus,
+.list-view-filter:focus {
+    outline: 0;
+}
+
+.list-view-item {
+  font-size: 16px;
   list-style: none;
   cursor: pointer;
   padding: 2px;
   margin: 6px 0;
+  border-bottom: 1px solid #999;
 }
 
-.title {
+#map {
+  height: 100%;
+  /*padding-top: 0;*/
+}
+
+/* Google InfoWindow Properties */
+
+.info-title {
   font-size: 15px;
   margin-bottom: 4px;
+  color: black;
 }
 
 .yelp-img {
@@ -72,6 +161,58 @@ body {
 .yelp-container p {
   line-height: 1.4;
 }
+
+.navmenu {
+
+}
+
+.navbar {
+
+}
+.navbar-brand {
+
+}
+.navbar-toggle {
+  position: absolute;
+  float: left;
+  margin-left: 15px;
+}
+
+.container {
+  max-width: 100%;
+}
+
+@media screen and (min-width: 769px) {
+  body {
+    padding: 0 0 0 300px;
+  }
+
+  .header {
+    padding-left: 300px;
+  }
+
+  .header-hamburger {
+    display: none;
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .list-view {
+    /*display: none;*/
+    transform: translateX(-100%);
+  }
+
+  body {
+    padding: 0;
+  }
+}
+
+@media (min-width: 1px) {
+  .navbar-toggle {
+    display: block !important;
+  }
+}
+
 
 /* Spinner CSS from http://tobiasahlin.com/spinkit/ */
 
