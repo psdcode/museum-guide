@@ -129,8 +129,7 @@ class GoogleMapView {
     }
 
     // Adjust map bounds to fit all markers
-    GoogleMapView.map.fitBounds(GoogleMapView.mapBounds, -50); // TODO
-    GoogleMapView.map.panBy(0, -100); // TODO
+    GoogleMapView.resetMap();
 
     // Notify current instance of DisplayViewModel that google map initialization is complete
     DisplayViewModel.instance.mapReady(true);
@@ -143,10 +142,10 @@ class GoogleMapView {
 
       // Center on marker & move up map to allow for info window display
       GoogleMapView.map.panTo(marker.position);
-      GoogleMapView.map.panBy(0, -270);
+      GoogleMapView.map.panBy(0, -280);
 
       // Begin construction of InfoWindow content
-      let markerContent = `<div class="title"><strong>${marker.title}</strong></div>`;
+      let markerContent = `<div class="info-title"><strong>${marker.title}</strong></div>`;
 
       // Spinner HTML below taken from http://tobiasahlin.com/spinkit/
       markerContent += '<div class="sk-circle">';
@@ -165,7 +164,7 @@ class GoogleMapView {
         // Only enter here if no connection issues
         if (yelpInfo) {
           // Yelp result exists. Remove spinner by reassigning markerContent
-          markerContent = `<div class="title"><strong>${marker.title}</strong></div>`;
+          markerContent = `<div class="info-title"><strong>${marker.title}</strong></div>`;
           markerContent += `<img class="yelp-img" src=${yelpInfo.image_url} alt=${marker.title}>`;
           markerContent += `<div class="yelp-container">${getRatingImg(yelpInfo.rating)}`;
           markerContent += `<a target="_blank" href="${yelpInfo.url}"><img class="yelp-logo" \
@@ -181,7 +180,7 @@ on <strong>${yelpInfo.review_count}</strong> review${yelpInfo.review_count > 1 ?
           GoogleMapView.mainInfoWindow.setContent(markerContent);
         } else {
         // Result undefined, search term not in Yelp database
-          markerContent = `<div class="title"><strong>${marker.title}</strong></div>`;
+          markerContent = `<div class="info-title"><strong>${marker.title}</strong></div>`;
           markerContent += `<p>This location's information is not found in Yelp's business \
 directory. Try a different location.</p>`;
           GoogleMapView.mainInfoWindow.setContent(markerContent);
@@ -276,7 +275,7 @@ connection error. Please try again later.`);
   }
 }
 
-// import model declared in model.js
+// import model from model.js
 // TODO may implement import data from server in future
 const currentModel = Object.assign({}, modelToImport);
 
@@ -284,6 +283,16 @@ const currentModel = Object.assign({}, modelToImport);
 GoogleMapView.YELP_TOKEN = `n9BZFWy_zC3jyQyNV9u0Tdc6IhfkwyV8b4JBg2NYD9AaQuHaUx6II9\
 ukiEQp2Z03m7Cmycz29Lu2n4Gc5LPu1wDjVVCGyignkEoZn167yyq07sbPEN7gF5GzE20YWnYx`;
 
-// KOjs DisplayViewModel initialization
+// Knockout.js DisplayViewModel initialization
 DisplayViewModel.instance = new DisplayViewModel();
 ko.applyBindings(DisplayViewModel.instance);
+
+// TODO
+window.onresize = GoogleMapView.resetMap;
+const slideButton = document.getElementsByClassName('header-hamburger')[0];
+
+slideButton.addEventListener('click', () => {
+  const listView = document.getElementsByClassName('list-view')[0];
+  const state = listView.classList.contains('show')
+  listView.setAttribute('class', state ? 'list-view hide' : 'list-view show');
+});
