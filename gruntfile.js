@@ -59,7 +59,7 @@ module.exports = function (grunt) {
         processors: [
           require('postcss-import')(),
           require('postcss-cssnext')(),
-          require('cssnano')()
+          // require('cssnano')()
         ]
       },
       dist: {
@@ -130,6 +130,7 @@ module.exports = function (grunt) {
   grunt.registerTask('dev', [
     'clean:prebuild',
     'copy:dev',
-    'babel'
+    'babel',
+    'postcss'
   ]);
 };
