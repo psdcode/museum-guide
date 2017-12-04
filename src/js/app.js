@@ -11,6 +11,7 @@ ${currentModel.area.type} Map Guide`;
     } else {
       self.mainTitle = `${currentModel.area.city} ${currentModel.area.type} Map Guide`;
     }
+
     // Observable Markers Array that will determine display of list and markers
     self.markersObservable = ko.observableArray([]);
     // Computed observable loads markers once map initialization complete
@@ -23,6 +24,7 @@ ${currentModel.area.type} Map Guide`;
     }, self);
 
     self.clickLocationList = function (clickedMarker) {
+      hideListView();
       GoogleMapView.popInfoWindow(clickedMarker);
       GoogleMapView.toggleBounceMarker(clickedMarker);
     };
@@ -87,7 +89,7 @@ class GoogleMapView {
   // googleapis.com initalization success callback
   static initMap () {
     // Create new map
-    GoogleMapView.map = new google.maps.Map(document.getElementById('map'), {
+    GoogleMapView.map = new google.maps.Map(document.getElementsByClassName('map')[0], {
       // Center on city
       center: {
         lat: currentModel.area.position.lat,
@@ -111,6 +113,7 @@ class GoogleMapView {
 
     // Declare listener callback outside of loop to avoid jshint warning
     const listenerPopInfo = function () {
+      hideListView();
       GoogleMapView.popInfoWindow(this);
       GoogleMapView.toggleBounceMarker(this);
     };
@@ -287,12 +290,40 @@ ukiEQp2Z03m7Cmycz29Lu2n4Gc5LPu1wDjVVCGyignkEoZn167yyq07sbPEN7gF5GzE20YWnYx`;
 DisplayViewModel.instance = new DisplayViewModel();
 ko.applyBindings(DisplayViewModel.instance);
 
-// TODO
-window.onresize = GoogleMapView.resetMap;
-const slideButton = document.getElementsByClassName('header-hamburger')[0];
+// Layout, Interface & CSS related Javascript
+window.onresize = function () {
+  GoogleMapView.resetMap();
+  if (window.matchMedia('(min-width: 768px)').matches) {
+    const listView = document.getElementsByClassName('list-view')[0];
+    listView.classList.remove('show-list-view');
+  }
+};
 
+const slideButton = document.getElementsByClassName('header-hamburger')[0];
 slideButton.addEventListener('click', () => {
   const listView = document.getElementsByClassName('list-view')[0];
-  const state = listView.classList.contains('show')
-  listView.setAttribute('class', state ? 'list-view hide' : 'list-view show');
+  const state = listView.classList.contains('show-list-view');
+  if (state) {
+    listView.classList.add('hide-list-view');
+    listView.classList.remove('show-list-view');
+  } else {
+    listView.classList.remove('hide-list-view');
+    listView.classList.add('show-list-view');
+  }
 });
+
+const headerElement = document.getElementsByClassName('header')[0];
+const mapElement = document.getElementsByClassName('map')[0];
+// headerElement.addEventListener('click', hideListView);
+// mapElement.addEventListener('click', hideListView);
+
+function hideListView () {
+  if (this !== slideButton) {
+    const listView = document.getElementsByClassName('list-view')[0];
+    const state = listView.classList.contains('show-list-view');
+    if (state) {
+      listView.classList.add('hide-list-view');
+      listView.classList.remove('show-list-view');
+    }
+  }
+}
