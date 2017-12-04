@@ -14,7 +14,7 @@
   <div class="list-view">
     <div class="list-view-top">
       <input class="list-view-filter" placeholder="Filter..." type="search" data-bind="textInput: query"/>
-      <button class="list-view-reset" data-bind="click: resetMap">Reset Map</button>
+      <button class="btn list-view-reset" data-bind="click: resetMap">Reset Map</button>
     </div>
     <ul data-bind="foreach: markersObservable">
       <li class="list-view-item" data-bind="text: title, click: $root.clickLocationList">Loading Data...</li>
@@ -22,11 +22,8 @@
   </div>
   <header class="header">
     <h1 class="header-title" data-bind="text: mainTitle"></h1>
-    <button type="button" class="header-hamburger">
-        BOF
-        <!-- <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span> -->
+    <button class="btn header-hamburger">
+        &#9776;
     </button>
   </header>
   <div class="map"></div>
