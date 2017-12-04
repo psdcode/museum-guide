@@ -8,6 +8,7 @@ const modelToImport = {
   "area": {
     "city": "Tokyo",
     "country": "Japan",
+    "countrycode": "jp",
     "locallang": "東京博物館",
     "type": "Museum",
     "position": {
