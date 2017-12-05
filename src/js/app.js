@@ -1,3 +1,6 @@
+/* Classes */
+
+// ViewModel class utilized in Knockout.js initialization
 class DisplayViewModel {
   constructor () {
     const self = this;
@@ -24,6 +27,7 @@ ${currentModel.area.type} Map Guide`;
     }, self);
 
     self.clickLocationList = function (clickedMarker) {
+      // Hide sidebar if open to display InfoWindow
       hideListView();
       GoogleMapView.popInfoWindow(clickedMarker);
       GoogleMapView.toggleBounceMarker(clickedMarker);
@@ -79,7 +83,7 @@ ${currentModel.area.type} Map Guide`;
   }
 }
 
-// Class handling google map display
+// Class for handling google map display/view
 class GoogleMapView {
   // maps.googleapis.com script initial loading error callback
   static errorLoadMap () {
@@ -113,6 +117,7 @@ class GoogleMapView {
 
     // Declare listener callback outside of loop to avoid jshint warning
     const listenerPopInfo = function () {
+      // Hide sidebar if open to display InfoWindow
       hideListView();
       GoogleMapView.popInfoWindow(this);
       GoogleMapView.toggleBounceMarker(this);
@@ -166,7 +171,8 @@ class GoogleMapView {
       getYelp(marker).then(yelpInfo => {
         // Only enter here if no connection issues
         if (yelpInfo) {
-          // Yelp result exists. Remove spinner by reassigning markerContent
+          // Yelp result exists
+          // Remove spinner by reassigning markerContent with Yelp info
           markerContent = `<div class="info-title"><strong>${marker.title}</strong></div>`;
           markerContent += `<img class="yelp-img" src=${yelpInfo.image_url} alt=${marker.title}>`;
           markerContent += `<div class="yelp-container">${getRatingImg(yelpInfo.rating)}`;
@@ -278,7 +284,9 @@ connection error. Please try again later.`);
   }
 }
 
-// import model from model.js
+/* Initialization */
+
+// Import model:currently from local model.js
 // TODO may implement import data from server in future
 const currentModel = Object.assign({}, modelToImport);
 
@@ -290,19 +298,23 @@ ukiEQp2Z03m7Cmycz29Lu2n4Gc5LPu1wDjVVCGyignkEoZn167yyq07sbPEN7gF5GzE20YWnYx`;
 DisplayViewModel.instance = new DisplayViewModel();
 ko.applyBindings(DisplayViewModel.instance);
 
-// Layout, Interface & CSS related Javascript
+// Layout, Interface, CSS related code
 window.onresize = function () {
+  // Recenter map on window resize
   GoogleMapView.resetMap();
+  // Slide sidebar into initial position automatically when window enlarge
   if (window.matchMedia('(min-width: 768px)').matches) {
     const listView = document.getElementsByClassName('list-view')[0];
     listView.classList.remove('show-list-view');
   }
 };
 
-const slideButton = document.getElementsByClassName('header-hamburger')[0];
-slideButton.addEventListener('click', () => {
+// Button for opening sidebar
+const sidebarButton = document.getElementsByClassName('header-hamburger')[0];
+sidebarButton.addEventListener('click', () => {
   const listView = document.getElementsByClassName('list-view')[0];
   const state = listView.classList.contains('show-list-view');
+  // Hides sidebar if open and vice versa
   if (state) {
     listView.classList.add('hide-list-view');
     listView.classList.remove('show-list-view');
@@ -312,18 +324,16 @@ slideButton.addEventListener('click', () => {
   }
 });
 
-const headerElement = document.getElementsByClassName('header')[0];
+// Clicking on map while sidebar is open will hide it
 const mapElement = document.getElementsByClassName('map')[0];
-// headerElement.addEventListener('click', hideListView);
-// mapElement.addEventListener('click', hideListView);
+mapElement.addEventListener('click', hideListView);
 
+// Method for hidign sidebar if it is open
 function hideListView () {
-  if (this !== slideButton) {
-    const listView = document.getElementsByClassName('list-view')[0];
-    const state = listView.classList.contains('show-list-view');
-    if (state) {
-      listView.classList.add('hide-list-view');
-      listView.classList.remove('show-list-view');
-    }
+  const listView = document.getElementsByClassName('list-view')[0];
+  const state = listView.classList.contains('show-list-view');
+  if (state) {
+    listView.classList.add('hide-list-view');
+    listView.classList.remove('show-list-view');
   }
 }
