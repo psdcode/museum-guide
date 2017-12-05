@@ -3,6 +3,7 @@
 // ViewModel class utilized in Knockout.js initialization
 class DisplayViewModel {
   constructor () {
+    /* Instance Variables */
     const self = this;
     self.mapReady = ko.observable(false);
     self.query = ko.observable('');
@@ -26,11 +27,19 @@ ${currentModel.area.type} Map Guide`;
       }
     }, self);
 
+    /* Instance Methods */
     self.clickLocationList = function (clickedMarker) {
       // Hide sidebar if open to display InfoWindow
       hideListView();
       GoogleMapView.popInfoWindow(clickedMarker);
-      GoogleMapView.toggleBounceMarker(clickedMarker);
+    };
+
+    self.clickArrow = function (direction) {
+      const currentMarkerIndex = self.markersObservable.indexOf(GoogleMapView.mainInfoWindow.marker);
+      let neighborMarkerIndex = (currentMarkerIndex + direction) % self.markersObservable().length;
+      if (neighborMarkerIndex === -1) neighborMarkerIndex = self.markersObservable().length - 1;
+      const neighborMarker = self.markersObservable()[neighborMarkerIndex];
+      GoogleMapView.popInfoWindow(neighborMarker);
     };
 
     self.filterMarkerList = function (searchInput) {
@@ -57,11 +66,12 @@ ${currentModel.area.type} Map Guide`;
       } else {
         // Display all markers on map
         for (const marker of GoogleMapView.markers) {
-          if (!marker.getMap()) GoogleMapView.setMarkerMap(marker, GoogleMapView.map);
+          if (!marker.getMap()) GoogleMapView.setMarkerMap(marker, true);
         }
         // Display all list items
         self.markersObservable(GoogleMapView.markers);
         self.sort(self.markersObservable);
+        self.resetMap();
       }
     };
 
@@ -120,7 +130,6 @@ class GoogleMapView {
       // Hide sidebar if open to display InfoWindow
       hideListView();
       GoogleMapView.popInfoWindow(this);
-      GoogleMapView.toggleBounceMarker(this);
     };
     // Create array of Markers from provided location info
     for (const location of currentModel.locations) {
@@ -144,7 +153,10 @@ class GoogleMapView {
   }
 
   static popInfoWindow (marker) {
-    // First check if InfoWindow not already onen on clicked marker
+    // Bounce marker
+    GoogleMapView.toggleBounceMarker(marker);
+
+    // Check if InfoWindow not already on on clicked marker
     if (GoogleMapView.mainInfoWindow.marker !== marker) {
       GoogleMapView.mainInfoWindow.marker = marker;
 
@@ -186,13 +198,19 @@ on <strong>${yelpInfo.review_count}</strong> review${yelpInfo.review_count > 1 ?
           markerContent += `<p class="yelp-info">Currently \
 <strong>${yelpInfo.is_closed ? 'CLOSED' : 'OPEN'}</strong><br>`;
           markerContent += `Phone: ${yelpInfo.display_phone}</p></div>`;
+          markerContent += `<div class="info-arrows"><a href="#" class="btn info-arrows-prev">&lt;</a>\
+<a href="#" class="btn info-arrows-next">&gt;</a></div>`;
           GoogleMapView.mainInfoWindow.setContent(markerContent);
+          addArrowEventListeners();
         } else {
-        // Result undefined, search term not in Yelp database
+          // Result undefined, search term not in Yelp database
           markerContent = `<div class="info-title"><strong>${marker.title}</strong></div>`;
           markerContent += `<p>This location's information is not found in Yelp's business \
 directory. Try a different location.</p>`;
+          markerContent += `<div class="info-arrows"><a href="#" class="btn info-arrows-prev">&lt;</a>\
+<a href="#" class="btn info-arrows-next">&gt;</a></div>`;
           GoogleMapView.mainInfoWindow.setContent(markerContent);
+          addArrowEventListeners();
         }
       })
       // In case of connection error to cors-anywhere.herokuapp.com or
@@ -268,7 +286,13 @@ connection error. Please try again later.`);
 
   static setMarkerMap (marker, set) {
     if (set) marker.setMap(GoogleMapView.map);
-    else marker.setMap(null);
+    else {
+      if (GoogleMapView.mainInfoWindow.marker === marker) {
+        GoogleMapView.mainInfoWindow.close();
+        GoogleMapView.mainInfoWindow.marker = null;
+      }
+      marker.setMap(null);
+    }
   }
 
   static toggleBounceMarker (marker) {
@@ -328,12 +352,29 @@ sidebarButton.addEventListener('click', () => {
 const mapElement = document.getElementsByClassName('map')[0];
 mapElement.addEventListener('click', hideListView);
 
-// Method for hidign sidebar if it is open
+// Method for hiding sidebar if it is open
 function hideListView () {
   const listView = document.getElementsByClassName('list-view')[0];
   const state = listView.classList.contains('show-list-view');
   if (state) {
     listView.classList.add('hide-list-view');
     listView.classList.remove('show-list-view');
+  }
+}
+
+function addArrowEventListeners () {
+  const prevArrow = document.getElementsByClassName('info-arrows-prev')[0];
+  const nextArrow = document.getElementsByClassName('info-arrows-next')[0];
+  if (prevArrow) {
+    prevArrow.addEventListener('click', () => {
+      const previous = -1;
+      DisplayViewModel.instance.clickArrow(previous);
+    });
+  }
+  if (nextArrow) {
+    nextArrow.addEventListener('click', () => {
+      const next = 1;
+      DisplayViewModel.instance.clickArrow(next);
+    });
   }
 }
