@@ -34,6 +34,7 @@ ${currentModel.area.type} Map Guide`;
       GoogleMapView.popInfoWindow(clickedMarker);
     };
 
+    // Method to open InfoWindow using prev/next buttons
     self.clickArrow = function (direction) {
       if (self.markersObservable().length > 1) {
         const currentMarkerIndex = self.markersObservable.indexOf(GoogleMapView.mainInfoWindow.marker);
@@ -44,36 +45,59 @@ ${currentModel.area.type} Map Guide`;
       }
     };
 
+    self.clickPrevArrow = function () {
+      self.clickArrow(-1);
+    };
+
+    self.clickNextArrow = function () {
+      self.clickArrow(1);
+    };
+
+    // Filter obsrvable location list and markers based on query
     self.filterMarkerList = function (searchInput) {
       // Search query is a non-empty string
       if (searchInput) {
         // Empty the observable list
         self.markersObservable([]);
-        for (const marker of GoogleMapView.markers) {
-          const markerTitle = marker.title.toUpperCase();
-
+        for (const checkMarker of GoogleMapView.markers) {
           // Re-add marker to observable array only if marker title match search query
+          const markerTitle = checkMarker.title.toUpperCase();
           if (markerTitle.indexOf(searchInput.toUpperCase()) >= 0) {
-            self.markersObservable.push(marker);
+            // Positive match between query and marker title
+            self.markersObservable.push(checkMarker);
             // Check if marker not already displayed to prevent blinking due to setting map again
-            if (!marker.getMap()) GoogleMapView.setMarkerMap(marker, true);
-            GoogleMapView.queryBoundsExtend(marker.position);
+            if (!checkMarker.getMap()) GoogleMapView.setMarkerMap(checkMarker, true);
+            GoogleMapView.queryBoundsExtend(checkMarker.position);
           // Marker title did not match search query, remove it from map
           } else {
-            GoogleMapView.setMarkerMap(marker, false);
+            GoogleMapView.setMarkerMap(checkMarker, false);
           }
         }
-        // Sort remaining markers after query and apply new bounds only if any markers match search
-        if (self.markersObservable().length) {
+
+        const markersLength = self.markersObservable().length;
+        // Open info window if 1 marker matches search
+        if (markersLength === 1) {
+          if (!GoogleMapView.mainInfoWindow.marker) {
+            GoogleMapView.popInfoWindow(self.markersObservable()[0]);
+          }
+          // Will set queryBounds to null, no bounds fit
+          GoogleMapView.queryBoundsFit(false);
+
+        // Else sort remaining markers after query and apply new bounds
+        // only if more than 1 marker matches search
+        } else if (markersLength > 1) {
+          // Close InfoWindow if open on a marker
+          GoogleMapView.closeInfoWindow();
           self.sort(self.markersObservable);
-          GoogleMapView.queryBoundsFit();
+          // Fit query bounds
+          GoogleMapView.queryBoundsFit(true);
         }
 
       // Search query is empty string ''
       } else {
         // Display all markers on map
-        for (const marker of GoogleMapView.markers) {
-          if (!marker.getMap()) GoogleMapView.setMarkerMap(marker, true);
+        for (const checkMarker of GoogleMapView.markers) {
+          if (!checkMarker.getMap()) GoogleMapView.setMarkerMap(checkMarker, true);
         }
         // Display all list items
         self.markersObservable(GoogleMapView.markers);
@@ -102,6 +126,11 @@ ${currentModel.area.type} Map Guide`;
 
 // Class for handling google map display/view
 class GoogleMapView {
+  static closeInfoWindow () {
+    GoogleMapView.mainInfoWindow.close();
+    GoogleMapView.mainInfoWindow.marker = null;
+  }
+
   // maps.googleapis.com script initial loading error callback
   static errorLoadMap () {
     alert('Unable to load Google Map at this time. Check your connection or try again later');
@@ -193,31 +222,54 @@ class GoogleMapView {
           // Yelp result exists
           // Remove spinner by reassigning markerContent with Yelp info
           markerContent = `<div class="info-title"><strong>${marker.title}</strong></div>`;
+
+          // Image
           markerContent += `<img class="yelp-img" src=${yelpInfo.image_url} alt=${marker.title}>`;
+
+          // Rating & Info
           markerContent += `<div class="yelp-container">${getRatingImg(yelpInfo.rating)}`;
-          markerContent += `<a target="_blank" href="${yelpInfo.url}"><img class="yelp-logo" \
-src="img/yelp_trademark_rgb_outline.png" srcset="img/yelp_trademark_rgb_outline_2x.png 2x" \
-alt="Yelp Logo"></a>`;
+          markerContent += `<a target="_blank" href="${yelpInfo.url}">`;
+          markerContent += `<img class="yelp-logo" src="img/yelp_trademark_rgb_outline.png" \
+srcset="img/yelp_trademark_rgb_outline_2x.png 2x" alt="Yelp Logo">`;
+          markerContent += `</a>`;
           markerContent += `<a class="yelp-reviews" href="${yelpInfo.url}" target="_blank">Based \
 on <strong>${yelpInfo.review_count}</strong> review${yelpInfo.review_count > 1 ? 's' : ''}</a>`;
           markerContent += `<p><address>${getYelpAddressHtml(yelpInfo.location.display_address)}\
 </address></p>`;
           markerContent += `<p class="yelp-info">Currently \
 <strong>${yelpInfo.is_closed ? 'CLOSED' : 'OPEN'}</strong><br>`;
-          markerContent += `Phone: ${yelpInfo.display_phone}</p></div>`;
-          markerContent += `<div class="info-arrows"><a href="#" class="btn info-arrows-prev" aria\
--role="button">&lt;</a><a href="#" class="btn info-arrows-next" aria-role="button">&gt;</a></div>`;
+          markerContent += `Phone: ${yelpInfo.display_phone}</p>`;
+          markerContent += `</div>`;
+
+          // Add previosu/next arrow buttons
+          markerContent += `<div class="info-arrows">`;
+          markerContent += `<a href="#" aria-role="button" class="btn info-arrows-prev" \
+>&lt;</a>`;
+          markerContent += `<a href="#" class="btn info-arrows-next" aria-role="button" \
+>&gt;</a>`;
+          markerContent += `</div>`;
           GoogleMapView.mainInfoWindow.setContent(markerContent);
-          addArrowEventListeners();
+
+          // Apply ViewModel bindings to the arrow buttons
+          applyArrowBtnsBindings();
+
+        // Result undefined, search term not in Yelp database
         } else {
-          // Result undefined, search term not in Yelp database
           markerContent = `<div class="info-title"><strong>${marker.title}</strong></div>`;
           markerContent += `<p>This location's information is not found in Yelp's business \
 directory. Try a different location.</p>`;
-          markerContent += `<div class="info-arrows"><a href="#" aria-role="button" class="btn \
-info-arrows-prev">&lt;</a><a href="#" class="btn info-arrows-next" aria-role="button" >&gt;</a></div>`;
+
+          // Add previosu/next arrow buttons
+          markerContent += `<div class="info-arrows">`;
+          markerContent += `<a href="#" aria-role="button" class="btn info-arrows-prev" \
+>&lt;</a>`;
+          markerContent += `<a href="#" class="btn info-arrows-next" aria-role="button" \
+>&gt;</a>`;
+          markerContent += `</div>`;
           GoogleMapView.mainInfoWindow.setContent(markerContent);
-          addArrowEventListeners();
+
+          // Apply ViewModel bindings to the arrow buttons
+          applyArrowBtnsBindings();
         }
       })
       // In case of connection error to cors-anywhere.herokuapp.com or
@@ -229,6 +281,20 @@ connection error. Please try again later.</p>`;
         GoogleMapView.mainInfoWindow.setContent(markerContent);
         console.log(err);
       });
+    }
+
+    // Helper method for applying Knockout bindings to arrow prev/next buttons
+    function applyArrowBtnsBindings () {
+      const arrowBtnsDiv = document.getElementsByClassName('info-arrows')[0];
+      const dataBindStyle = `style: { cursor: markersObservable().length < 2 ? \
+'not-allowed' : 'pointer', 'opacity': markersObservable().length < 2 ? \
+'0.2' : '1' , 'background-color': markersObservable().length < 2 ? '#696969' : 'transparent'}`;
+
+      if (arrowBtnsDiv) {
+        arrowBtnsDiv.children[0].setAttribute('data-bind', 'click: clickPrevArrow, ' + dataBindStyle);
+        arrowBtnsDiv.children[1].setAttribute('data-bind', 'click: clickNextArrow, ' + dataBindStyle);
+        ko.applyBindings(DisplayViewModel.instance, arrowBtnsDiv);
+      }
     }
 
     // Helper method for formatting Yelp address html string
@@ -285,15 +351,18 @@ connection error. Please try again later.`);
   }
 
   static queryBoundsExtend (markerPosition) {
+    // Create new LatLngBounds object for every query
     if (!GoogleMapView.queryBounds) {
       GoogleMapView.queryBounds = new google.maps.LatLngBounds();
     }
     GoogleMapView.queryBounds.extend(markerPosition);
   }
 
-  static queryBoundsFit () {
-    GoogleMapView.map.fitBounds(GoogleMapView.queryBounds);
-    GoogleMapView.queryBounds = null;
+  static queryBoundsFit (fitBounds) {
+    if (fitBounds) {
+      GoogleMapView.map.fitBounds(GoogleMapView.queryBounds);
+      GoogleMapView.queryBounds = null;
+    } else GoogleMapView.queryBounds = null;
     if (GoogleMapView.map.getZoom() > 18) GoogleMapView.map.setZoom(18);
   }
 
@@ -306,13 +375,7 @@ connection error. Please try again later.`);
 
   static setMarkerMap (marker, set) {
     if (set) marker.setMap(GoogleMapView.map);
-    else {
-      if (GoogleMapView.mainInfoWindow.marker === marker) {
-        GoogleMapView.mainInfoWindow.close();
-        GoogleMapView.mainInfoWindow.marker = null;
-      }
-      marker.setMap(null);
-    }
+    else marker.setMap(null);
   }
 
   static toggleBounceMarker (marker) {
@@ -379,22 +442,5 @@ function hideListView () {
   if (state) {
     listView.classList.add('hide-list-view');
     listView.classList.remove('show-list-view');
-  }
-}
-
-function addArrowEventListeners () {
-  const prevArrow = document.getElementsByClassName('info-arrows-prev')[0];
-  const nextArrow = document.getElementsByClassName('info-arrows-next')[0];
-  if (prevArrow) {
-    prevArrow.addEventListener('click', () => {
-      const previous = -1;
-      DisplayViewModel.instance.clickArrow(previous);
-    });
-  }
-  if (nextArrow) {
-    nextArrow.addEventListener('click', () => {
-      const next = 1;
-      DisplayViewModel.instance.clickArrow(next);
-    });
   }
 }
