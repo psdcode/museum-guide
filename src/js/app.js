@@ -35,11 +35,13 @@ ${currentModel.area.type} Map Guide`;
     };
 
     self.clickArrow = function (direction) {
-      const currentMarkerIndex = self.markersObservable.indexOf(GoogleMapView.mainInfoWindow.marker);
-      let neighborMarkerIndex = (currentMarkerIndex + direction) % self.markersObservable().length;
-      if (neighborMarkerIndex === -1) neighborMarkerIndex = self.markersObservable().length - 1;
-      const neighborMarker = self.markersObservable()[neighborMarkerIndex];
-      GoogleMapView.popInfoWindow(neighborMarker);
+      if (self.markersObservable.length > 1) {
+        const currentMarkerIndex = self.markersObservable.indexOf(GoogleMapView.mainInfoWindow.marker);
+        let neighborMarkerIndex = (currentMarkerIndex + direction) % self.markersObservable().length;
+        if (neighborMarkerIndex === -1) neighborMarkerIndex = self.markersObservable().length - 1;
+        const neighborMarker = self.markersObservable()[neighborMarkerIndex];
+        GoogleMapView.popInfoWindow(neighborMarker);
+      }
     };
 
     self.filterMarkerList = function (searchInput) {
@@ -292,6 +294,7 @@ connection error. Please try again later.`);
   static queryBoundsFit () {
     GoogleMapView.map.fitBounds(GoogleMapView.queryBounds);
     GoogleMapView.queryBounds = null;
+    if (GoogleMapView.map.getZoom() > 18) GoogleMapView.map.setZoom(18);
   }
 
   static resetMap () {
