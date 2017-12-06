@@ -212,8 +212,8 @@ on <strong>${yelpInfo.review_count}</strong> review${yelpInfo.review_count > 1 ?
           markerContent = `<div class="info-title"><strong>${marker.title}</strong></div>`;
           markerContent += `<p>This location's information is not found in Yelp's business \
 directory. Try a different location.</p>`;
-          markerContent += `<div class="info-arrows"><a href="#" class="btn info-arrows-prev">&lt;</a>\
-<a href="#" class="btn info-arrows-next">&gt;</a></div>`;
+          markerContent += `<div class="info-arrows"><a href="#" aria-role="button" class="btn \
+info-arrows-prev">&lt;</a><a href="#" class="btn info-arrows-next" aria-role="button" >&gt;</a></div>`;
           GoogleMapView.mainInfoWindow.setContent(markerContent);
           addArrowEventListeners();
         }
