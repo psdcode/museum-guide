@@ -205,8 +205,8 @@ on <strong>${yelpInfo.review_count}</strong> review${yelpInfo.review_count > 1 ?
           markerContent += `<p class="yelp-info">Currently \
 <strong>${yelpInfo.is_closed ? 'CLOSED' : 'OPEN'}</strong><br>`;
           markerContent += `Phone: ${yelpInfo.display_phone}</p></div>`;
-          markerContent += `<div class="info-arrows"><a href="#" class="btn info-arrows-prev">&lt;</a>\
-<a href="#" class="btn info-arrows-next">&gt;</a></div>`;
+          markerContent += `<div class="info-arrows"><a href="#" class="btn info-arrows-prev" aria\
+-role="button">&lt;</a><a href="#" class="btn info-arrows-next" aria-role="button">&gt;</a></div>`;
           GoogleMapView.mainInfoWindow.setContent(markerContent);
           addArrowEventListeners();
         } else {
