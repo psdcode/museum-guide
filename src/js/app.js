@@ -35,7 +35,7 @@ ${currentModel.area.type} Map Guide`;
     };
 
     self.clickArrow = function (direction) {
-      if (self.markersObservable.length > 1) {
+      if (self.markersObservable().length > 1) {
         const currentMarkerIndex = self.markersObservable.indexOf(GoogleMapView.mainInfoWindow.marker);
         let neighborMarkerIndex = (currentMarkerIndex + direction) % self.markersObservable().length;
         if (neighborMarkerIndex === -1) neighborMarkerIndex = self.markersObservable().length - 1;
