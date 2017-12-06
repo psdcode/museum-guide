@@ -49,18 +49,23 @@ ${currentModel.area.type} Map Guide`;
         self.markersObservable([]);
         for (const marker of GoogleMapView.markers) {
           const markerTitle = marker.title.toUpperCase();
+
+          // Re-add marker to observable array only if marker title match search query
           if (markerTitle.indexOf(searchInput.toUpperCase()) >= 0) {
-            // Readd markers to observable array only if title match search query
             self.markersObservable.push(marker);
             // Check if marker not already displayed to prevent blinking due to setting map again
             if (!marker.getMap()) GoogleMapView.setMarkerMap(marker, true);
+            GoogleMapView.queryBoundsExtend(marker.position);
+          // Marker title did not match search query, remove it from map
           } else {
-            // Marker title did not match search query, remove it from map
             GoogleMapView.setMarkerMap(marker, false);
           }
         }
-        // Sort remaining markers after query
-        self.sort(self.markersObservable);
+        // Sort remaining markers after query and apply new bounds only if any markers match search
+        if (self.markersObservable().length) {
+          self.sort(self.markersObservable);
+          GoogleMapView.queryBoundsFit();
+        }
 
       // Search query is empty string ''
       } else {
@@ -115,7 +120,7 @@ class GoogleMapView {
     // Markers corresponding to data locations
     GoogleMapView.markers = [];
     // Map bounds
-    GoogleMapView.mapBounds = new google.maps.LatLngBounds();
+    GoogleMapView.originalBounds = new google.maps.LatLngBounds();
 
     // InfoWindow configuration
     GoogleMapView.mainInfoWindow = new google.maps.InfoWindow({
@@ -142,7 +147,7 @@ class GoogleMapView {
       });
       newMarker.addListener('click', listenerPopInfo);
       GoogleMapView.markers.push(newMarker);
-      GoogleMapView.mapBounds.extend(newMarker.position);
+      GoogleMapView.originalBounds.extend(newMarker.position);
     }
 
     // Adjust map bounds to fit all markers
@@ -277,8 +282,20 @@ connection error. Please try again later.`);
   // END of method popInfoWindow(marker)
   }
 
+  static queryBoundsExtend (markerPosition) {
+    if (!GoogleMapView.queryBounds) {
+      GoogleMapView.queryBounds = new google.maps.LatLngBounds();
+    }
+    GoogleMapView.queryBounds.extend(markerPosition);
+  }
+
+  static queryBoundsFit () {
+    GoogleMapView.map.fitBounds(GoogleMapView.queryBounds);
+    GoogleMapView.queryBounds = null;
+  }
+
   static resetMap () {
-    GoogleMapView.map.fitBounds(GoogleMapView.mapBounds);
+    GoogleMapView.map.fitBounds(GoogleMapView.originalBounds);
     GoogleMapView.map.panBy(0, -100);
     GoogleMapView.mainInfoWindow.marker = null;
     GoogleMapView.mainInfoWindow.close();
