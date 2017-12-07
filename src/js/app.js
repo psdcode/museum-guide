@@ -1,3 +1,8 @@
+/* Imports */
+
+import {model as currentModel} from '../model/model.js';
+import {mapStyle} from '../model/map-style.js';
+
 /* Classes */
 
 // ViewModel class utilized in Knockout.js initialization
@@ -142,14 +147,19 @@ class GoogleMapView {
   // googleapis.com initalization success callback
   static initMap () {
     // Create new map
-    GoogleMapView.map = new google.maps.Map(document.getElementsByClassName('map')[0], {
+    const mapElement = document.getElementsByClassName('map')[0];
+    GoogleMapView.map = new google.maps.Map(mapElement, {
       // Center on city
       center: {
         lat: currentModel.area.position.lat,
         lng: currentModel.area.position.lng
       },
-      zoom: 12
+      zoom: 12,
+      styles: mapStyle
     });
+
+    // Clicking on map while sidebar is open will hide it
+    mapElement.addEventListener('click', hideListView);
 
     // Markers corresponding to data locations
     GoogleMapView.markers = [];
@@ -176,7 +186,7 @@ class GoogleMapView {
         position: location.position,
         title: location.title,
         animation: google.maps.Animation.DROP,
-        icon: 'data/' + location.icon,
+        icon: 'model/' + location.icon,
         map: GoogleMapView.map
       });
       newMarker.addListener('click', listenerPopInfo);
@@ -219,6 +229,7 @@ class GoogleMapView {
       }
       // If no visible markers, no fitting bounds
     }
+
     // Slide sidebar into initial position automatically when window enlarge
     if (window.matchMedia('(min-width: 768px)').matches) {
       const listView = document.getElementsByClassName('list-view')[0];
@@ -430,9 +441,9 @@ connection error. Please try again later.`);
 
 /* Initialization */
 
-// Import model:currently from local model.js
+// Import model:currently from local model.js file
 // TODO may implement import data from server in future
-const currentModel = Object.assign({}, model);
+// const currentModel = Object.assign({}, model);
 
 // Yelp service access token
 GoogleMapView.YELP_TOKEN = `n9BZFWy_zC3jyQyNV9u0Tdc6IhfkwyV8b4JBg2NYD9AaQuHaUx6II9\
@@ -442,7 +453,7 @@ ukiEQp2Z03m7Cmycz29Lu2n4Gc5LPu1wDjVVCGyignkEoZn167yyq07sbPEN7gF5GzE20YWnYx`;
 DisplayViewModel.instance = new DisplayViewModel();
 ko.applyBindings(DisplayViewModel.instance);
 
-// Layout, Interface, CSS related code
+/* Layout, Interface, CSS related code */
 
 // Recenter map on window resize
 window.onresize = GoogleMapView.onWindowResize;
@@ -461,10 +472,6 @@ sidebarButton.addEventListener('click', () => {
     listView.classList.add('show-list-view');
   }
 });
-
-// Clicking on map while sidebar is open will hide it
-const mapElement = document.getElementsByClassName('map')[0];
-mapElement.addEventListener('click', hideListView);
 
 // Method for hiding sidebar if it is open
 function hideListView () {
