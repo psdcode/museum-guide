@@ -286,10 +286,7 @@ connection error. Please try again later.</p>`;
     // Helper method for applying Knockout bindings to arrow prev/next buttons
     function applyArrowBtnsBindings () {
       const arrowBtnsDiv = document.getElementsByClassName('info-arrows')[0];
-      const dataBindStyle = `style: { cursor: markersObservable().length < 2 ? \
-'not-allowed' : 'pointer', 'opacity': markersObservable().length < 2 ? \
-'0.2' : '1' , 'background-color': markersObservable().length < 2 ? '#696969' : 'transparent'}`;
-
+      const dataBindStyle = `css: { 'btn-off': markersObservable().length < 2 }`;
       if (arrowBtnsDiv) {
         arrowBtnsDiv.children[0].setAttribute('data-bind', 'click: clickPrevArrow, ' + dataBindStyle);
         arrowBtnsDiv.children[1].setAttribute('data-bind', 'click: clickNextArrow, ' + dataBindStyle);
@@ -395,7 +392,7 @@ connection error. Please try again later.`);
 
 // Import model:currently from local model.js
 // TODO may implement import data from server in future
-const currentModel = Object.assign({}, modelToImport);
+const currentModel = Object.assign({}, model);
 
 // Yelp service access token
 GoogleMapView.YELP_TOKEN = `n9BZFWy_zC3jyQyNV9u0Tdc6IhfkwyV8b4JBg2NYD9AaQuHaUx6II9\
@@ -406,8 +403,8 @@ DisplayViewModel.instance = new DisplayViewModel();
 ko.applyBindings(DisplayViewModel.instance);
 
 // Layout, Interface, CSS related code
+// Recenter map on window resize
 window.onresize = function () {
-  // Recenter map on window resize
   GoogleMapView.resetMap();
   // Slide sidebar into initial position automatically when window enlarge
   if (window.matchMedia('(min-width: 768px)').matches) {
