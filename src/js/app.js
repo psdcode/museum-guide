@@ -105,6 +105,9 @@ ${currentModel.area.type} Map Guide`;
         self.resetMap();
       }
     };
+    self.getVisibleMarkers = function () {
+      return self.markersObservable();
+    };
 
     // Observable subscription for instant filtering of query results
     self.query.subscribe(self.filterMarkerList);
@@ -191,18 +194,24 @@ class GoogleMapView {
   static onWindowResize () {
     if (DisplayViewModel.instance) {
       // Get list of current visible markers
-      const visibleMarkers = DisplayViewModel.instance.markersObservable();
+      const visibleMarkers = DisplayViewModel.instance.getVisibleMarkers();
 
       // If > 1 marker fit bounds based on all of them
       if (visibleMarkers.length > 1) {
-        GoogleMapView.resizeBounds = new google.maps.LatLngBounds();
-        for (const markerOnMap of visibleMarkers) {
-          GoogleMapView.resizeBounds.extend(markerOnMap.position);
+        // If infoWindow currently open, center on info window
+        if (GoogleMapView.mainInfoWindow.marker) {
+          GoogleMapView.map.panTo(GoogleMapView.mainInfoWindow.marker.position);
+          GoogleMapView.map.panBy(0, -280);
+        // InfoWindow not open on any marker, fit bounds based on all visible markers
+        } else {
+          GoogleMapView.resizeBounds = new google.maps.LatLngBounds();
+          for (const markerOnMap of visibleMarkers) {
+            GoogleMapView.resizeBounds.extend(markerOnMap.position);
+          }
+          GoogleMapView.map.fitBounds(GoogleMapView.resizeBounds);
+          GoogleMapView.resizeBounds = null;
+          if (GoogleMapView.map.getZoom() > 18) GoogleMapView.map.setZoom(18);
         }
-        GoogleMapView.map.fitBounds(GoogleMapView.resizeBounds);
-        GoogleMapView.resizeBounds = null;
-        if (GoogleMapView.map.getZoom() > 18) GoogleMapView.map.setZoom(18);
-
       // Only 1 marker, don't extend bounds, go directly to marker
       } else if (visibleMarkers.length === 1) {
         GoogleMapView.map.panTo(visibleMarkers[0].position);
