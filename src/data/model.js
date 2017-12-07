@@ -4,7 +4,7 @@
 // Maps Icons Collection https://mapicons.mapsmarker.com
 // CC BY SA 3.0
 
-const modelToImport = {
+const model = {
   "area": {
     "city": "Tokyo",
     "country": "Japan",
