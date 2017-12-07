@@ -188,6 +188,35 @@ class GoogleMapView {
     DisplayViewModel.instance.mapReady(true);
   }
 
+  static onWindowResize () {
+    if (DisplayViewModel.instance) {
+      // Get list of current visible markers
+      const visibleMarkers = DisplayViewModel.instance.markersObservable();
+
+      // If > 1 marker fit bounds based on all of them
+      if (visibleMarkers.length > 1) {
+        GoogleMapView.resizeBounds = new google.maps.LatLngBounds();
+        for (const markerOnMap of visibleMarkers) {
+          GoogleMapView.resizeBounds.extend(markerOnMap.position);
+        }
+        GoogleMapView.map.fitBounds(GoogleMapView.resizeBounds);
+        GoogleMapView.resizeBounds = null;
+        if (GoogleMapView.map.getZoom() > 18) GoogleMapView.map.setZoom(18);
+
+      // Only 1 marker, don't extend bounds, go directly to marker
+      } else if (visibleMarkers.length === 1) {
+        GoogleMapView.map.panTo(visibleMarkers[0].position);
+        GoogleMapView.map.panBy(0, -280);
+      }
+      // If no visible markers, no fitting bounds
+    }
+    // Slide sidebar into initial position automatically when window enlarge
+    if (window.matchMedia('(min-width: 768px)').matches) {
+      const listView = document.getElementsByClassName('list-view')[0];
+      listView.classList.remove('show-list-view');
+    }
+  }
+
   static popInfoWindow (marker) {
     // Bounce marker
     GoogleMapView.toggleBounceMarker(marker);
@@ -358,14 +387,16 @@ connection error. Please try again later.`);
   static queryBoundsFit (fitBounds) {
     if (fitBounds) {
       GoogleMapView.map.fitBounds(GoogleMapView.queryBounds);
+      // Set to null since each query creates new queryBounds
       GoogleMapView.queryBounds = null;
     } else GoogleMapView.queryBounds = null;
+
+    // Check for excessive zoom if bounds very small or a single marker
     if (GoogleMapView.map.getZoom() > 18) GoogleMapView.map.setZoom(18);
   }
 
   static resetMap () {
     GoogleMapView.map.fitBounds(GoogleMapView.originalBounds);
-    GoogleMapView.map.panBy(0, -100);
     GoogleMapView.mainInfoWindow.marker = null;
     GoogleMapView.mainInfoWindow.close();
   }
@@ -403,15 +434,9 @@ DisplayViewModel.instance = new DisplayViewModel();
 ko.applyBindings(DisplayViewModel.instance);
 
 // Layout, Interface, CSS related code
+
 // Recenter map on window resize
-window.onresize = function () {
-  GoogleMapView.resetMap();
-  // Slide sidebar into initial position automatically when window enlarge
-  if (window.matchMedia('(min-width: 768px)').matches) {
-    const listView = document.getElementsByClassName('list-view')[0];
-    listView.classList.remove('show-list-view');
-  }
-};
+window.onresize = GoogleMapView.onWindowResize;
 
 // Button for opening sidebar
 const sidebarButton = document.getElementsByClassName('header-hamburger')[0];
