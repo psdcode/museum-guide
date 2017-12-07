@@ -2,22 +2,12 @@ module.exports = function (grunt) {
   grunt.initConfig({
     pkg: grunt.file.readJSON('package.json'),
 
-    babel: {
-      options: {
-        sourceMap: false
-      },
-      dist: {
-        files: {
-          'dist/js/app.js': 'src/js/app.js'
-        }
-      }
-    },
     copy: {
       build: {
         files: [{
           expand: true,
           cwd: 'src',
-          src: ['img/**', 'data/**'],
+          src: ['img/**', 'model/**'],
           dest: 'dist/'
         }]
       },
@@ -25,7 +15,7 @@ module.exports = function (grunt) {
         files: [{
           expand: true,
           cwd: 'src',
-          src: ['img/**/*', 'data/**/*', 'index.html', 'css/**/*'],
+          src: ['img/**/*', 'model/**/*', 'index.html', 'css/**/*'],
           dest: 'dist/'
         }]
       }
@@ -53,13 +43,31 @@ module.exports = function (grunt) {
       all: ['src/js/**/*']
     },
 
+    rollup: {
+      options: {
+        format: 'es',
+        plugins: [
+          require('rollup-plugin-babel')({
+            presets: [['env', { 'modules': false }]],
+            plugins: ['external-helpers']
+          })
+        ]
+      },
+
+      dist: {
+        files: {
+          'dist/js/app.js': ['src/js/app.js']
+        }
+      }
+    },
+
     postcss: {
       options: {
         map: false,
         processors: [
           require('postcss-import')(),
           require('postcss-cssnext')(),
-          // require('cssnano')()
+          require('cssnano')()
         ]
       },
       dist: {
@@ -121,7 +129,7 @@ module.exports = function (grunt) {
     'stylelint',
     'clean:prebuild',
     'copy:build',
-    'babel',
+    'rollup',
     'uglify',
     'clean:postuglify',
     'processhtml',
@@ -130,7 +138,7 @@ module.exports = function (grunt) {
   grunt.registerTask('dev', [
     'clean:prebuild',
     'copy:dev',
-    'babel',
+    'rollup',
     'postcss'
   ]);
 };
