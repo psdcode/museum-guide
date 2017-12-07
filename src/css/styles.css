@@ -64,7 +64,7 @@ body {
 .header {
   display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: space-between;
   position: fixed;
   text-align: center;
   height: 70px;
@@ -80,7 +80,7 @@ body {
 
 .header-title {
   font-weight: 600;
-  margin: 5px 7px;
+  margin: 5px 0px 5px 12px;
   white-space: normal;
   line-height: 0.95;
   align-self: center;
@@ -88,7 +88,7 @@ body {
 
 .header-hamburger {
   padding: 0 4px;
-  margin: 1.8px 17px 3px 0px
+  margin: 1.8px 20px 3px 12px;
   background-color: transparent;
   font-size: 26.4px;
   line-height: inherit;
