@@ -1,4 +1,6 @@
-const mapStyle = [
+/* Map Style by eshuz https://snazzymaps.com/style/4105/brokka-map  CC0 1.0 */
+
+export const mapStyle = [
     {
         "featureType": "all",
         "elementType": "labels.text.fill",
