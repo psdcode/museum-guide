@@ -6,12 +6,11 @@ Final project for Udacity's Front-End Web Developer Nanodegree.
 
 This single-page app is an interactive Google Maps based guide to select museums in Tokyo, Japan. Detailed information for each location is provided via Yelp's business directory.
 
-## Viewing Instructions
+## Viewing & Build Instructions
 
 1. Download and unzip the repository.
 2. Navigate to the 'dist' folder and open 'index.html' in a web browser.
 
-### Build Instructions
 Alternatively, you may build the production code yourself from source.
 
 1. Download and unzip the repository.
