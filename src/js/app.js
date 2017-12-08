@@ -186,7 +186,7 @@ class GoogleMapView {
         position: location.position,
         title: location.title,
         animation: google.maps.Animation.DROP,
-        icon: 'model/' + location.icon,
+        icon: 'img/icons/' + location.type + '.png',
         map: GoogleMapView.map
       });
       newMarker.addListener('click', listenerPopInfo);
