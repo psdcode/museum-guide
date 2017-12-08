@@ -40,7 +40,7 @@ module.exports = function (grunt) {
         esversion: 6,
         forin: true
       },
-      all: ['src/js/**/*']
+      all: ['src/js/**/*', 'src/model/**/*']
     },
 
     rename: {
