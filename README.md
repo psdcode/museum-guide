@@ -9,6 +9,12 @@ This single-page app is an interactive Google Maps based guide to select museums
 ## Viewing Instructions
 
 1. Download and unzip the repository.
+2. Navigate to the 'dist' folder and open 'index.html' in a web browser.
+
+### Build Instructions
+Alternatively, you may build the production code yourself from source.
+
+1. Download and unzip the repository.
 2. Navigate to the downloaded directory and run 'npm install' from the command line.
 3. Run 'grunt build' from the command line.
 2. Navigate to the 'dist' folder and open 'index.html' in a web browser.
