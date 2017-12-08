@@ -15,7 +15,7 @@ module.exports = function (grunt) {
         files: [{
           expand: true,
           cwd: 'src',
-          src: ['img/**/*', 'model/**/*', 'index.html', 'css/**/*'],
+          src: ['img/**/*', 'model/**/*', 'index.html'],
           dest: 'dist/'
         }]
       }
@@ -41,6 +41,16 @@ module.exports = function (grunt) {
         forin: true
       },
       all: ['src/js/**/*']
+    },
+
+    rename: {
+      main: {
+        files: [
+          {
+            src: ['dist/css/styles.css'], dest: 'dist/css/styles.min.css'
+          }
+        ]
+      }
     },
 
     rollup: {
@@ -74,7 +84,7 @@ module.exports = function (grunt) {
         files: [{
           expand: true,
           cwd: 'src/css/',
-          src: '*.css',
+          src: 'styles.css',
           dest: 'dist/css/'
         }]
       }
@@ -133,7 +143,9 @@ module.exports = function (grunt) {
     'uglify',
     'clean:postuglify',
     'processhtml',
-    'postcss']);
+    'postcss',
+    'rename'
+  ]);
 
   grunt.registerTask('dev', [
     'clean:prebuild',
