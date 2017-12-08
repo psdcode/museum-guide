@@ -27,6 +27,7 @@ Alternatively, you may build the production code yourself from source.
 * To reset the map to its initial view and display all available museums press the 'Reset Map' button next to the search box in the top left corner of the screen.
 
 ## Tools and Resources Used
+
 * [Google Maps JavaScript API V3](https://developers.google.com/maps/)
 * [Yelp Fusion API 3.0](https://www.yelp.com/developers/documentation/v3)
 * [Knockout.js](http://knockoutjs.com/)
@@ -40,5 +41,11 @@ Alternatively, you may build the production code yourself from source.
 * [CSS Spinner](http://tobiasahlin.com/spinkit/) by Tobias Ahlin
 * [Maps Icons Collection](https://mapicons.mapsmarker.com) CC BY SA 3.0
 * [Custom Google Map Style](https://snazzymaps.com/style/4105/brokka-map) by eshuz CC0 1.0
+
+## Attribution
+
+* Official tool & resource documentation
+* [Udacity Forums](https://discussions.udacity.com/t/handling-google-maps-in-async-and-fallback/34282)
+* General information from various online blog entries and StackOverflow posts
 
 License: ISC 2017
