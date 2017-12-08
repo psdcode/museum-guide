@@ -1,9 +1,3 @@
-// Initial Model
-
-// All Icon images:
-// Maps Icons Collection https://mapicons.mapsmarker.com
-// CC BY SA 3.0
-
 export const model = {
   "area": {
     "city": "Tokyo",
@@ -23,7 +17,6 @@ export const model = {
       "lng": 139.772818
     },
     "type": "art",
-    "icon": "icons/general.png",
     "place_id": "ChIJb_o7HiiMGGARUKu8uO7fGIQ"
   }, {
     "title": "Tokyo Waterworks Historical Museum",
@@ -32,7 +25,6 @@ export const model = {
       "lng": 139.7604967
     },
     "type": "history",
-    "icon": "icons/general.png",
     "place_id": "ChIJrVm8DD2MGGARX70ZvbreBlQ"
   }, {
     "title": "Mitsubishi Ichigokan Museum",
@@ -41,7 +33,6 @@ export const model = {
       "lng": 139.7632194
     },
     "type": "art",
-    "icon": "icons/general.png",
     "place_id": "ChIJuyY-ZfqLGGAREYR9A10IXPQ"
   }, {
     "title": "Tokyo Toy Museum",
@@ -49,8 +40,7 @@ export const model = {
       "lat": 35.68973,
       "lng": 139.718039
     },
-    "type": "other",
-    "icon": "icons/general.png",
+    "type": "general",
     "place_id": "ChIJHeBCIOyMGGAR7BktETlUP_w"
   }, {
     "title": "Tokyo National Museum",
@@ -59,7 +49,6 @@ export const model = {
       "lng": 139.7763106
     },
     "type": "history",
-    "icon": "icons/general.png",
     "place_id": "ChIJycHKF4OOGGARZlm_joH52qI"
   }, {
     "title": "Advertising Museum Tokyo",
@@ -67,8 +56,7 @@ export const model = {
       "lat": 35.6649201,
       "lng": 139.7625548
     },
-    "type": "other",
-    "icon": "icons/general.png",
+    "type": "art",
     "place_id": "ChIJ2VtGysKLGGAR2oS8_Y_o-pk"
   }, {
     "title": "National Museum of Western Art",
@@ -77,7 +65,6 @@ export const model = {
       "lng": 139.7758138
     },
     "type": "art",
-    "icon": "icons/general.png",
     "place_id": "ChIJf8xB-pyOGGARizzhlNTcI7s"
   }, {
     "title": "Samurai Museum",
@@ -86,7 +73,6 @@ export const model = {
       "lng": 139.7035426
     },
     "type": "history",
-    "icon": "icons/general.png",
     "place_id": "ChIJ__-PU9iMGGAR6KHVhaRiqH8"
   }, {
     "title": "National Museum of Nature and Science",
@@ -95,7 +81,6 @@ export const model = {
       "lng": 139.7763826
     },
     "type": "science",
-    "icon": "icons/general.png",
     "place_id": "ChIJ8Vuh65yOGGARyj4L5IBFiIk"
   }, {
     "title": "National Museum of Modern Art",
@@ -104,7 +89,6 @@ export const model = {
       "lng": 139.7546932
     },
     "type": "art",
-    "icon": "icons/general.png",
     "place_id": "ChIJL0kSfg2MGGARKv5KX53ZZ2Y"
   }]
 };
