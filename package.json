@@ -3,15 +3,12 @@
   "version": "1.0.0",
   "description": "Udacity FrontEnd Nanodegree Final Project",
   "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/effluxation/fend-neighborhood-map.git"
   },
   "keywords": [],
-  "author": "Patryk Dorosz",
+  "author": "Patrick Dorosz",
   "license": "ISC",
   "bugs": {
     "url": "https://github.com/effluxation/fend-neighborhood-map/issues"
@@ -19,6 +16,7 @@
   "homepage": "https://github.com/effluxation/fend-neighborhood-map#readme",
   "devDependencies": {
     "babel-core": "^6.26.0",
+    "babel-plugin-external-helpers": "^6.22.0",
     "babel-preset-env": "^1.6.1",
     "cssnano": "^3.10.0",
     "grunt": "^1.0.1",
@@ -26,16 +24,19 @@
     "grunt-contrib-clean": "^1.1.0",
     "grunt-contrib-copy": "^1.0.0",
     "grunt-contrib-jshint": "^1.1.0",
+    "grunt-contrib-rename": "^0.2.0",
     "grunt-contrib-uglify": "^3.2.1",
     "grunt-contrib-watch": "^1.0.0",
     "grunt-open": "^0.2.3",
     "grunt-postcss": "^0.9.0",
     "grunt-processhtml": "^0.4.1",
+    "grunt-rollup": "^8.1.0",
     "grunt-stylelint": "^0.9.0",
     "jshint-stylish": "^2.2.1",
     "load-grunt-tasks": "^3.5.2",
     "postcss-cssnext": "^3.0.2",
     "postcss-sass": "^0.2.0",
+    "rollup-plugin-babel": "^3.0.2",
     "stylelint": "^8.3.1",
     "stylelint-config-standard": "^18.0.0"
   },

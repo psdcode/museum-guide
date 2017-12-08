@@ -2,22 +2,20 @@ module.exports = function (grunt) {
   grunt.initConfig({
     pkg: grunt.file.readJSON('package.json'),
 
-    babel: {
-      options: {
-        sourceMap: false
-      },
-      dist: {
-        files: {
-          'dist/js/app.js': 'src/js/app.js'
-        }
-      }
-    },
     copy: {
+      build: {
+        files: [{
+          expand: true,
+          cwd: 'src',
+          src: ['img/**', 'model/**'],
+          dest: 'dist/'
+        }]
+      },
       dev: {
         files: [{
           expand: true,
           cwd: 'src',
-          src: ['img/**', 'data/**'],
+          src: ['img/**/*', 'model/**/*', 'index.html'],
           dest: 'dist/'
         }]
       }
@@ -45,6 +43,34 @@ module.exports = function (grunt) {
       all: ['src/js/**/*']
     },
 
+    rename: {
+      main: {
+        files: [
+          {
+            src: ['dist/css/styles.css'], dest: 'dist/css/styles.min.css'
+          }
+        ]
+      }
+    },
+
+    rollup: {
+      options: {
+        format: 'es',
+        plugins: [
+          require('rollup-plugin-babel')({
+            presets: [['env', { 'modules': false }]],
+            plugins: ['external-helpers']
+          })
+        ]
+      },
+
+      dist: {
+        files: {
+          'dist/js/app.js': ['src/js/app.js']
+        }
+      }
+    },
+
     postcss: {
       options: {
         map: false,
@@ -58,7 +84,7 @@ module.exports = function (grunt) {
         files: [{
           expand: true,
           cwd: 'src/css/',
-          src: '*.css',
+          src: 'styles.css',
           dest: 'dist/css/'
         }]
       }
@@ -89,7 +115,7 @@ module.exports = function (grunt) {
 
     watch: {
       reload: {
-        files: ['src/**/*'],
+        files: ['src/**/*', 'dist/css/*'],
         tasks: [],
         options: {
           livereload: true
@@ -107,14 +133,24 @@ module.exports = function (grunt) {
   });
 
   require('load-grunt-tasks')(grunt);
+
   grunt.registerTask('build', [
     'jshint',
     'stylelint',
     'clean:prebuild',
-    'copy',
-    'babel',
+    'copy:build',
+    'rollup',
     'uglify',
     'clean:postuglify',
     'processhtml',
-    'postcss']);
+    'postcss',
+    'rename'
+  ]);
+
+  grunt.registerTask('dev', [
+    'clean:prebuild',
+    'copy:dev',
+    'rollup',
+    'postcss'
+  ]);
 };

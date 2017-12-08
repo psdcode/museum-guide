@@ -1,101 +1,256 @@
-// Main global google map variables accessed by ViewModel
-let museumMap;
-let mainInfoWindow;
-let mapBounds;
+/* Imports */
 
-// Array of map markers holding default locations
-const markers = [];
+import {model as currentModel} from '../model/model.js';
+import {mapStyle} from '../model/map-style.js';
 
-class MuseumMapViewModel {
+/* Classes */
+
+// ViewModel class utilized in Knockout.js initialization
+class DisplayViewModel {
   constructor () {
+    /* Instance Variables */
     const self = this;
     self.mapReady = ko.observable(false);
     self.query = ko.observable('');
+
+    // Determine if to include local language heading in title
+    if (currentModel.area.locallang) {
+      self.mainTitle = `${currentModel.area.locallang} - ${currentModel.area.city} \
+${currentModel.area.type} Map Guide`;
+    } else {
+      self.mainTitle = `${currentModel.area.city} ${currentModel.area.type} Map Guide`;
+    }
 
     // Observable Markers Array that will determine display of list and markers
     self.markersObservable = ko.observableArray([]);
     // Computed observable loads markers once map initialization complete
     self.createMarkersObservable = ko.computed(function () {
       if (self.mapReady()) {
-        self.markersObservable(markers);
+        self.markersObservable(GoogleMapView.markers);
         self.sort(self.markersObservable);
         return true;
       }
     }, self);
 
-    self.clickMuseumList = function (clickedMarker) {
-      MuseumMapViewModel.popInfoWindow(clickedMarker);
-      MuseumMapViewModel.toggleBounceMarker(clickedMarker);
+    /* Instance Methods */
+    self.clickLocationList = function (clickedMarker) {
+      // Hide sidebar if open to display InfoWindow
+      hideListView();
+      GoogleMapView.popInfoWindow(clickedMarker);
     };
 
+    // Method to open InfoWindow using prev/next buttons
+    self.clickArrow = function (direction) {
+      if (self.markersObservable().length > 1) {
+        const currentMarkerIndex = self.markersObservable.indexOf(GoogleMapView.mainInfoWindow.marker);
+        let neighborMarkerIndex = (currentMarkerIndex + direction) % self.markersObservable().length;
+        if (neighborMarkerIndex === -1) neighborMarkerIndex = self.markersObservable().length - 1;
+        const neighborMarker = self.markersObservable()[neighborMarkerIndex];
+        GoogleMapView.popInfoWindow(neighborMarker);
+      }
+    };
+
+    self.clickPrevArrow = function () {
+      self.clickArrow(-1);
+    };
+
+    self.clickNextArrow = function () {
+      self.clickArrow(1);
+    };
+
+    // Filter obsrvable location list and markers based on query
     self.filterMarkerList = function (searchInput) {
       // Search query is a non-empty string
       if (searchInput) {
         // Empty the observable list
         self.markersObservable([]);
-        for (const marker of markers) {
-          const markerTitle = marker.title.toUpperCase();
+        for (const checkMarker of GoogleMapView.markers) {
+          // Re-add marker to observable array only if marker title match search query
+          const markerTitle = checkMarker.title.toUpperCase();
           if (markerTitle.indexOf(searchInput.toUpperCase()) >= 0) {
-            // Readd markers to observable array only if title match search query
-            self.markersObservable.push(marker);
+            // Positive match between query and marker title
+            self.markersObservable.push(checkMarker);
             // Check if marker not already displayed to prevent blinking due to setting map again
-            if (!marker.getMap()) marker.setMap(museumMap);
+            if (!checkMarker.getMap()) GoogleMapView.setMarkerMap(checkMarker, true);
+            GoogleMapView.queryBoundsExtend(checkMarker.position);
+          // Marker title did not match search query, remove it from map
           } else {
-            // Marker title did not match search query, remove it from map
-            marker.setMap(null);
+            GoogleMapView.setMarkerMap(checkMarker, false);
           }
         }
-        // Sort remaining markers after query
-        self.sort(self.markersObservable);
+
+        const markersLength = self.markersObservable().length;
+        // Open info window if 1 marker matches search
+        if (markersLength === 1) {
+          if (!GoogleMapView.mainInfoWindow.marker) {
+            GoogleMapView.popInfoWindow(self.markersObservable()[0]);
+          }
+          // Will set queryBounds to null, no bounds fit
+          GoogleMapView.queryBoundsFit(false);
+
+        // Else sort remaining markers after query and apply new bounds
+        // only if more than 1 marker matches search
+        } else if (markersLength > 1) {
+          // Close InfoWindow if open on a marker
+          GoogleMapView.closeInfoWindow();
+          self.sort(self.markersObservable);
+          // Fit query bounds
+          GoogleMapView.queryBoundsFit(true);
+        }
 
       // Search query is empty string ''
       } else {
         // Display all markers on map
-        for (const marker of markers) {
-          if (!marker.getMap()) marker.setMap(museumMap);
+        for (const checkMarker of GoogleMapView.markers) {
+          if (!checkMarker.getMap()) GoogleMapView.setMarkerMap(checkMarker, true);
         }
         // Display all list items
-        self.markersObservable(markers);
+        self.markersObservable(GoogleMapView.markers);
         self.sort(self.markersObservable);
+        self.resetMap();
       }
     };
+    self.getVisibleMarkers = function () {
+      return self.markersObservable();
+    };
 
-    // Observable Subscriptions
+    // Observable subscription for instant filtering of query results
     self.query.subscribe(self.filterMarkerList);
   }
 
-  // ViewModel Methods
-
-  // Alphabetically sort display of museums by title
+  // Alphabetically sort display of loations by title
   sort (observableArray) {
     observableArray.sort((first, second) => {
       return first.title === second.title ? 0 : (first.title > second.title ? 1 : -1);
     });
   }
 
-  static toggleBounceMarker (marker) {
-    if (marker.getAnimation()) {
-      // If click again during animation marker, will stop
-      marker.setAnimation(null);
-    } else {
-      // Disable bounce on all markers and set temporary bounce on selected marker
-      markers.forEach(otherMarker => { otherMarker.setAnimation(null); });
-      marker.setAnimation(google.maps.Animation.BOUNCE);
-      setTimeout(() => marker.setAnimation(null), 1500);
+  // Called by Reset <button>
+  resetMap () {
+    this.query('');
+    GoogleMapView.resetMap();
+  }
+}
+
+// Class for handling google map display/view
+class GoogleMapView {
+  static closeInfoWindow () {
+    GoogleMapView.mainInfoWindow.close();
+    GoogleMapView.mainInfoWindow.marker = null;
+  }
+
+  // maps.googleapis.com script initial loading error callback
+  static errorLoadMap () {
+    alert('Unable to load Google Map at this time. Check your connection or try again later');
+  }
+
+  // googleapis.com initalization success callback
+  static initMap () {
+    // Create new map
+    const mapElement = document.getElementsByClassName('map')[0];
+    GoogleMapView.map = new google.maps.Map(mapElement, {
+      // Center on city
+      center: {
+        lat: currentModel.area.position.lat,
+        lng: currentModel.area.position.lng
+      },
+      zoom: 12,
+      styles: mapStyle
+    });
+
+    // Clicking on map while sidebar is open will hide it
+    mapElement.addEventListener('click', hideListView);
+
+    // Markers corresponding to data locations
+    GoogleMapView.markers = [];
+    // Map bounds
+    GoogleMapView.originalBounds = new google.maps.LatLngBounds();
+
+    // InfoWindow configuration
+    GoogleMapView.mainInfoWindow = new google.maps.InfoWindow({
+      maxWidth: 250
+    });
+    GoogleMapView.mainInfoWindow.addListener('closeclick', function () {
+      GoogleMapView.mainInfoWindow.marker = null;
+    });
+
+    // Declare listener callback outside of loop to avoid jshint warning
+    const listenerPopInfo = function () {
+      // Hide sidebar if open to display InfoWindow
+      hideListView();
+      GoogleMapView.popInfoWindow(this);
+    };
+    // Create array of Markers from provided location info
+    for (const location of currentModel.locations) {
+      const newMarker = new google.maps.Marker({
+        position: location.position,
+        title: location.title,
+        animation: google.maps.Animation.DROP,
+        icon: 'img/icons/' + location.type + '.png',
+        map: GoogleMapView.map
+      });
+      newMarker.addListener('click', listenerPopInfo);
+      GoogleMapView.markers.push(newMarker);
+      GoogleMapView.originalBounds.extend(newMarker.position);
+    }
+
+    // Adjust map bounds to fit all markers
+    GoogleMapView.resetMap();
+
+    // Notify current instance of DisplayViewModel that google map initialization is complete
+    DisplayViewModel.instance.mapReady(true);
+  }
+
+  static onWindowResize () {
+    if (DisplayViewModel.instance) {
+      // Get list of current visible markers
+      const visibleMarkers = DisplayViewModel.instance.getVisibleMarkers();
+
+      // If > 1 marker fit bounds based on all of them
+      if (visibleMarkers.length > 1) {
+        // If infoWindow currently open, center on info window
+        if (GoogleMapView.mainInfoWindow.marker) {
+          GoogleMapView.map.panTo(GoogleMapView.mainInfoWindow.marker.position);
+          GoogleMapView.map.panBy(0, -280);
+        // InfoWindow not open on any marker, fit bounds based on all visible markers
+        } else {
+          GoogleMapView.resizeBounds = new google.maps.LatLngBounds();
+          for (const markerOnMap of visibleMarkers) {
+            GoogleMapView.resizeBounds.extend(markerOnMap.position);
+          }
+          GoogleMapView.map.fitBounds(GoogleMapView.resizeBounds);
+          GoogleMapView.resizeBounds = null;
+          if (GoogleMapView.map.getZoom() > 18) GoogleMapView.map.setZoom(18);
+        }
+      // Only 1 marker, don't extend bounds, go directly to marker
+      } else if (visibleMarkers.length === 1) {
+        GoogleMapView.map.panTo(visibleMarkers[0].position);
+        GoogleMapView.map.panBy(0, -280);
+      }
+      // If no visible markers, no fitting bounds
+    }
+
+    // Slide sidebar into initial position automatically when window enlarge
+    if (window.matchMedia('(min-width: 768px)').matches) {
+      const listView = document.getElementsByClassName('list-view')[0];
+      listView.classList.remove('show-list-view');
     }
   }
 
   static popInfoWindow (marker) {
-    // First check if InfoWindow not already onen on clicked marker
-    if (mainInfoWindow.marker !== marker) {
-      mainInfoWindow.marker = marker;
+    // Bounce marker
+    GoogleMapView.toggleBounceMarker(marker);
+
+    // Check if InfoWindow not already on on clicked marker
+    if (GoogleMapView.mainInfoWindow.marker !== marker) {
+      GoogleMapView.mainInfoWindow.marker = marker;
 
       // Center on marker & move up map to allow for info window display
-      museumMap.panTo(marker.position);
-      museumMap.panBy(0, -270);
+      GoogleMapView.map.panTo(marker.position);
+      GoogleMapView.map.panBy(0, -280);
 
       // Begin construction of InfoWindow content
-      let markerContent = `<div class="title"><strong>${marker.title}</strong></div>`;
+      let markerContent = `<div class="info-title"><strong>${marker.title}</strong></div>`;
 
       // Spinner HTML below taken from http://tobiasahlin.com/spinkit/
       markerContent += '<div class="sk-circle">';
@@ -106,51 +261,92 @@ class MuseumMapViewModel {
       // END spinner HTML injection code
 
       // Place title & spinner into InfoWindow & open it
-      mainInfoWindow.setContent(markerContent);
-      mainInfoWindow.open(museumMap, marker);
+      GoogleMapView.mainInfoWindow.setContent(markerContent);
+      GoogleMapView.mainInfoWindow.open(GoogleMapView.map, marker);
 
       // Begin fetching data from Yelp
       getYelp(marker).then(yelpInfo => {
         // Only enter here if no connection issues
         if (yelpInfo) {
-          // Yelp result exists. Remove spinner by reassigning markerContent
-          markerContent = `<div class="title"><strong>${marker.title}</strong></div>`;
+          // Yelp result exists
+          // Remove spinner by reassigning markerContent with Yelp info
+          markerContent = `<div class="info-title"><strong>${marker.title}</strong></div>`;
+
+          // Image
           markerContent += `<img class="yelp-img" src=${yelpInfo.image_url} alt=${marker.title}>`;
+
+          // Rating & Info
           markerContent += `<div class="yelp-container">${getRatingImg(yelpInfo.rating)}`;
-          markerContent += `<a target="_blank" href="${yelpInfo.url}"><img class="yelp-logo" \
-src="img/yelp_trademark_rgb_outline.png" srcset="img/yelp_trademark_rgb_outline_2x.png 2x" \
-alt="Yelp Logo"></a>`;
+          markerContent += `<a target="_blank" href="${yelpInfo.url}">`;
+          markerContent += `<img class="yelp-logo" src="img/yelp_trademark_rgb_outline.png" \
+srcset="img/yelp_trademark_rgb_outline_2x.png 2x" alt="Yelp Logo">`;
+          markerContent += `</a>`;
           markerContent += `<a class="yelp-reviews" href="${yelpInfo.url}" target="_blank">Based \
 on <strong>${yelpInfo.review_count}</strong> review${yelpInfo.review_count > 1 ? 's' : ''}</a>`;
           markerContent += `<p><address>${getYelpAddressHtml(yelpInfo.location.display_address)}\
 </address></p>`;
           markerContent += `<p class="yelp-info">Currently \
 <strong>${yelpInfo.is_closed ? 'CLOSED' : 'OPEN'}</strong><br>`;
-          markerContent += `Phone: ${yelpInfo.display_phone}</p></div>`;
-          mainInfoWindow.setContent(markerContent);
-        } else {
+          markerContent += `Phone: ${yelpInfo.display_phone}</p>`;
+          markerContent += `</div>`;
+
+          // Add previosu/next arrow buttons
+          markerContent += `<div class="info-arrows">`;
+          markerContent += `<a href="#" aria-role="button" class="btn info-arrows-prev" \
+>&lt;</a>`;
+          markerContent += `<a href="#" class="btn info-arrows-next" aria-role="button" \
+>&gt;</a>`;
+          markerContent += `</div>`;
+          GoogleMapView.mainInfoWindow.setContent(markerContent);
+
+          // Apply ViewModel bindings to the arrow buttons
+          applyArrowBtnsBindings();
+
         // Result undefined, search term not in Yelp database
-          markerContent = `<div class="title"><strong>${marker.title}</strong></div>`;
-          markerContent += `<p>This museum's information is not found in Yelp's business \
-directory. Try a different museum location.</p>`;
-          mainInfoWindow.setContent(markerContent);
+        } else {
+          markerContent = `<div class="info-title"><strong>${marker.title}</strong></div>`;
+          markerContent += `<p>This location's information is not found in Yelp's business \
+directory. Try a different location.</p>`;
+
+          // Add previosu/next arrow buttons
+          markerContent += `<div class="info-arrows">`;
+          markerContent += `<a href="#" aria-role="button" class="btn info-arrows-prev" \
+>&lt;</a>`;
+          markerContent += `<a href="#" class="btn info-arrows-next" aria-role="button" \
+>&gt;</a>`;
+          markerContent += `</div>`;
+          GoogleMapView.mainInfoWindow.setContent(markerContent);
+
+          // Apply ViewModel bindings to the arrow buttons
+          applyArrowBtnsBindings();
         }
       })
       // In case of connection error to cors-anywhere.herokuapp.com or
       // api.yelp.com
       .catch((err) => {
         markerContent = `<div class="title"><strong>${marker.title}</strong></div>`;
-        markerContent += `<p>Unable to retrieve this museum's Yelp data due to a \
+        markerContent += `<p>Unable to retrieve this location's Yelp data due to a \
 connection error. Please try again later.</p>`;
-        mainInfoWindow.setContent(markerContent);
+        GoogleMapView.mainInfoWindow.setContent(markerContent);
         console.log(err);
       });
     }
 
+    // Helper method for applying Knockout bindings to arrow prev/next buttons
+    function applyArrowBtnsBindings () {
+      const arrowBtnsDiv = document.getElementsByClassName('info-arrows')[0];
+      const dataBindStyle = `css: { 'btn-off': markersObservable().length < 2 }`;
+      if (arrowBtnsDiv) {
+        arrowBtnsDiv.children[0].setAttribute('data-bind', 'click: clickPrevArrow, ' + dataBindStyle);
+        arrowBtnsDiv.children[1].setAttribute('data-bind', 'click: clickNextArrow, ' + dataBindStyle);
+        ko.applyBindings(DisplayViewModel.instance, arrowBtnsDiv);
+      }
+    }
+
     // Helper method for formatting Yelp address html string
     function getYelpAddressHtml (yelpAddress) {
-      // Remove 'Japan' from address since it's redundant in the context of a map of Tokyo
-      if (yelpAddress[yelpAddress.length - 1] === 'Japan') {
+      // Remove country from address since it's redundant in the context of a city map
+      if (yelpAddress[yelpAddress.length - 1] === currentModel.area.country) {
         yelpAddress = yelpAddress.slice(0, yelpAddress.length - 1);
       }
       return yelpAddress.join('<br>');
@@ -165,29 +361,26 @@ connection error. Please try again later.</p>`;
     }
 
     // Helper method for formatting search string from title
-    function getSearchString (museumTitle) {
-      return museumTitle.replace(/\s+/g, '+');
+    function getSearchString (locationTitle) {
+      return locationTitle.replace(/\s+/g, '+');
     }
 
     // Helper method for fetching Yelp info
-    function getYelp (museumMarker) {
+    function getYelp (mapMarker) {
       // Since client-side requests to Yelp V3 API are not possible due to lack
       // of support for CORS and JSONP, 'cors-anywhere' app hack is employed as a proxy
-      const YELP_TOKEN = `n9BZFWy_zC3jyQyNV9u0Tdc6IhfkwyV8b4JBg2NYD9AaQuHaUx6II9\
-ukiEQp2Z03m7Cmycz29Lu2n4Gc5LPu1wDjVVCGyignkEoZn167yyq07sbPEN7gF5GzE20YWnYx`;
-
       return fetch(`https://cors-anywhere.herokuapp.com/https://api.yelp.com/v3/\
-businesses/search?term=${getSearchString(museumMarker.title)}&latitude=\
-${museumMarker.position.lat()}&longitude=${museumMarker.position.lng()}`,
+businesses/search?term=${getSearchString(mapMarker.title)}&latitude=\
+${mapMarker.position.lat()}&longitude=${mapMarker.position.lng()}`,
         {
           method: 'GET',
           headers: {
-            'authorization': `Bearer ${YELP_TOKEN}`
+            'authorization': `Bearer ${GoogleMapView.YELP_TOKEN}`
           }
         })
         .catch(err => {
           // In case connection error to cors-anywhere.herokuapp.com
-          window.alert(`Unable to retrieve this museum's Yelp data due to a \
+          window.alert(`Unable to retrieve this locations's Yelp data due to a \
 connection error. Please try again later.`);
           return Promise.reject(err);
         })
@@ -203,77 +396,89 @@ connection error. Please try again later.`);
   // END of method popInfoWindow(marker)
   }
 
-  // Called by Reset <button>
-  resetMap () {
-    this.query('');
-    museumMap.fitBounds(mapBounds);
-    museumMap.panBy(0, -100);
-    mainInfoWindow.marker = null;
-    mainInfoWindow.close();
+  static queryBoundsExtend (markerPosition) {
+    // Create new LatLngBounds object for every query
+    if (!GoogleMapView.queryBounds) {
+      GoogleMapView.queryBounds = new google.maps.LatLngBounds();
+    }
+    GoogleMapView.queryBounds.extend(markerPosition);
+  }
+
+  static queryBoundsFit (fitBounds) {
+    if (fitBounds) {
+      GoogleMapView.map.fitBounds(GoogleMapView.queryBounds);
+      // Set to null since each query creates new queryBounds
+      GoogleMapView.queryBounds = null;
+    } else GoogleMapView.queryBounds = null;
+
+    // Check for excessive zoom if bounds very small or a single marker
+    if (GoogleMapView.map.getZoom() > 18) GoogleMapView.map.setZoom(18);
+  }
+
+  static resetMap () {
+    GoogleMapView.map.fitBounds(GoogleMapView.originalBounds);
+    GoogleMapView.mainInfoWindow.marker = null;
+    GoogleMapView.mainInfoWindow.close();
+  }
+
+  static setMarkerMap (marker, set) {
+    if (set) marker.setMap(GoogleMapView.map);
+    else marker.setMap(null);
+  }
+
+  static toggleBounceMarker (marker) {
+    if (marker.getAnimation()) {
+      // If click again during animation marker, will stop
+      marker.setAnimation(null);
+    } else {
+      // Disable bounce on all markers and set temporary bounce on selected marker
+      GoogleMapView.markers.forEach(otherMarker => { otherMarker.setAnimation(null); });
+      marker.setAnimation(google.maps.Animation.BOUNCE);
+      setTimeout(() => marker.setAnimation(null), 1500);
+    }
   }
 }
 
-// KOjs ViewModel initialization
-const tokyoMuseumViewModel = new MuseumMapViewModel();
-ko.applyBindings(tokyoMuseumViewModel);
+/* Initialization */
 
+// Import model:currently from local model.js file
+// TODO may implement import data from server in future
+// const currentModel = Object.assign({}, model);
 
-// Map initalization function called by maps script
-function initMap () {
-  // Create new map
-  museumMap = new google.maps.Map(document.querySelector('#map'), {
-    // Center on Tokyo
-    center: {
-      lat: model.initial.lat,
-      lng: model.initial.lng
-    },
-    zoom: 12
-  });
-  mapBounds = new google.maps.LatLngBounds();
+// Yelp service access token
+GoogleMapView.YELP_TOKEN = `n9BZFWy_zC3jyQyNV9u0Tdc6IhfkwyV8b4JBg2NYD9AaQuHaUx6II9\
+ukiEQp2Z03m7Cmycz29Lu2n4Gc5LPu1wDjVVCGyignkEoZn167yyq07sbPEN7gF5GzE20YWnYx`;
 
-  // InfoWindow configuration
-  mainInfoWindow = new google.maps.InfoWindow({
-    maxWidth: 250
-  });
-  mainInfoWindow.addListener('closeclick', function () {
-    mainInfoWindow.marker = null;
-  });
+// Knockout.js DisplayViewModel initialization
+DisplayViewModel.instance = new DisplayViewModel();
+ko.applyBindings(DisplayViewModel.instance);
 
-  // Icon image:
-  // Maps Icons Collection https://mapicons.mapsmarker.com
-  // CC BY SA 3.0
-  const museumIconImage = 'img/temple-2.png';
+/* Layout, Interface, CSS related code */
 
-  // Declare listener callback outside of loop to avoid jshint warning
-  const listenerPopInfo = function () {
-    MuseumMapViewModel.popInfoWindow(this);
-    MuseumMapViewModel.toggleBounceMarker(this);
-  };
-  // Create array of Markers from provided museum info
-  for (const museum of model.museums) {
-    const newMarker = new google.maps.Marker({
-      position: museum.location,
-      title: museum.title,
-      animation: google.maps.Animation.DROP,
-      icon: museumIconImage,
-      map: museumMap
-    });
-    newMarker.addListener('click', listenerPopInfo);
-    markers.push(newMarker);
-    mapBounds.extend(newMarker.position);
+// Recenter map on window resize
+window.onresize = GoogleMapView.onWindowResize;
+
+// Button for opening sidebar
+const sidebarButton = document.getElementsByClassName('header-hamburger')[0];
+sidebarButton.addEventListener('click', () => {
+  const listView = document.getElementsByClassName('list-view')[0];
+  const state = listView.classList.contains('show-list-view');
+  // Hides sidebar if open and vice versa
+  if (state) {
+    listView.classList.add('hide-list-view');
+    listView.classList.remove('show-list-view');
+  } else {
+    listView.classList.remove('hide-list-view');
+    listView.classList.add('show-list-view');
   }
+});
 
-  // Adjust map bounds to fit all markers
-  museumMap.fitBounds(mapBounds, -50); // TODO
-  museumMap.panBy(0, -100); // TODO
-
-  // Notify MapViewModel that google map initialization is complete
-  tokyoMuseumViewModel.mapReady(true);
+// Method for hiding sidebar if it is open
+function hideListView () {
+  const listView = document.getElementsByClassName('list-view')[0];
+  const state = listView.classList.contains('show-list-view');
+  if (state) {
+    listView.classList.add('hide-list-view');
+    listView.classList.remove('show-list-view');
+  }
 }
-
-// Google map initial loading error callback
-function errorLoadMap () {
-  alert('Unable to load Google Map at this time. Check your connection or try again later');
-}
-
-//

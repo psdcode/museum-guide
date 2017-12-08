@@ -1,0 +1,333 @@
+@import 'normalize.css';
+@import 'spinner.css';
+
+:root {
+  /* Color variables */
+  --mainFontColor: #252525;
+  --mainBkgndColor: #f1f1f1;
+  --mainElmntBorderColor: #d9d9d9;
+  --btnActive: #5b5b5b;
+  --btnBorder: var(--btnActive);
+  --listItemBorderBottom: var(--btnActive);
+  --yelpReviewFontColor: #999;
+  --yelpReviewFontHover: var(--btnActive);
+
+  /* Other */
+  --btnBorderRadius: 4px;
+}
+
+/* General */
+
+html,
+body {
+  font-family: 'Spectral SC', sans-serif;
+  height: 100%;
+  margin: 0;
+  padding-top: 70px;
+  background-color: var(--mainBkgndColor);
+  color: var(--mainFontColor);
+  box-sizing: border-box;
+}
+
+.btn {
+  background-color: transparent;
+  border: 2px solid var(--btnBorder);
+  border-radius: var(--btnBorderRadius);
+  cursor: pointer;
+  color: var(--mainFontColor);
+  text-decoration: none;
+  transition-duration: 0.2s;
+
+  &:visited {
+    color: var(--mainFontColor);
+  }
+
+  &:active {
+    background-color: var(--btnActive);
+  }
+
+  &:focus {
+    outline: auto;
+    outline-offset: 0.5px;
+  }
+}
+
+.btn-off {
+  cursor: not-allowed;
+  opacity: 0.2;
+  background-color: var(--btnBorder);
+}
+
+/* Header */
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: fixed;
+  text-align: center;
+  height: 70px;
+  top: 0;
+  border-bottom: 1px solid var(--mainElmntBorderColor);
+  right: 0;
+  left: 0;
+  z-index: 2;
+  background-color: inherit;
+  margin: 0;
+}
+
+.header-title {
+  font-weight: 600;
+  margin: 5px 0 5px 12px;
+  white-space: normal;
+  line-height: 0.95;
+  align-self: center;
+}
+
+.header-hamburger {
+  padding: 0 4px;
+  margin: 1.8px 20px 3px 12px;
+  background-color: transparent;
+  font-size: 26.4px;
+  line-height: inherit;
+}
+
+.header-hamburger-span {
+  background-color: var(--mainFontColor);
+  display: block;
+  width: 21.7px;
+  height: 5px;
+  margin-bottom: 4px;
+}
+
+.header-hamburger-span:first-of-type {
+  margin-top: 4px;
+}
+
+/* List View Sidebar */
+
+.list-view {
+  background-color: inherit;
+  font-weight: 400;
+  width: 300px;
+  position: fixed;
+  right: auto;
+  top: 0;
+  bottom: 0;
+  z-index: 3;
+  overflow-y: auto;
+  border-radius: 0;
+  height: auto;
+  border-right: 1px solid var(--mainElmntBorderColor);
+  transform: translateX(-100%);
+}
+
+.show-list-view {
+  animation: show 0.4s forwards;
+}
+
+@keyframes show {
+  100% {
+    transform: translateX(0);
+  }
+}
+
+.hide-list-view {
+  animation: hide 0.4s forwards;
+}
+
+@keyframes hide {
+  0% {
+    transform: translateX(0);
+  }
+
+  100% {
+    transform: translateX(-100%);
+  }
+}
+
+.list-view-top {
+  padding-bottom: 18px;
+  border-bottom: 1px solid var(--mainElmntBorderColor);
+}
+
+.list-view ul {
+  padding: 5px 15px 5px;
+  margin-top: 0;
+}
+
+.list-view-filter {
+  height: 35px;
+  border: 2px solid var(--btnBorder);
+  border-radius: var(--btnBorderRadius);
+  padding: 5px 4px;
+  width: 61%;
+  margin: 17px 3px 0 8px;
+  font-family: inherit;
+  font-size: 14px;
+  line-height: 1.43;
+
+  &:focus {
+    outline: auto;
+    outline-offset: 0.5px;
+  }
+}
+
+.list-view-reset {
+  margin-left: 1px;
+  padding: 5px 7px;
+  font-family: inherit;
+  font-size: 14px;
+  line-height: 1.43;
+}
+
+.list-view-item {
+  font-size: 18px;
+  list-style: none;
+  cursor: pointer;
+  padding: 2px;
+  margin: 6px 0;
+  border-bottom: 1px solid var(--listItemBorderBottom);
+  line-height: 1.42;
+}
+
+/* Google Map */
+
+.map {
+  height: 100%;
+}
+
+/* Google Map InfoWindow */
+
+.info-title {
+  font-size: 15px;
+  margin-bottom: 4px;
+  color: var(--mainFontColor);
+}
+
+.info-arrows-next,
+.info-arrows-prev {
+  font-size: 30px;
+  font-family: monospace;
+  padding: 0 10px;
+  font-weight: 600;
+  display: inline-block;
+  margin: 0 5px;
+}
+
+.info-arrows-next {
+  float: right;
+}
+
+.yelp-img {
+  margin: 4px 0;
+  width: 230px;
+  max-height: 375px;
+}
+
+.yelp-container {
+  position: relative;
+}
+
+.yelp-rating {
+  margin: 4px 0;
+}
+
+.yelp-reviews {
+  color: var(--yelpReviewFontColor);
+  display: block;
+  text-decoration: none;
+
+  &:hover {
+    color: var(--yelpReviewFontHover);
+  }
+
+  &:visited {
+    color: var(--yelpReviewFontColor);
+  }
+}
+
+.yelp-info {
+  margin: 5px 0 8px;
+}
+
+.yelp-logo {
+  position: absolute;
+  right: 20px;
+  top: -2px;
+}
+
+.yelp-container p {
+  line-height: 1.4;
+}
+
+/* Media Queries */
+
+@media screen and (min-width: 1px) {
+  .header-title {
+    font-size: 28.8px;
+  }
+}
+
+@media screen and (min-width: 480px) {
+  .header-title {
+    font-size: 32px;
+  }
+}
+
+@media screen and (max-width: 767px) {
+  body {
+    padding: 0;
+  }
+}
+
+@media screen and (min-width: 768px) {
+  body {
+    padding: 0 0 0 300px;
+  }
+
+  .header {
+    justify-content: center;
+    padding-left: 300px;
+  }
+
+  .header-hamburger {
+    display: none;
+  }
+}
+
+@media screen and (min-width: 960px) {
+  .header-title {
+    white-space: nowrap;
+  }
+}
+
+@media screen and (min-width: 1020px) {
+  .header-title {
+    font-size: 35.2px;
+  }
+}
+
+@media screen and (min-width: 1080px) {
+  .header-title {
+    font-size: 38.4px;
+  }
+}
+
+@media screen and (min-width: 1120px) {
+  .header-title {
+    font-size: 40px;
+  }
+}
+
+@media screen and (min-width: 1200px) {
+  .header-title {
+    font-size: 43.2px;
+  }
+}
+
+@media screen and (min-width: 1280px) {
+  .header-title {
+    font-size: 46.4px;
+  }
+}
