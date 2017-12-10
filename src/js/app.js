@@ -33,12 +33,6 @@ ${currentModel.area.type} Map Guide`;
     }, self);
 
     /* Instance Methods */
-    self.clickLocationList = function (clickedMarker) {
-      // Hide sidebar if open to display InfoWindow
-      hideListView();
-      GoogleMapView.popInfoWindow(clickedMarker);
-    };
-
     // Method to open InfoWindow using prev/next buttons
     self.clickArrow = function (direction) {
       if (self.markersObservable().length > 1) {
@@ -48,14 +42,6 @@ ${currentModel.area.type} Map Guide`;
         const neighborMarker = self.markersObservable()[neighborMarkerIndex];
         GoogleMapView.popInfoWindow(neighborMarker);
       }
-    };
-
-    self.clickPrevArrow = function () {
-      self.clickArrow(-1);
-    };
-
-    self.clickNextArrow = function () {
-      self.clickArrow(1);
     };
 
     // Filter obsrvable location list and markers based on query
@@ -118,6 +104,25 @@ ${currentModel.area.type} Map Guide`;
     self.query.subscribe(self.filterMarkerList);
   }
 
+  // When click a location in sidebar
+  clickLocationList (clickedMarker) {
+    // Hide sidebar if open to display InfoWindow
+    if (window.matchMedia('(max-width: 767px)').matches) {
+      DisplayViewModel.instance.toggleSidebar();
+    }
+    GoogleMapView.popInfoWindow(clickedMarker);
+  }
+
+  // Navigate to next available marker InfoWindow in list
+  clickNextArrow () {
+    DisplayViewModel.instance.clickArrow(1);
+  }
+
+  // Navigate to previous available marker InfoWindow in list
+  clickPrevArrow () {
+    DisplayViewModel.instance.clickArrow(-1);
+  }
+
   // Alphabetically sort display of loations by title
   sort (observableArray) {
     observableArray.sort((first, second) => {
@@ -129,6 +134,20 @@ ${currentModel.area.type} Map Guide`;
   resetMap () {
     this.query('');
     GoogleMapView.resetMap();
+  }
+
+  // Shows/hides sidebar with hamburger <button>
+  toggleSidebar () {
+    const listView = document.getElementsByClassName('list-view')[0];
+    const state = listView.classList.contains('show-list-view');
+    // Hides sidebar if open and vice versa
+    if (state) {
+      listView.classList.add('hide-list-view');
+      listView.classList.remove('show-list-view');
+    } else {
+      listView.classList.remove('hide-list-view');
+      listView.classList.add('show-list-view');
+    }
   }
 }
 
@@ -157,6 +176,9 @@ class GoogleMapView {
       zoom: 12,
       styles: mapStyle
     });
+
+    // Recenter map on window resize
+    window.onresize = GoogleMapView.onWindowResize;
 
     // Clicking on map while sidebar is open will hide it
     mapElement.addEventListener('click', hideListView);
@@ -199,6 +221,16 @@ class GoogleMapView {
 
     // Notify current instance of DisplayViewModel that google map initialization is complete
     DisplayViewModel.instance.mapReady(true);
+
+    // Helper Method for hiding sidebar if it is open
+    function hideListView () {
+      const listView = document.getElementsByClassName('list-view')[0];
+      const state = listView.classList.contains('show-list-view');
+      if (state) {
+        listView.classList.add('hide-list-view');
+        listView.classList.remove('show-list-view');
+      }
+    }
   }
 
   static onWindowResize () {
@@ -452,33 +484,3 @@ ukiEQp2Z03m7Cmycz29Lu2n4Gc5LPu1wDjVVCGyignkEoZn167yyq07sbPEN7gF5GzE20YWnYx`;
 // Knockout.js DisplayViewModel initialization
 DisplayViewModel.instance = new DisplayViewModel();
 ko.applyBindings(DisplayViewModel.instance);
-
-/* Layout, Interface, CSS related code */
-
-// Recenter map on window resize
-window.onresize = GoogleMapView.onWindowResize;
-
-// Button for opening sidebar
-const sidebarButton = document.getElementsByClassName('header-hamburger')[0];
-sidebarButton.addEventListener('click', () => {
-  const listView = document.getElementsByClassName('list-view')[0];
-  const state = listView.classList.contains('show-list-view');
-  // Hides sidebar if open and vice versa
-  if (state) {
-    listView.classList.add('hide-list-view');
-    listView.classList.remove('show-list-view');
-  } else {
-    listView.classList.remove('hide-list-view');
-    listView.classList.add('show-list-view');
-  }
-});
-
-// Method for hiding sidebar if it is open
-function hideListView () {
-  const listView = document.getElementsByClassName('list-view')[0];
-  const state = listView.classList.contains('show-list-view');
-  if (state) {
-    listView.classList.add('hide-list-view');
-    listView.classList.remove('show-list-view');
-  }
-}
