@@ -1,12 +1,12 @@
-# Tokyo Museum Map Guide
-
-Final project for Udacity's Front-End Web Developer Nanodegree.
+# MuseumGuide App
 
 ## General Overview
 
-This single-page app is an interactive Google Maps based guide to select museums in Tokyo, Japan. Detailed information for each location is provided via Yelp's business directory.
+An interactive single-page Google Maps based guide to museums in major cities from around the world. Detailed information for each location is provided via Yelp's business directory.
 
-## Viewing & Build Instructions
+This app is an expanded version of my [final project](https://github.com/psdcode/fend-neighborhood-map) for Udacity's Front-End Web Developer Nanodegree.
+
+## Local Viewing & Build Instructions
 
 1. Download and unzip the repository.
 2. Navigate to the 'dist' folder and open 'index.html' in a web browser.
@@ -42,10 +42,4 @@ Alternatively, you may build the production code yourself from source.
 * [Maps Icons Collection](https://mapicons.mapsmarker.com) CC BY SA 3.0
 * [Custom Google Map Style](https://snazzymaps.com/style/4105/brokka-map) by eshuz CC0 1.0
 
-## Attribution
-
-* Official tool & resource documentation
-* [Udacity Forums](https://discussions.udacity.com/t/handling-google-maps-in-async-and-fallback/34282)
-* General information from various online blog entries and StackOverflow posts
-
-License: ISC 2017
+License: ISC 2018
