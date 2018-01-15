@@ -1,19 +1,19 @@
 {
-  "name": "fend-neighborhood-map",
+  "name": "museum-map-guide",
   "version": "1.0.0",
-  "description": "Udacity FrontEnd Nanodegree Final Project",
+  "description": "A ",
   "main": "index.js",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/effluxation/fend-neighborhood-map.git"
+    "url": "git+https://github.com/psdcode/museum-map-guide.git"
   },
   "keywords": [],
   "author": "Patrick Dorosz",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/effluxation/fend-neighborhood-map/issues"
+    "url": "https://github.com/psdcode/museum-map-guide/issues"
   },
-  "homepage": "https://github.com/effluxation/fend-neighborhood-map#readme",
+  "homepage": "https://github.com/psdcode/museum-map-guide#readme",
   "devDependencies": {
     "babel-core": "^6.26.0",
     "babel-plugin-external-helpers": "^6.22.0",
