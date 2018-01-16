@@ -1,3 +1,4 @@
+'use strict';
 /* Imports */
 
 import {model as currentModel} from '../model/model.js';
@@ -10,8 +11,8 @@ class DisplayViewModel {
   constructor () {
     /* Instance Variables */
     const self = this;
-    self.mapReady = ko.observable(false);
-    self.query = ko.observable('');
+    self.mapReady = window.ko.observable(false);
+    self.query = window.ko.observable('');
 
     // Determine if to include local language heading in title
     if (currentModel.area.locallang) {
@@ -22,9 +23,9 @@ ${currentModel.area.type} Map Guide`;
     }
 
     // Observable Markers Array that will determine display of list and markers
-    self.markersObservable = ko.observableArray([]);
+    self.markersObservable = window.ko.observableArray([]);
     // Computed observable loads markers once map initialization complete
-    self.createMarkersObservable = ko.computed(function () {
+    self.createMarkersObservable = window.ko.computed(function () {
       if (self.mapReady()) {
         self.markersObservable(GoogleMapView.markers);
         self.sort(self.markersObservable);
@@ -166,14 +167,14 @@ class GoogleMapView {
 
   // maps.googleapis.com script initial loading error callback
   static errorLoadMap () {
-    window.alert('Unable to load Google Map at this time. Check your connection or try again later');
+    window.alert('Unable to load Google Map at this time. Check your internet connection or try again later');
   }
 
   // googleapis.com initalization success callback
   static initMap () {
     // Create new map
     const mapElement = document.getElementsByClassName('map')[0];
-    GoogleMapView.map = new google.maps.Map(mapElement, {
+    GoogleMapView.map = new window.google.maps.Map(mapElement, {
       // Center on city
       center: {
         lat: currentModel.area.position.lat,
@@ -192,10 +193,10 @@ class GoogleMapView {
     // Markers corresponding to data locations
     GoogleMapView.markers = [];
     // Map bounds
-    GoogleMapView.originalBounds = new google.maps.LatLngBounds();
+    GoogleMapView.originalBounds = new window.google.maps.LatLngBounds();
 
     // InfoWindow configuration
-    GoogleMapView.mainInfoWindow = new google.maps.InfoWindow({
+    GoogleMapView.mainInfoWindow = new window.google.maps.InfoWindow({
       maxWidth: 250
     });
     GoogleMapView.mainInfoWindow.addListener('closeclick', function () {
@@ -210,10 +211,10 @@ class GoogleMapView {
     };
     // Create array of Markers from provided location info
     for (const location of currentModel.locations) {
-      const newMarker = new google.maps.Marker({
+      const newMarker = new window.google.maps.Marker({
         position: location.position,
         title: location.title,
-        animation: google.maps.Animation.DROP,
+        animation: window.google.maps.Animation.DROP,
         icon: 'img/icons/' + location.type + '.png',
         map: GoogleMapView.map
       });
@@ -252,7 +253,7 @@ class GoogleMapView {
           GoogleMapView.map.panBy(0, -280);
         // InfoWindow not open on any marker, fit bounds based on all visible markers
         } else {
-          GoogleMapView.resizeBounds = new google.maps.LatLngBounds();
+          GoogleMapView.resizeBounds = new window.google.maps.LatLngBounds();
           for (const markerOnMap of visibleMarkers) {
             GoogleMapView.resizeBounds.extend(markerOnMap.position);
           }
@@ -379,7 +380,7 @@ connection error. Please try again later.</p>`;
       if (arrowBtnsDiv) {
         arrowBtnsDiv.children[0].setAttribute('data-bind', 'click: clickPrevArrow, ' + dataBindStyle);
         arrowBtnsDiv.children[1].setAttribute('data-bind', 'click: clickNextArrow, ' + dataBindStyle);
-        ko.applyBindings(DisplayViewModel.instance, arrowBtnsDiv);
+        window.ko.applyBindings(DisplayViewModel.instance, arrowBtnsDiv);
       }
     }
 
@@ -439,7 +440,7 @@ connection error. Please try again later.`);
   static queryBoundsExtend (markerPosition) {
     // Create new LatLngBounds object for every query
     if (!GoogleMapView.queryBounds) {
-      GoogleMapView.queryBounds = new google.maps.LatLngBounds();
+      GoogleMapView.queryBounds = new window.google.maps.LatLngBounds();
     }
     GoogleMapView.queryBounds.extend(markerPosition);
   }
@@ -478,7 +479,7 @@ connection error. Please try again later.`);
     } else {
       // Disable bounce on all markers and set temporary bounce on selected marker
       GoogleMapView.markers.forEach(otherMarker => { otherMarker.setAnimation(null); });
-      marker.setAnimation(google.maps.Animation.BOUNCE);
+      marker.setAnimation(window.google.maps.Animation.BOUNCE);
       setTimeout(() => marker.setAnimation(null), 1500);
     }
   }
@@ -496,4 +497,4 @@ ukiEQp2Z03m7Cmycz29Lu2n4Gc5LPu1wDjVVCGyignkEoZn167yyq07sbPEN7gF5GzE20YWnYx`;
 
 // Knockout.js DisplayViewModel initialization
 DisplayViewModel.instance = new DisplayViewModel();
-ko.applyBindings(DisplayViewModel.instance);
+window.ko.applyBindings(DisplayViewModel.instance);
