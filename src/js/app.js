@@ -38,7 +38,9 @@ ${currentModel.area.type} Map Guide`;
       if (self.markersObservable().length > 1) {
         const currentMarkerIndex = self.markersObservable.indexOf(GoogleMapView.mainInfoWindow.marker);
         let neighborMarkerIndex = (currentMarkerIndex + direction) % self.markersObservable().length;
-        if (neighborMarkerIndex === -1) neighborMarkerIndex = self.markersObservable().length - 1;
+        if (neighborMarkerIndex === -1) {
+          neighborMarkerIndex = self.markersObservable().length - 1;
+        }
         const neighborMarker = self.markersObservable()[neighborMarkerIndex];
         GoogleMapView.popInfoWindow(neighborMarker);
       }
@@ -57,7 +59,9 @@ ${currentModel.area.type} Map Guide`;
             // Positive match between query and marker title
             self.markersObservable.push(checkMarker);
             // Check if marker not already displayed to prevent blinking due to setting map again
-            if (!checkMarker.getMap()) GoogleMapView.setMarkerMap(checkMarker, true);
+            if (!checkMarker.getMap()) {
+              GoogleMapView.setMarkerMap(checkMarker, true);
+            }
             GoogleMapView.queryBoundsExtend(checkMarker.position);
           // Marker title did not match search query, remove it from map
           } else {
@@ -88,7 +92,9 @@ ${currentModel.area.type} Map Guide`;
       } else {
         // Display all markers on map
         for (const checkMarker of GoogleMapView.markers) {
-          if (!checkMarker.getMap()) GoogleMapView.setMarkerMap(checkMarker, true);
+          if (!checkMarker.getMap()) {
+            GoogleMapView.setMarkerMap(checkMarker, true);
+          }
         }
         // Display all list items
         self.markersObservable(GoogleMapView.markers);
@@ -160,7 +166,7 @@ class GoogleMapView {
 
   // maps.googleapis.com script initial loading error callback
   static errorLoadMap () {
-    alert('Unable to load Google Map at this time. Check your connection or try again later');
+    window.alert('Unable to load Google Map at this time. Check your connection or try again later');
   }
 
   // googleapis.com initalization success callback
@@ -252,7 +258,9 @@ class GoogleMapView {
           }
           GoogleMapView.map.fitBounds(GoogleMapView.resizeBounds);
           GoogleMapView.resizeBounds = null;
-          if (GoogleMapView.map.getZoom() > 18) GoogleMapView.map.setZoom(18);
+          if (GoogleMapView.map.getZoom() > 18) {
+            GoogleMapView.map.setZoom(18);
+          }
         }
       // Only 1 marker, don't extend bounds, go directly to marker
       } else if (visibleMarkers.length === 1) {
@@ -286,7 +294,7 @@ class GoogleMapView {
 
       // Spinner HTML below taken from http://tobiasahlin.com/spinkit/
       markerContent += '<div class="sk-circle">';
-      for (let circleNum = 1; circleNum <= 12; circleNum++) {
+      for (let circleNum = 1; circleNum <= 12; circleNum += 1) {
         markerContent += `<div class="sk-circle${circleNum} sk-child"></div>`;
       }
       markerContent += '</div>';
@@ -401,7 +409,7 @@ connection error. Please try again later.</p>`;
     function getYelp (mapMarker) {
       // Since client-side requests to Yelp V3 API are not possible due to lack
       // of support for CORS and JSONP, 'cors-anywhere' app hack is employed as a proxy
-      return fetch(`https://cors-anywhere.herokuapp.com/https://api.yelp.com/v3/\
+      return window.fetch(`https://cors-anywhere.herokuapp.com/https://api.yelp.com/v3/\
 businesses/search?term=${getSearchString(mapMarker.title)}&latitude=\
 ${mapMarker.position.lat()}&longitude=${mapMarker.position.lng()}`,
         {
@@ -444,7 +452,9 @@ connection error. Please try again later.`);
     } else GoogleMapView.queryBounds = null;
 
     // Check for excessive zoom if bounds very small or a single marker
-    if (GoogleMapView.map.getZoom() > 18) GoogleMapView.map.setZoom(18);
+    if (GoogleMapView.map.getZoom() > 18) {
+      GoogleMapView.map.setZoom(18);
+    }
   }
 
   static resetMap () {
@@ -454,8 +464,11 @@ connection error. Please try again later.`);
   }
 
   static setMarkerMap (marker, set) {
-    if (set) marker.setMap(GoogleMapView.map);
-    else marker.setMap(null);
+    if (set) {
+      marker.setMap(GoogleMapView.map);
+    } else {
+      marker.setMap(null);
+    }
   }
 
   static toggleBounceMarker (marker) {
