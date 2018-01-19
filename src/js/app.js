@@ -53,7 +53,7 @@ ${currentModel.area.type} Map Guide`;
       if (searchInput) {
         // Empty the observable list
         self.markersObservable([]);
-        for (const checkMarker of GoogleMapView.markers) {
+        GoogleMapView.markers.forEach(function (checkMarker) {
           // Re-add marker to observable array only if marker title match search query
           const markerTitle = checkMarker.title.toUpperCase();
           if (markerTitle.indexOf(searchInput.toUpperCase()) >= 0) {
@@ -68,7 +68,7 @@ ${currentModel.area.type} Map Guide`;
           } else {
             GoogleMapView.setMarkerMap(checkMarker, false);
           }
-        }
+        });
 
         const markersLength = self.markersObservable().length;
         // Open info window if 1 marker matches search
@@ -92,11 +92,11 @@ ${currentModel.area.type} Map Guide`;
       // Search query is empty string ''
       } else {
         // Display all markers on map
-        for (const checkMarker of GoogleMapView.markers) {
+        GoogleMapView.markers.forEach(function (checkMarker) {
           if (!checkMarker.getMap()) {
             GoogleMapView.setMarkerMap(checkMarker, true);
           }
-        }
+        });
         // Display all list items
         self.markersObservable(GoogleMapView.markers);
         self.sort(self.markersObservable);
@@ -210,7 +210,7 @@ class GoogleMapView {
       GoogleMapView.popInfoWindow(this);
     };
     // Create array of Markers from provided location info
-    for (const location of currentModel.locations) {
+    currentModel.locations.forEach(function (location) {
       const newMarker = new window.google.maps.Marker({
         position: location.position,
         title: location.title,
@@ -221,7 +221,7 @@ class GoogleMapView {
       newMarker.addListener('click', listenerPopInfo);
       GoogleMapView.markers.push(newMarker);
       GoogleMapView.originalBounds.extend(newMarker.position);
-    }
+    });
 
     // Adjust map bounds to fit all markers
     GoogleMapView.resetMap();
@@ -251,18 +251,20 @@ class GoogleMapView {
         if (GoogleMapView.mainInfoWindow.marker) {
           GoogleMapView.map.panTo(GoogleMapView.mainInfoWindow.marker.position);
           GoogleMapView.map.panBy(0, -280);
+
         // InfoWindow not open on any marker, fit bounds based on all visible markers
         } else {
           GoogleMapView.resizeBounds = new window.google.maps.LatLngBounds();
-          for (const markerOnMap of visibleMarkers) {
+          visibleMarkers.forEach(function (markerOnMap) {
             GoogleMapView.resizeBounds.extend(markerOnMap.position);
-          }
+          });
           GoogleMapView.map.fitBounds(GoogleMapView.resizeBounds);
           GoogleMapView.resizeBounds = undefined;
           if (GoogleMapView.map.getZoom() > 18) {
             GoogleMapView.map.setZoom(18);
           }
         }
+
       // Only 1 marker, don't extend bounds, go directly to marker
       } else if (visibleMarkers.length === 1) {
         GoogleMapView.map.panTo(visibleMarkers[0].position);
