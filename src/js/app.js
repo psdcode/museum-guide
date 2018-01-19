@@ -76,7 +76,7 @@ ${currentModel.area.type} Map Guide`;
           if (!GoogleMapView.mainInfoWindow.marker) {
             GoogleMapView.popInfoWindow(self.markersObservable()[0]);
           }
-          // Will set queryBounds to null, no bounds fit
+          // Will set queryBounds to undefined, no bounds fit
           GoogleMapView.queryBoundsFit(false);
 
         // Else sort remaining markers after query and apply new bounds
@@ -162,7 +162,7 @@ ${currentModel.area.type} Map Guide`;
 class GoogleMapView {
   static closeInfoWindow () {
     GoogleMapView.mainInfoWindow.close();
-    GoogleMapView.mainInfoWindow.marker = null;
+    GoogleMapView.mainInfoWindow.marker = undefined;
   }
 
   // maps.googleapis.com script initial loading error callback
@@ -200,7 +200,7 @@ class GoogleMapView {
       maxWidth: 250
     });
     GoogleMapView.mainInfoWindow.addListener('closeclick', function () {
-      GoogleMapView.mainInfoWindow.marker = null;
+      GoogleMapView.mainInfoWindow.marker = undefined;
     });
 
     // Declare listener callback outside of loop to avoid jshint warning
@@ -258,7 +258,7 @@ class GoogleMapView {
             GoogleMapView.resizeBounds.extend(markerOnMap.position);
           }
           GoogleMapView.map.fitBounds(GoogleMapView.resizeBounds);
-          GoogleMapView.resizeBounds = null;
+          GoogleMapView.resizeBounds = undefined;
           if (GoogleMapView.map.getZoom() > 18) {
             GoogleMapView.map.setZoom(18);
           }
@@ -448,9 +448,9 @@ connection error. Please try again later.`);
   static queryBoundsFit (fitBounds) {
     if (fitBounds) {
       GoogleMapView.map.fitBounds(GoogleMapView.queryBounds);
-      // Set to null since each query creates new queryBounds
-      GoogleMapView.queryBounds = null;
-    } else GoogleMapView.queryBounds = null;
+      // Set to undefined since each query creates new queryBounds
+      GoogleMapView.queryBounds = undefined;
+    } else GoogleMapView.queryBounds = undefined;
 
     // Check for excessive zoom if bounds very small or a single marker
     if (GoogleMapView.map.getZoom() > 18) {
@@ -460,7 +460,7 @@ connection error. Please try again later.`);
 
   static resetMap () {
     GoogleMapView.map.fitBounds(GoogleMapView.originalBounds);
-    GoogleMapView.mainInfoWindow.marker = null;
+    GoogleMapView.mainInfoWindow.marker = undefined;
     GoogleMapView.mainInfoWindow.close();
   }
 
@@ -468,19 +468,19 @@ connection error. Please try again later.`);
     if (set) {
       marker.setMap(GoogleMapView.map);
     } else {
-      marker.setMap(null);
+      marker.setMap(undefined);
     }
   }
 
   static toggleBounceMarker (marker) {
     if (marker.getAnimation()) {
       // If click again during animation marker, will stop
-      marker.setAnimation(null);
+      marker.setAnimation(undefined);
     } else {
       // Disable bounce on all markers and set temporary bounce on selected marker
-      GoogleMapView.markers.forEach(otherMarker => { otherMarker.setAnimation(null); });
+      GoogleMapView.markers.forEach(otherMarker => { otherMarker.setAnimation(undefined); });
       marker.setAnimation(window.google.maps.Animation.BOUNCE);
-      setTimeout(() => marker.setAnimation(null), 1500);
+      setTimeout(() => marker.setAnimation(undefined), 1500);
     }
   }
 }
