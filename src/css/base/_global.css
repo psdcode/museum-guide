@@ -1,0 +1,15 @@
+/* GLOBAL */
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  font-family: 'Spectral SC', sans-serif;
+  height: 100%;
+  margin: 0;
+  padding-top: 70px;
+  background-color: var(--mainBkgndColor);
+  color: var(--mainFontColor);
+}

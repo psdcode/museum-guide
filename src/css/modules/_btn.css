@@ -1,0 +1,30 @@
+/* BTN BUTTONS */
+
+.btn {
+  background-color: transparent;
+  border: 2px solid var(--btnBorder);
+  border-radius: var(--btnBorderRadius);
+  cursor: pointer;
+  color: var(--mainFontColor);
+  text-decoration: none;
+  transition-duration: 0.2s;
+
+  &:visited {
+    color: var(--mainFontColor);
+  }
+
+  &:active {
+    background-color: var(--btnActive);
+  }
+
+  &:focus {
+    outline: auto;
+    outline-offset: 0.5px;
+  }
+
+  &--off {
+    cursor: not-allowed;
+    opacity: 0.2;
+    background-color: var(--btnBorder);
+  }
+}

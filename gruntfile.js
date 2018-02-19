@@ -76,6 +76,8 @@ module.exports = function (grunt) {
         map: false,
         processors: [
           require('postcss-import')(),
+          require('postcss-mixins')(),
+          require('postcss-nested')(),
           require('postcss-cssnext')(),
           require('cssnano')()
         ]
@@ -136,7 +138,7 @@ module.exports = function (grunt) {
 
   grunt.registerTask('build', [
     'jshint',
-    'stylelint',
+    // 'stylelint',
     'clean:prebuild',
     'copy:build',
     'rollup',

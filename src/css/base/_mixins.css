@@ -1,0 +1,19 @@
+/* MIXINS */
+
+@define-mixin downToSmall {
+  @media (min-width: 530px) {
+    @mixin-content;
+  }
+}
+
+@define-mixin downToMedium {
+  @media (min-width: 530px) {
+    @mixin-content;
+  }
+}
+
+@define-mixin downToLarge {
+  @media (min-width: 530px) {
+    @mixin-content;
+  }
+}

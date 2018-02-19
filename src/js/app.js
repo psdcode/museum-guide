@@ -145,15 +145,15 @@ ${currentModel.area.type} Map Guide`;
 
   // Shows/hides sidebar with hamburger <button>
   toggleSidebar () {
-    const listView = document.getElementsByClassName('list-view')[0];
-    const state = listView.classList.contains('show-list-view');
+    const listView = document.getElementsByClassName('list-sidebar')[0];
+    const state = listView.classList.contains('show-list-sidebar');
     // Hides sidebar if open and vice versa
     if (state) {
-      listView.classList.add('hide-list-view');
-      listView.classList.remove('show-list-view');
+      listView.classList.add('hide-list-sidebar');
+      listView.classList.remove('show-list-sidebar');
     } else {
-      listView.classList.remove('hide-list-view');
-      listView.classList.add('show-list-view');
+      listView.classList.remove('hide-list-sidebar');
+      listView.classList.add('show-list-sidebar');
     }
   }
 }
@@ -231,11 +231,11 @@ class GoogleMapView {
 
     // Helper Method for hiding sidebar if it is open
     function hideListView () {
-      const listView = document.getElementsByClassName('list-view')[0];
-      const state = listView.classList.contains('show-list-view');
+      const listView = document.getElementsByClassName('list-sidebar')[0];
+      const state = listView.classList.contains('show-list-sidebar');
       if (state) {
-        listView.classList.add('hide-list-view');
-        listView.classList.remove('show-list-view');
+        listView.classList.add('hide-list-sidebar');
+        listView.classList.remove('show-list-sidebar');
       }
     }
   }
@@ -275,8 +275,8 @@ class GoogleMapView {
 
     // Slide sidebar into initial position automatically when window enlarge
     if (window.matchMedia('(min-width: 768px)').matches) {
-      const listView = document.getElementsByClassName('list-view')[0];
-      listView.classList.remove('show-list-view');
+      const listView = document.getElementsByClassName('list-sidebar')[0];
+      listView.classList.remove('show-list-sidebar');
     }
   }
 
@@ -378,7 +378,8 @@ connection error. Please try again later.</p>`;
     // Helper method for applying Knockout bindings to arrow prev/next buttons
     function applyArrowBtnsBindings () {
       const arrowBtnsDiv = document.getElementsByClassName('info-arrows')[0];
-      const dataBindStyle = `css: { 'btn-off': markersObservable().length < 2 }`;
+      // Determine if buttons will be clickable
+      const dataBindStyle = `css: { 'btn--off': markersObservable().length < 2 }`;
       if (arrowBtnsDiv) {
         arrowBtnsDiv.children[0].setAttribute('data-bind', 'click: clickPrevArrow, ' + dataBindStyle);
         arrowBtnsDiv.children[1].setAttribute('data-bind', 'click: clickNextArrow, ' + dataBindStyle);

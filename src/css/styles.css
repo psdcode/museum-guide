@@ -1,64 +1,14 @@
 @import 'normalize.css';
-@import 'spinner.css';
-
-:root {
-  /* Color variables */
-  --mainFontColor: #252525;
-  --mainBkgndColor: #f1f1f1;
-  --mainElmntBorderColor: #d9d9d9;
-  --btnActive: #5b5b5b;
-  --btnBorder: var(--btnActive);
-  --listItemBorderBottom: var(--btnActive);
-  --yelpReviewFontColor: #999;
-  --yelpReviewFontHover: var(--btnActive);
-
-  /* Other */
-  --btnBorderRadius: 4px;
-}
-
-/* General */
-
-html,
-body {
-  font-family: 'Spectral SC', sans-serif;
-  height: 100%;
-  margin: 0;
-  padding-top: 70px;
-  background-color: var(--mainBkgndColor);
-  color: var(--mainFontColor);
-  box-sizing: border-box;
-}
-
-.btn {
-  background-color: transparent;
-  border: 2px solid var(--btnBorder);
-  border-radius: var(--btnBorderRadius);
-  cursor: pointer;
-  color: var(--mainFontColor);
-  text-decoration: none;
-  transition-duration: 0.2s;
-
-  &:visited {
-    color: var(--mainFontColor);
-  }
-
-  &:active {
-    background-color: var(--btnActive);
-  }
-
-  &:focus {
-    outline: auto;
-    outline-offset: 0.5px;
-  }
-}
-
-.btn-off {
-  cursor: not-allowed;
-  opacity: 0.2;
-  background-color: var(--btnBorder);
-}
-
-/* Header */
+@import 'base/_global';
+@import 'base/_variables';
+@import 'base/_mixins';
+@import 'modules/_spinner';
+@import 'modules/_header';
+@import 'modules/_btn';
+@import 'modules/_list-sidebar';
+@import 'modules/_map';
+@import 'modules/_info-window';
+@import 'modules/_yelp';
 
 .header {
   display: flex;
@@ -104,9 +54,9 @@ body {
   margin-top: 4px;
 }
 
-/* List View Sidebar */
+/* List Sidebar */
 
-.list-view {
+.list-sidebar {
   background-color: inherit;
   font-weight: 400;
   width: 300px;
@@ -122,7 +72,7 @@ body {
   transform: translateX(-100%);
 }
 
-.show-list-view {
+.show-list-sidebar {
   animation: show 0.4s forwards;
 }
 
@@ -132,7 +82,7 @@ body {
   }
 }
 
-.hide-list-view {
+.hide-list-sidebar {
   animation: hide 0.4s forwards;
 }
 
@@ -146,17 +96,17 @@ body {
   }
 }
 
-.list-view-top {
+.list-sidebar-top {
   padding-bottom: 18px;
   border-bottom: 1px solid var(--mainElmntBorderColor);
 }
 
-.list-view ul {
+.list-sidebar ul {
   padding: 5px 15px 5px;
   margin-top: 0;
 }
 
-.list-view-filter {
+.list-sidebar-filter {
   height: 35px;
   border: 2px solid var(--btnBorder);
   border-radius: var(--btnBorderRadius);
@@ -173,7 +123,7 @@ body {
   }
 }
 
-.list-view-reset {
+.list-sidebar-reset {
   margin-left: 1px;
   padding: 5px 7px;
   font-family: inherit;
@@ -181,7 +131,7 @@ body {
   line-height: 1.43;
 }
 
-.list-view-item {
+.list-sidebar-item {
   font-size: 18px;
   list-style: none;
   cursor: pointer;
@@ -189,12 +139,6 @@ body {
   margin: 6px 0;
   border-bottom: 1px solid var(--listItemBorderBottom);
   line-height: 1.42;
-}
-
-/* Google Map */
-
-.map {
-  height: 100%;
 }
 
 /* Google Map InfoWindow */
