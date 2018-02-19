@@ -1,0 +1,44 @@
+/* YELP  */
+
+
+.yelp-img {
+  margin: 4px 0;
+  width: 230px;
+  max-height: 375px;
+}
+
+.yelp-container {
+  position: relative;
+}
+
+.yelp-rating {
+  margin: 4px 0;
+}
+
+.yelp-reviews {
+  color: var(--yelpReviewFontColor);
+  display: block;
+  text-decoration: none;
+
+  &:hover {
+    color: var(--yelpReviewFontHover);
+  }
+
+  &:visited {
+    color: var(--yelpReviewFontColor);
+  }
+}
+
+.yelp-info {
+  margin: 5px 0 8px;
+}
+
+.yelp-logo {
+  position: absolute;
+  right: 20px;
+  top: -2px;
+}
+
+.yelp-container p {
+  line-height: 1.4;
+}

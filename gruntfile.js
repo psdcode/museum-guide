@@ -138,7 +138,7 @@ module.exports = function (grunt) {
 
   grunt.registerTask('build', [
     'jshint',
-    // 'stylelint',
+    'stylelint',
     'clean:prebuild',
     'copy:build',
     'rollup',

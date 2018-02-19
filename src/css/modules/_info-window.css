@@ -1,0 +1,21 @@
+/* INFO WINDOW */
+
+.info-title {
+  font-size: 15px;
+  margin-bottom: 4px;
+  color: var(--mainFontColor);
+}
+
+.info-arrows-next,
+.info-arrows-prev {
+  font-size: 30px;
+  font-family: monospace;
+  padding: 0 10px;
+  font-weight: 600;
+  display: inline-block;
+  margin: 0 5px;
+}
+
+.info-arrows-next {
+  float: right;
+}
