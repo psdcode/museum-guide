@@ -4,25 +4,23 @@
   box-sizing: border-box;
 }
 
-html,
+html {
+  height: 100%;
+}
+
 body {
   font-family: 'Spectral SC', sans-serif;
   height: 100%;
   margin: 0;
-  padding-top: 70px;
   background-color: var(--mainBkgndColor);
   color: var(--mainFontColor);
-}
+  padding: 0;
 
-
-@media screen and (max-width: 767px) {
-  body {
-    padding: 0;
+  @media screen and (min-width: 768px) {
+      padding-left:300px;
   }
 }
 
-@media screen and (min-width: 768px) {
-  body {
-    padding: 0 0 0 300px;
-  }
+strong {
+  font-weight: 500;
 }

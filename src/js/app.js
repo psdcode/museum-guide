@@ -293,7 +293,7 @@ class GoogleMapView {
       GoogleMapView.map.panBy(0, -280);
 
       // Begin construction of InfoWindow content
-      let markerContent = `<div class="info-title"><strong>${marker.title}</strong></div>`;
+      let markerContent = `<div class="info-window__title"><strong>${marker.title}</strong></div>`;
 
       // Spinner HTML below taken from http://tobiasahlin.com/spinkit/
       markerContent += '<div class="sk-circle">';
@@ -313,7 +313,7 @@ class GoogleMapView {
         if (yelpInfo) {
           // Yelp result exists
           // Remove spinner by reassigning markerContent with Yelp info
-          markerContent = `<div class="info-title"><strong>${marker.title}</strong></div>`;
+          markerContent = `<div class="info-window__title"><strong>${marker.title}</strong></div>`;
 
           // Image
           markerContent += `<img class="yelp-img" src=${yelpInfo.image_url} alt=${marker.title}>`;
@@ -334,10 +334,10 @@ on <strong>${yelpInfo.review_count}</strong> review${yelpInfo.review_count > 1 ?
           markerContent += `</div>`;
 
           // Add previosu/next arrow buttons
-          markerContent += `<div class="info-arrows">`;
-          markerContent += `<a href="#" aria-role="button" class="btn info-arrows-prev" \
+          markerContent += `<div class="info-window__arrows">`;
+          markerContent += `<a href="#" aria-role="button" class="btn info-window__arrows-prev" \
 >&lt;</a>`;
-          markerContent += `<a href="#" class="btn info-arrows-next" aria-role="button" \
+          markerContent += `<a href="#" class="btn info-window__arrows-next" aria-role="button" \
 >&gt;</a>`;
           markerContent += `</div>`;
           GoogleMapView.mainInfoWindow.setContent(markerContent);
@@ -347,15 +347,15 @@ on <strong>${yelpInfo.review_count}</strong> review${yelpInfo.review_count > 1 ?
 
         // Result undefined, search term not in Yelp database
         } else {
-          markerContent = `<div class="info-title"><strong>${marker.title}</strong></div>`;
+          markerContent = `<div class="info-window__title"><strong>${marker.title}</strong></div>`;
           markerContent += `<p>This location's information is not found in Yelp's business \
 directory. Try a different location.</p>`;
 
           // Add previosu/next arrow buttons
-          markerContent += `<div class="info-arrows">`;
-          markerContent += `<a href="#" aria-role="button" class="btn info-arrows-prev" \
+          markerContent += `<div class="info-window__arrows">`;
+          markerContent += `<a href="#" aria-role="button" class="btn info-window__arrows-prev" \
 >&lt;</a>`;
-          markerContent += `<a href="#" class="btn info-arrows-next" aria-role="button" \
+          markerContent += `<a href="#" class="btn info-window__arrows-next" aria-role="button" \
 >&gt;</a>`;
           markerContent += `</div>`;
           GoogleMapView.mainInfoWindow.setContent(markerContent);
@@ -377,7 +377,7 @@ connection error. Please try again later.</p>`;
 
     // Helper method for applying Knockout bindings to arrow prev/next buttons
     function applyArrowBtnsBindings () {
-      const arrowBtnsDiv = document.getElementsByClassName('info-arrows')[0];
+      const arrowBtnsDiv = document.getElementsByClassName('info-window__arrows')[0];
       // Determine if buttons will be clickable
       const dataBindStyle = `css: { 'btn--off': markersObservable().length < 2 }`;
       if (arrowBtnsDiv) {
