@@ -40,7 +40,7 @@ module.exports = function (grunt) {
         esversion: 6,
         forin: true
       },
-      all: ['src/js/**/*', 'src/model/**/*']
+      all: ['dist/js/**/*', 'dist/model/**/*']
     },
 
     rename: {
@@ -101,7 +101,7 @@ module.exports = function (grunt) {
     },
 
     stylelint: {
-      all: ['src/css/**/*.css']
+      all: ['dist/css/**/*.css']
     },
 
     uglify: {
@@ -117,7 +117,7 @@ module.exports = function (grunt) {
 
     watch: {
       reload: {
-        files: ['src/**/*', 'dist/css/*'],
+        files: ['src/**/*'],
         tasks: ['dev'],
         options: {
           livereload: true

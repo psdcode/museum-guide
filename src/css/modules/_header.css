@@ -14,101 +14,71 @@
   z-index: 2;
   background-color: inherit;
   margin: 0;
-}
 
-.header__title {
-  font-weight: 600;
-  margin: 5px 0 5px 12px;
-  white-space: normal;
-  line-height: 0.95;
-  align-self: center;
-}
-
-.header__hamburger {
-  padding: 0 4px;
-  margin: 17px 20px 17px 12px;
-  background-color: transparent;
-  font-size: 26.4px;
-  line-height: inherit;
-}
-
-.header__hamburger__bar {
-  background-color: var(--mainFontColor);
-  display: block;
-  width: 21.7px;
-  height: 5px;
-  margin-bottom: 4px;
-}
-
-.header__hamburger__bar:first-of-type {
-  margin-top: 4px;
-}
-
-
-@media screen and (min-width: 1px) {
-  .header__title {
-    font-size: 28.8px;
-  }
-}
-
-@media screen and (min-width: 480px) {
-  .header__title {
-    font-size: 32px;
-  }
-}
-
-
-
-
-@media screen and (min-width: 768px) {
-  .header {
+  @media screen and (min-width: 768px) {
     justify-content: center;
     padding-left: 300px;
   }
 
-  .header__hamburger {
-    display: none;
+  &__hamburger {
+    padding: 0 4px;
+    margin: 17px 20px 17px 12px;
+    background-color: transparent;
+    font-size: 26.4px;
+    line-height: inherit;
+
+    @media screen and (min-width: 768px) {
+      display: none;
+    }
+
+    &__bar {
+      background-color: var(--mainFontColor);
+      display: block;
+      width: 21.7px;
+      height: 5px;
+      margin-bottom: 4px;
+
+      &:first-of-type {
+        margin-top: 4px;
+      }
+    }
   }
-}
 
+  &__title {
+    font-weight: 600;
+    font-size: 25px;
+    margin: 5px 0 5px 12px;
+    white-space: normal;
+    line-height: 0.98;
+    align-self: center;
 
+    @media screen and (min-width: 480px) {
+      font-size: 31px;
+      line-height: 0.95;
+    }
 
+    @media screen and (min-width: 960px) {
+      white-space: nowrap;
+    }
 
+    @media screen and (min-width: 1020px) {
+      font-size: 35.2px;
+    }
 
+    @media screen and (min-width: 1080px) {
+      font-size: 38.4px;
+    }
 
+    @media screen and (min-width: 1120px) {
+      font-size: 40px;
+    }
 
-@media screen and (min-width: 960px) {
-  .header__title {
-    white-space: nowrap;
-  }
-}
+    @media screen and (min-width: 1200px) {
+      font-size: 43.2px;
+    }
 
-@media screen and (min-width: 1020px) {
-  .header__title {
-    font-size: 35.2px;
-  }
-}
-
-@media screen and (min-width: 1080px) {
-  .header__title {
-    font-size: 38.4px;
-  }
-}
-
-@media screen and (min-width: 1120px) {
-  .header__title {
-    font-size: 40px;
-  }
-}
-
-@media screen and (min-width: 1200px) {
-  .header__title {
-    font-size: 43.2px;
-  }
-}
-
-@media screen and (min-width: 1280px) {
-  .header__title {
-    font-size: 46.4px;
+    @media screen and (min-width: 1280px) {
+      font-size: 46.4px;
+    }
   }
 }
