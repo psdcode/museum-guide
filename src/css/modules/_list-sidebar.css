@@ -41,7 +41,8 @@
 }
 
 .list-sidebar-top {
-  padding-bottom: 18px;
+  padding: 17px 0;
+  height: 70px;
   border-bottom: 1px solid var(--mainElmntBorderColor);
 }
 
@@ -51,15 +52,16 @@
 }
 
 .list-sidebar-filter {
-  height: 35px;
   border: 2px solid var(--btnBorder);
   border-radius: var(--btnBorderRadius);
   padding: 5px 4px;
   width: 61%;
-  margin: 17px 3px 0 8px;
+  margin: 0 3px 0 8px;
   font-family: inherit;
   font-size: 14px;
   line-height: 1.43;
+  display: inline-block;
+  height: 35px;
 
   &:focus {
     outline: auto;
@@ -73,6 +75,12 @@
   font-family: inherit;
   font-size: 14px;
   line-height: 1.43;
+  display: inline-block;
+
+  /* Adjust to align with input element */
+  height: 34.6px;
+  position: relative;
+  top: -0.4px;
 }
 
 .list-sidebar-item {

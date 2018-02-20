@@ -12,5 +12,5 @@
   --yelpReviewFontHover: var(--btnActive);
 
   /* Other */
-  --btnBorderRadius: 4px;
+  --btnBorderRadius: 0;
 }

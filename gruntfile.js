@@ -118,19 +118,19 @@ module.exports = function (grunt) {
     watch: {
       reload: {
         files: ['src/**/*', 'dist/css/*'],
-        tasks: [],
+        tasks: ['dev'],
         options: {
           livereload: true
         }
-      },
-      js: {
-        files: ['src/js/**/*'],
-        tasks: ['jshint']
-      },
-      css: {
-        files: ['src/css/**/*'],
-        tasks: ['stylelint']
-      }
+      }// ,
+      // js: {
+      //   files: ['src/js/**/*'],
+      //   tasks: ['jshint']
+      // },
+      // css: {
+      //   files: ['src/css/**/*'],
+      //   tasks: ['stylelint']
+      // }
     }
   });
 

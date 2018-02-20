@@ -4,8 +4,8 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
-  <meta name="description" content="Google Map based local guide">
-  <title>Location Map Guide</title>
+  <meta name="description" content="Museum Map Guide">
+  <title>Museum Map Guide</title>
   <script defer src="https://maps.googleapis.com/maps/api/js?libraries=places&key=AIzaSyCc5fWtTXIZ1Xoa3A6waJR-lLHNhXNfzBk&v=3&callback=GoogleMapView.initMap" onerror="GoogleMapView.errorLoadMap()"></script>
   <link href="https://fonts.googleapis.com/css?family=Spectral+SC:400,600" rel="stylesheet">
   <!-- build:css css/styles.min.css -->
@@ -23,11 +23,11 @@
     </ul>
   </div>
   <header class="header">
-    <h1 class="header-title" data-bind="text: mainTitle"></h1>
-    <a data-bind="click: toggleSidebar" aria-role="button" href="#" class="btn header-hamburger">
-      <span class="header-hamburger-span">&nbsp;</span>
-      <span class="header-hamburger-span">&nbsp;</span>
-      <span class="header-hamburger-span">&nbsp;</span>
+    <h1 class="header__title" data-bind="text: mainTitle"></h1>
+    <a data-bind="click: toggleSidebar" aria-role="button" href="#" class="btn header__hamburger">
+      <span class="header__hamburger__bar">&nbsp;</span>
+      <span class="header__hamburger__bar">&nbsp;</span>
+      <span class="header__hamburger__bar">&nbsp;</span>
     </a>
   </header>
   <div class="map"></div>
