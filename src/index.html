@@ -16,7 +16,7 @@
   <div class="list-sidebar">
     <div class="list-sidebar-top">
       <input class="list-sidebar-filter" placeholder="Filter..." type="search" data-bind="textInput: query"/>
-      <a href="#" class="btn list-sidebar-reset" data-bind="click: resetMap" aria-role="button">Reset Map</a>
+      <a href="#" class="btn list-sidebar-reset" data-bind="click: resetMap" role="button">Reset Map</a>
     </div>
     <ul data-bind="foreach: markersObservable">
       <li class="list-sidebar-item" data-bind="text: title, click: $root.clickLocationList">Loading Data...</li>
@@ -24,7 +24,7 @@
   </div>
   <header class="header">
     <h1 class="header__title" data-bind="text: mainTitle"></h1>
-    <a data-bind="click: toggleSidebar" aria-role="button" href="#" class="btn header__hamburger">
+    <a data-bind="click: toggleSidebar" role="button" href="#" class="btn header__hamburger">
       <span class="header__hamburger__bar">&nbsp;</span>
       <span class="header__hamburger__bar">&nbsp;</span>
       <span class="header__hamburger__bar">&nbsp;</span>
