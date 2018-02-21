@@ -146,14 +146,14 @@ ${currentModel.area.type} Map Guide`;
   // Shows/hides sidebar with hamburger <button>
   toggleSidebar () {
     const listView = document.getElementsByClassName('list-sidebar')[0];
-    const state = listView.classList.contains('show-list-sidebar');
+    const state = listView.classList.contains('list-sidebar--show');
     // Hides sidebar if open and vice versa
     if (state) {
-      listView.classList.add('hide-list-sidebar');
-      listView.classList.remove('show-list-sidebar');
+      listView.classList.add('list-sidebar--hide');
+      listView.classList.remove('list-sidebar--show');
     } else {
-      listView.classList.remove('hide-list-sidebar');
-      listView.classList.add('show-list-sidebar');
+      listView.classList.remove('list-sidebar--hide');
+      listView.classList.add('list-sidebar--show');
     }
   }
 }
@@ -167,7 +167,7 @@ class GoogleMapView {
 
   // maps.googleapis.com script initial loading error callback
   static errorLoadMap () {
-    window.alert('Unable to load Google Map at this time. Check your internet connection or try again later');
+    window.alert('Unable to load Google Map at this time. Check your internet connection or try again later.');
   }
 
   // googleapis.com initalization success callback
@@ -209,6 +209,7 @@ class GoogleMapView {
       hideListView();
       GoogleMapView.popInfoWindow(this);
     };
+
     // Create array of Markers from provided location info
     currentModel.locations.forEach(function (location) {
       const newMarker = new window.google.maps.Marker({
@@ -232,10 +233,10 @@ class GoogleMapView {
     // Helper Method for hiding sidebar if it is open
     function hideListView () {
       const listView = document.getElementsByClassName('list-sidebar')[0];
-      const state = listView.classList.contains('show-list-sidebar');
+      const state = listView.classList.contains('list-sidebar--show');
       if (state) {
-        listView.classList.add('hide-list-sidebar');
-        listView.classList.remove('show-list-sidebar');
+        listView.classList.add('list-sidebar--hide');
+        listView.classList.remove('list-sidebar--show');
       }
     }
   }
@@ -276,7 +277,7 @@ class GoogleMapView {
     // Slide sidebar into initial position automatically when window enlarge
     if (window.matchMedia('(min-width: 768px)').matches) {
       const listView = document.getElementsByClassName('list-sidebar')[0];
-      listView.classList.remove('show-list-sidebar');
+      listView.classList.remove('list-sidebar--show');
     }
   }
 
@@ -284,7 +285,7 @@ class GoogleMapView {
     // Bounce marker
     GoogleMapView.toggleBounceMarker(marker);
 
-    // Check if InfoWindow not already on on clicked marker
+    // Check if InfoWindow not already on clicked marker
     if (GoogleMapView.mainInfoWindow.marker !== marker) {
       GoogleMapView.mainInfoWindow.marker = marker;
 
@@ -293,19 +294,20 @@ class GoogleMapView {
       GoogleMapView.map.panBy(0, -280);
 
       // Begin construction of InfoWindow content
-      let markerContent = `<div class="info-window__title"><strong>${marker.title}</strong></div>`;
-
-      // Spinner HTML below taken from http://tobiasahlin.com/spinkit/
-      markerContent += '<div class="sk-circle">';
-      for (let circleNum = 1; circleNum <= 12; circleNum += 1) {
-        markerContent += `<div class="sk-circle${circleNum} sk-child"></div>`;
-      }
-      markerContent += '</div>';
-      // END spinner HTML injection code
+      let markerContent = `<div class="info-window">`;
+      markerContent += `<div class="info-window__title"><strong>${marker.title}</strong></div>`;
+      // Inject Spinner HTML (taken from http://tobiasahlin.com/spinkit/)
+      markerContent += getInfoWindowSpinner();
+      // Insert navigation arrows
+      markerContent += getInfoWindowArrows();
+      // Close <div class="info-window">
+      markerContent += `</div>`;
 
       // Place title & spinner into InfoWindow & open it
       GoogleMapView.mainInfoWindow.setContent(markerContent);
       GoogleMapView.mainInfoWindow.open(GoogleMapView.map, marker);
+
+      applyArrowBtnsBindings();
 
       // Begin fetching data from Yelp
       getYelp(marker).then(yelpInfo => {
@@ -313,33 +315,36 @@ class GoogleMapView {
         if (yelpInfo) {
           // Yelp result exists
           // Remove spinner by reassigning markerContent with Yelp info
-          markerContent = `<div class="info-window__title"><strong>${marker.title}</strong></div>`;
+          markerContent = `<div class="info-window">`;
+          markerContent += `<div class="info-window__title"><strong>${marker.title}</strong></div>`;
 
+          // Begin Yelp injection
+          markerContent += `<div class="yelp">`;
           // Image
-          markerContent += `<img class="yelp-img" src=${yelpInfo.image_url} alt=${marker.title}>`;
-
+          markerContent += `<img class="yelp__image" src=${yelpInfo.image_url} alt="Museum">`;
           // Rating & Info
-          markerContent += `<div class="yelp-container">${getRatingImg(yelpInfo.rating)}`;
+          markerContent += `<div class="yelp__info">${getRatingImg(yelpInfo.rating)}`;
           markerContent += `<a target="_blank" href="${yelpInfo.url}">`;
-          markerContent += `<img class="yelp-logo" src="img/yelp_trademark_rgb_outline.png" \
+          markerContent += `<img class="yelp__info__logo" src="img/yelp_trademark_rgb_outline.png" \
 srcset="img/yelp_trademark_rgb_outline_2x.png 2x" alt="Yelp Logo">`;
           markerContent += `</a>`;
-          markerContent += `<a class="yelp-reviews" href="${yelpInfo.url}" target="_blank">Based \
+          markerContent += `<a class="yelp__info__reviews" href="${yelpInfo.url}" target="_blank">Based \
 on <strong>${yelpInfo.review_count}</strong> review${yelpInfo.review_count > 1 ? 's' : ''}</a>`;
           markerContent += `<p><address>${getYelpAddressHtml(yelpInfo.location.display_address)}\
 </address></p>`;
-          markerContent += `<p class="yelp-info">Currently \
+          markerContent += `<p class="yelp__info__open-now">Currently \
 <strong>${yelpInfo.is_closed ? 'CLOSED' : 'OPEN'}</strong><br>`;
           markerContent += `Phone: ${yelpInfo.display_phone}</p>`;
+          // Close <div class="yelp__info">
+          markerContent += `</div>`;
+          // Close <div class="yelp">
           markerContent += `</div>`;
 
           // Add previosu/next arrow buttons
-          markerContent += `<div class="info-window__arrows">`;
-          markerContent += `<a href="#" aria-role="button" class="btn info-window__arrows-prev" \
->&lt;</a>`;
-          markerContent += `<a href="#" class="btn info-window__arrows-next" aria-role="button" \
->&gt;</a>`;
+          markerContent += getInfoWindowArrows();
+          // Close <div class="info-window">
           markerContent += `</div>`;
+
           GoogleMapView.mainInfoWindow.setContent(markerContent);
 
           // Apply ViewModel bindings to the arrow buttons
@@ -347,17 +352,17 @@ on <strong>${yelpInfo.review_count}</strong> review${yelpInfo.review_count > 1 ?
 
         // Result undefined, search term not in Yelp database
         } else {
-          markerContent = `<div class="info-window__title"><strong>${marker.title}</strong></div>`;
+          markerContent = `<div class="info-window">`;
+          markerContent += `<div class="info-window__title"><strong>${marker.title}</strong></div>`;
           markerContent += `<p>This location's information is not found in Yelp's business \
 directory. Try a different location.</p>`;
 
-          // Add previosu/next arrow buttons
-          markerContent += `<div class="info-window__arrows">`;
-          markerContent += `<a href="#" aria-role="button" class="btn info-window__arrows-prev" \
->&lt;</a>`;
-          markerContent += `<a href="#" class="btn info-window__arrows-next" aria-role="button" \
->&gt;</a>`;
+          // Add previous/next arrow buttons
+          markerContent += getInfoWindowArrows();
+
+          // Close <div class="info-window">
           markerContent += `</div>`;
+
           GoogleMapView.mainInfoWindow.setContent(markerContent);
 
           // Apply ViewModel bindings to the arrow buttons
@@ -367,11 +372,19 @@ directory. Try a different location.</p>`;
       // In case of connection error to cors-anywhere.herokuapp.com or
       // api.yelp.com
       .catch((err) => {
-        markerContent = `<div class="title"><strong>${marker.title}</strong></div>`;
+        markerContent = `<div class="info-window">`;
+        markerContent += `<div class="title"><strong>${marker.title}</strong></div>`;
         markerContent += `<p>Unable to retrieve this location's Yelp data due to a \
 connection error. Please try again later.</p>`;
+        markerContent += getInfoWindowArrows();
+        // Close <div class="info-window">
+        markerContent += `</div>`;
+
         GoogleMapView.mainInfoWindow.setContent(markerContent);
-        console.log(err);
+        console.log(err); // TODO
+
+        // Apply ViewModel bindings to the arrow buttons
+        applyArrowBtnsBindings();
       });
     }
 
@@ -387,13 +400,25 @@ connection error. Please try again later.</p>`;
       }
     }
 
-    // Helper method for formatting Yelp address html string
-    function getYelpAddressHtml (yelpAddress) {
-      // Remove country from address since it's redundant in the context of a city map
-      if (yelpAddress[yelpAddress.length - 1] === currentModel.area.country) {
-        yelpAddress = yelpAddress.slice(0, yelpAddress.length - 1);
+    // Helper method for constructing InfoWindow arrows HTML
+    function getInfoWindowArrows () {
+      let infoWindowArrows = `<div class="info-window__arrows">`;
+      infoWindowArrows += `<a href="#" role="button" class="btn info-window__arrows-prev" \
+>&lt;</a>`;
+      infoWindowArrows += `<a href="#" class="btn info-window__arrows-next" role="button" \
+>&gt;</a>`;
+      infoWindowArrows += `</div>`;
+      return infoWindowArrows;
+    }
+
+    // Helper method for constructing InfoWindow spinner HTML
+    function getInfoWindowSpinner () {
+      let spinner = '<div class="sk-circle">';
+      for (let circleNum = 1; circleNum <= 12; circleNum += 1) {
+        spinner += `<div class="sk-circle${circleNum} sk-child"></div>`;
       }
-      return yelpAddress.join('<br>');
+      spinner += '</div>';
+      return spinner;
     }
 
     // Helper method for selection and formatting of correct Yelp star rating img
@@ -424,8 +449,8 @@ ${mapMarker.position.lat()}&longitude=${mapMarker.position.lng()}`,
         })
         .catch(err => {
           // In case connection error to cors-anywhere.herokuapp.com
-          window.alert(`Unable to retrieve this locations's Yelp data due to a \
-connection error. Please try again later.`);
+//           window.alert(`Unable to retrieve this locations's Yelp data due to a \
+// connection error. Please try again later.`); TODO
           return Promise.reject(err);
         })
         .then(response => {
@@ -437,6 +462,16 @@ connection error. Please try again later.`);
         .then(response => response.json())
         .then(responseJSON => responseJSON.businesses[0]);
     }
+
+    // Helper method for formatting Yelp address html string
+    function getYelpAddressHtml (yelpAddress) {
+      // Remove country from address since it's redundant in the context of a city map
+      if (yelpAddress[yelpAddress.length - 1] === currentModel.area.country) {
+        yelpAddress = yelpAddress.slice(0, yelpAddress.length - 1);
+      }
+      return yelpAddress.join('<br>');
+    }
+
   // END of method popInfoWindow(marker)
   }
 
