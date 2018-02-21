@@ -14,12 +14,12 @@
 </head>
 <body>
   <div class="list-sidebar">
-    <div class="list-sidebar-top">
-      <input class="list-sidebar-filter" placeholder="Filter..." type="search" data-bind="textInput: query"/>
-      <a href="#" class="btn list-sidebar-reset" data-bind="click: resetMap" role="button">Reset Map</a>
+    <div class="list-sidebar__top">
+      <input class="list-sidebar__top__filter" placeholder="Filter..." type="search" data-bind="textInput: query"/>
+      <a href="#" class="btn list-sidebar__top__reset" data-bind="click: resetMap" role="button">Reset Map</a>
     </div>
-    <ul data-bind="foreach: markersObservable">
-      <li class="list-sidebar-item" data-bind="text: title, click: $root.clickLocationList">Loading Data...</li>
+    <ul class="list-sidebar__list" data-bind="foreach: markersObservable">
+      <li class="list-sidebar__list__item" data-bind="text: title, click: $root.clickLocationList">Loading Data...</li>
     </ul>
   </div>
   <header class="header">

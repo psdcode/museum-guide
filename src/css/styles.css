@@ -2,9 +2,9 @@
 @import 'base/_global';
 @import 'base/_variables';
 @import 'base/_mixins';
+@import 'modules/_btn';
 @import 'modules/_spinner';
 @import 'modules/_header';
-@import 'modules/_btn';
 @import 'modules/_list-sidebar';
 @import 'modules/_map';
 @import 'modules/_info-window';

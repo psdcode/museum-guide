@@ -23,9 +23,6 @@
   &__hamburger {
     padding: 0 4px;
     margin: 17px 20px 17px 12px;
-    background-color: transparent;
-    font-size: 26.4px;
-    line-height: inherit;
 
     @media screen and (min-width: 768px) {
       display: none;
