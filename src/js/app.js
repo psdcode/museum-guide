@@ -133,7 +133,7 @@ class DisplayViewModel {
     DisplayViewModel.instance.clickArrow(-1);
   }
 
-  // Alphabetically sort display of loations by title
+  // Alphabetically sort display of locations by title
   sort (observableArray) {
     observableArray.sort((first, second) => {
       return first.title === second.title ? 0 : (first.title > second.title ? 1 : -1);
@@ -307,45 +307,49 @@ class GoogleMapView {
       applyArrowBtnsBindings();
 
       // Begin fetching data from Yelp
-      getYelp(marker).then(yelpInfo => {
+      getYelp(marker).then(function (yelpInfo) {
         // Only enter here if no connection issues
-        if (yelpInfo) {
-          // if (/*check if infoWindow is still open on marker for which fetch occured. If not, don't display*/) {
-          //
-          // }
-          // Yelp result exists
-          // Remove spinner by reassigning markerContent with Yelp info
-          markerContent = getInfoWindowMainHtml(getYelpInfoHtml(yelpInfo), marker.title);
 
-          GoogleMapView.mainInfoWindow.setContent(markerContent);
+        // Check if InfoWindow still on requested marker, else don't render
+        if (GoogleMapView.mainInfoWindow.marker === marker) {
+          // Check if Yelp result exists
+          if (yelpInfo) {
+            // Remove spinner by reassigning markerContent with Yelp info
+            markerContent = getInfoWindowMainHtml(getYelpInfoHtml(yelpInfo), marker.title);
 
-          // Apply ViewModel bindings to the arrow buttons
-          applyArrowBtnsBindings();
+            GoogleMapView.mainInfoWindow.setContent(markerContent);
 
-        // Result undefined, search term not in Yelp database
-        } else {
-          let notFoundHtml = `<p>This location's information is not found in Yelp's business `
-          notFoundHtml += `directory. Try a different location.</p>`;
-          markerContent = getInfoWindowMainHtml(notFoundHtml, marker.title);
+            // Apply ViewModel bindings to the arrow buttons
+            applyArrowBtnsBindings();
 
-          GoogleMapView.mainInfoWindow.setContent(markerContent);
+          // Result undefined, search term not in Yelp database
+          } else {
+            let notFoundHtml = `<p>This location's information is not found in Yelp's business `;
+            notFoundHtml += `directory. Try a different location.</p>`;
+            markerContent = getInfoWindowMainHtml(notFoundHtml, marker.title);
 
-          // Apply ViewModel bindings to the arrow buttons
-          applyArrowBtnsBindings();
+            GoogleMapView.mainInfoWindow.setContent(markerContent);
+
+            // Apply ViewModel bindings to the arrow buttons
+            applyArrowBtnsBindings();
+          }
         }
       })
       // In case of connection error to cors-anywhere.herokuapp.com or
       // api.yelp.com
-      .catch((err) => {
-        let errorHtml = `<p>Unable to retrieve this location's Yelp data due to a `;
-        errorHtml += `connection error. Please try again later.</p>`;
-        markerContent = getInfoWindowMainHtml(errorHtml, undefined);
+      .catch(function (err) {
+        // Check if InfoWindow still on requested marker, else don't render
+        if (GoogleMapView.mainInfoWindow.marker === marker) {
+          let errorHtml = `<p>Unable to retrieve this location's Yelp data due to a `;
+          errorHtml += `connection error. Please try again later.</p>`;
+          markerContent = getInfoWindowMainHtml(errorHtml, undefined);
 
-        GoogleMapView.mainInfoWindow.setContent(markerContent);
-        console.log(err); // TODO
+          GoogleMapView.mainInfoWindow.setContent(markerContent);
+          console.log(err); // TODO
 
-        // Apply ViewModel bindings to the arrow buttons
-        applyArrowBtnsBindings();
+          // Apply ViewModel bindings to the arrow buttons
+          applyArrowBtnsBindings();
+        }
       });
     }
 
