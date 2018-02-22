@@ -5,6 +5,7 @@
   --mainFontColor: #252525;
   --mainBkgndColor: #f1f1f1;
   --mainElmntBorderColor: #d9d9d9;
+  --listElmntSelectedColor: var(--mainElmntBorderColor);
   --btnActive: #5b5b5b;
   --btnBorder: var(--btnActive);
   --listItemBorderBottom: var(--btnActive);
