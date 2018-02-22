@@ -297,15 +297,8 @@ class GoogleMapView {
       GoogleMapView.map.panTo(marker.position);
       GoogleMapView.map.panBy(0, -280);
 
-      // Begin construction of InfoWindow content
-      let markerContent = `<div class="info-window">`;
-      markerContent += `<div class="info-window__title"><strong>${marker.title}</strong></div>`;
-      // Inject Spinner HTML (taken from http://tobiasahlin.com/spinkit/)
-      markerContent += getInfoWindowSpinner();
-      // Insert navigation arrows
-      markerContent += getInfoWindowArrowsHtml();
-      // Close <div class="info-window">
-      markerContent += `</div>`;
+      // Construction of pre-fetch InfoWindow content
+      let markerContent = getInfoWindowMainHtml(getInfoWindowSpinnerHtml(), marker.title);
 
       // Place title & spinner into InfoWindow & open it
       GoogleMapView.mainInfoWindow.setContent(markerContent);
@@ -322,16 +315,7 @@ class GoogleMapView {
           // }
           // Yelp result exists
           // Remove spinner by reassigning markerContent with Yelp info
-          markerContent = `<div class="info-window">`;
-          markerContent += `<div class="info-window__title"><strong>${marker.title}</strong></div>`;
-
-          // Begin Yelp injection
-          markerContent += getYelpInfoHtml(yelpInfo);
-
-          // Add previosu/next arrow buttons
-          markerContent += getInfoWindowArrowsHtml();
-          // Close <div class="info-window">
-          markerContent += `</div>`;
+          markerContent = getInfoWindowMainHtml(getYelpInfoHtml(yelpInfo), marker.title);
 
           GoogleMapView.mainInfoWindow.setContent(markerContent);
 
@@ -340,16 +324,9 @@ class GoogleMapView {
 
         // Result undefined, search term not in Yelp database
         } else {
-          markerContent = `<div class="info-window">`;
-          markerContent += `<div class="info-window__title"><strong>${marker.title}</strong></div>`;
-          markerContent += `<p>This location's information is not found in Yelp's business `
-          markerContent += `directory. Try a different location.</p>`;
-
-          // Add previous/next arrow buttons
-          markerContent += getInfoWindowArrowsHtml();
-
-          // Close <div class="info-window">
-          markerContent += `</div>`;
+          let notFoundHtml = `<p>This location's information is not found in Yelp's business `
+          notFoundHtml += `directory. Try a different location.</p>`;
+          markerContent = getInfoWindowMainHtml(notFoundHtml, marker.title);
 
           GoogleMapView.mainInfoWindow.setContent(markerContent);
 
@@ -360,13 +337,9 @@ class GoogleMapView {
       // In case of connection error to cors-anywhere.herokuapp.com or
       // api.yelp.com
       .catch((err) => {
-        markerContent = `<div class="info-window">`;
-        markerContent += `<div class="title"><strong>${marker.title}</strong></div>`;
-        markerContent += `<p>Unable to retrieve this location's Yelp data due to a `;
-        markerContent += `connection error. Please try again later.</p>`;
-        markerContent += getInfoWindowArrowsHtml();
-        // Close <div class="info-window">
-        markerContent += `</div>`;
+        let errorHtml = `<p>Unable to retrieve this location's Yelp data due to a `;
+        errorHtml += `connection error. Please try again later.</p>`;
+        markerContent = getInfoWindowMainHtml(errorHtml, undefined);
 
         GoogleMapView.mainInfoWindow.setContent(markerContent);
         console.log(err); // TODO
@@ -390,19 +363,33 @@ class GoogleMapView {
       }
     }
 
-    // Helper method for constructing InfoWindow arrows HTML
-    function getInfoWindowArrowsHtml () {
-      let infoWindowArrows = `<div class="info-window__arrows">`;
-      infoWindowArrows += `<a href="#" role="button" class="btn info-window__arrows-prev"`;
-      infoWindowArrows += `>&lt;</a>`;
-      infoWindowArrows += `<a href="#" class="btn info-window__arrows-next" role="button"`;
-      infoWindowArrows += `>&gt;</a>`;
-      infoWindowArrows += `</div>`;
-      return infoWindowArrows;
+    function getInfoWindowMainHtml (content, markerTitle) {
+      // Helper method for constructing InfoWindow arrows HTML
+      function getInfoWindowArrowsHtml () {
+        let infoWindowArrows = `<div class="info-window__arrows">`;
+        infoWindowArrows += `<a href="#" role="button" class="btn info-window__arrows-prev"`;
+        infoWindowArrows += `>&lt;</a>`;
+        infoWindowArrows += `<a href="#" class="btn info-window__arrows-next" role="button"`;
+        infoWindowArrows += `>&gt;</a>`;
+        infoWindowArrows += `</div>`;
+        return infoWindowArrows;
+      }
+
+      let infoWindowContent = `<div class="info-window">`;
+      infoWindowContent += `<div class="title"><strong>${markerTitle}</strong></div>`;
+
+      // Insert custom content
+      infoWindowContent += content;
+
+      // Insert bottom nav arrows
+      infoWindowContent += getInfoWindowArrowsHtml();
+      // Close <div class="info-window">
+      infoWindowContent += `</div>`;
+      return infoWindowContent;
     }
 
     // Helper method for constructing InfoWindow spinner HTML
-    function getInfoWindowSpinner () {
+    function getInfoWindowSpinnerHtml () {
       let spinner = '<div class="sk-circle">';
       for (let circleNum = 1; circleNum <= 12; circleNum += 1) {
         spinner += `<div class="sk-circle${circleNum} sk-child"></div>`;
