@@ -1,4 +1,4 @@
-'use strict';
+'use strict'; // already use strict within classes tho
 /* Imports */
 
 import {model as currentModel} from '../model/model.js';
@@ -16,8 +16,8 @@ class DisplayViewModel {
 
     // Determine if to include local language heading in title TODO
     if (currentModel.area.locallang) {
-      self.mainTitle = `${currentModel.area.locallang} - ${currentModel.area.city} \
-${currentModel.area.type} Map Guide`;
+      self.mainTitle = `${currentModel.area.locallang} - ${currentModel.area.city} `;
+      self.mainTitle += `${currentModel.area.type} Map Guide`;
     } else {
       self.mainTitle = `${currentModel.area.city} ${currentModel.area.type} Map Guide`;
     }
@@ -36,9 +36,12 @@ ${currentModel.area.type} Map Guide`;
     /* Instance Methods */
     // Method to open InfoWindow using prev/next buttons
     self.clickArrow = function (direction) {
+      // Check if current search result has more than 1 item
       if (self.markersObservable().length > 1) {
         const currentMarkerIndex = self.markersObservable.indexOf(GoogleMapView.mainInfoWindow.marker);
+        // Get index of target list-view entry the markers observable array
         let neighborMarkerIndex = (currentMarkerIndex + direction) % self.markersObservable().length;
+        // Check if need to loop back to beginning of list
         if (neighborMarkerIndex === -1) {
           neighborMarkerIndex = self.markersObservable().length - 1;
         }
@@ -227,7 +230,8 @@ class GoogleMapView {
     // Adjust map bounds to fit all markers
     GoogleMapView.resetMap();
 
-    // Notify current instance of DisplayViewModel that google map initialization is complete
+    // Notify current instance of DisplayViewModel that
+    // google map initialization is complete
     DisplayViewModel.instance.mapReady(true);
 
     // Helper Method for hiding sidebar if it is open
@@ -338,8 +342,8 @@ class GoogleMapView {
         } else {
           markerContent = `<div class="info-window">`;
           markerContent += `<div class="info-window__title"><strong>${marker.title}</strong></div>`;
-          markerContent += `<p>This location's information is not found in Yelp's business \
-directory. Try a different location.</p>`;
+          markerContent += `<p>This location's information is not found in Yelp's business `
+          markerContent += `directory. Try a different location.</p>`;
 
           // Add previous/next arrow buttons
           markerContent += getInfoWindowArrowsHtml();
@@ -358,8 +362,8 @@ directory. Try a different location.</p>`;
       .catch((err) => {
         markerContent = `<div class="info-window">`;
         markerContent += `<div class="title"><strong>${marker.title}</strong></div>`;
-        markerContent += `<p>Unable to retrieve this location's Yelp data due to a \
-connection error. Please try again later.</p>`;
+        markerContent += `<p>Unable to retrieve this location's Yelp data due to a `;
+        markerContent += `connection error. Please try again later.</p>`;
         markerContent += getInfoWindowArrowsHtml();
         // Close <div class="info-window">
         markerContent += `</div>`;
@@ -378,8 +382,10 @@ connection error. Please try again later.</p>`;
       // Determine if buttons will be clickable
       const dataBindStyle = `css: { 'btn--off': markersObservable().length < 2 }`;
       if (arrowBtnsDiv) {
-        arrowBtnsDiv.children[0].setAttribute('data-bind', 'click: clickPrevArrow, ' + dataBindStyle);
-        arrowBtnsDiv.children[1].setAttribute('data-bind', 'click: clickNextArrow, ' + dataBindStyle);
+        arrowBtnsDiv.children[0]
+          .setAttribute('data-bind', 'click: clickPrevArrow, ' + dataBindStyle);
+        arrowBtnsDiv.children[1]
+          .setAttribute('data-bind', 'click: clickNextArrow, ' + dataBindStyle);
         window.ko.applyBindings(DisplayViewModel.instance, arrowBtnsDiv);
       }
     }
@@ -387,10 +393,10 @@ connection error. Please try again later.</p>`;
     // Helper method for constructing InfoWindow arrows HTML
     function getInfoWindowArrowsHtml () {
       let infoWindowArrows = `<div class="info-window__arrows">`;
-      infoWindowArrows += `<a href="#" role="button" class="btn info-window__arrows-prev" \
->&lt;</a>`;
-      infoWindowArrows += `<a href="#" class="btn info-window__arrows-next" role="button" \
->&gt;</a>`;
+      infoWindowArrows += `<a href="#" role="button" class="btn info-window__arrows-prev"`;
+      infoWindowArrows += `>&lt;</a>`;
+      infoWindowArrows += `<a href="#" class="btn info-window__arrows-next" role="button"`;
+      infoWindowArrows += `>&gt;</a>`;
       infoWindowArrows += `</div>`;
       return infoWindowArrows;
     }
@@ -409,8 +415,10 @@ connection error. Please try again later.</p>`;
     function getRatingImg (rating) {
       const ratingWhole = Math.floor(rating);
       const ratingHalf = (rating - ratingWhole === 0.5 ? '_half' : '');
-      return `<img class="yelp-rating" src="img/yelp_stars_reg/regular_${ratingWhole}${ratingHalf}\
-.png" srcset="img/yelp_stars_reg/regular_${ratingWhole}${ratingHalf}@2x.png 2x">`;
+      let imgHtml = `<img class="yelp-rating" src="img/yelp_stars_reg/regular_`;
+      imgHtml += `${ratingWhole}${ratingHalf}.png" srcset="img/yelp_stars_reg/`;
+      imgHtml += `regular_${ratingWhole}${ratingHalf}@2x.png 2x">`;
+      return imgHtml;
     }
 
     // Helper method for formatting search string from title
@@ -422,9 +430,12 @@ connection error. Please try again later.</p>`;
     function getYelp (mapMarker) {
       // Since client-side requests to Yelp V3 API are not possible due to lack
       // of support for CORS and JSONP, 'cors-anywhere' app hack is employed as a proxy
-      return window.fetch(`https://cors-anywhere.herokuapp.com/https://api.yelp.com/v3/\
-businesses/search?term=${getSearchString(mapMarker.title)}&latitude=\
-${mapMarker.position.lat()}&longitude=${mapMarker.position.lng()}`,
+      let fetchString = `https://cors-anywhere.herokuapp.com/https://api.yelp.com/v3/`;
+      fetchString += `businesses/search?term=${getSearchString(mapMarker.title)}&`;
+      fetchString += `latitude=${mapMarker.position.lat()}&longitude=`;
+      fetchString += `${mapMarker.position.lng()}`;
+
+      return window.fetch(fetchString,
         {
           method: 'GET',
           headers: {
@@ -433,8 +444,8 @@ ${mapMarker.position.lat()}&longitude=${mapMarker.position.lng()}`,
         })
         .catch(err => {
           // In case connection error to cors-anywhere.herokuapp.com
-//           window.alert(`Unable to retrieve this locations's Yelp data due to a \
-// connection error. Please try again later.`); TODO
+          // window.alert(`Unable to retrieve this locations's Yelp data due to a \
+          // connection error. Please try again later.`); TODO
           return Promise.reject(err);
         })
         .then(response => {
@@ -464,15 +475,16 @@ ${mapMarker.position.lat()}&longitude=${mapMarker.position.lng()}`,
       // Rating & Info
       yelpContent += `<div class="yelp__info">${getRatingImg(yelpInfo.rating)}`;
       yelpContent += `<a target="_blank" href="${yelpInfo.url}">`;
-      yelpContent += `<img class="yelp__info__logo" src="img/yelp_trademark_rgb_outline.png" \
-srcset="img/yelp_trademark_rgb_outline_2x.png 2x" alt="Yelp Logo">`;
+      yelpContent += `<img class="yelp__info__logo" src="img/yelp_trademark_rgb_outline.png" `;
+      yelpContent += `srcset="img/yelp_trademark_rgb_outline_2x.png 2x" alt="Yelp Logo">`;
       yelpContent += `</a>`;
-      yelpContent += `<a class="yelp__info__reviews" href="${yelpInfo.url}" target="_blank">Based \
-on <strong>${yelpInfo.review_count}</strong> review${yelpInfo.review_count > 1 ? 's' : ''}</a>`;
-      yelpContent += `<p><address>${getYelpAddressHtml(yelpInfo.location.display_address)}\
-</address></p>`;
-      yelpContent += `<p class="yelp__info__open-now">Currently \
-<strong>${yelpInfo.is_closed ? 'CLOSED' : 'OPEN'}</strong><br>`;
+      yelpContent += `<a class="yelp__info__reviews" href="${yelpInfo.url}" target="_blank">Based `;
+      yelpContent += `on <strong>${yelpInfo.review_count}</strong> review`;
+      yelpContent += `${yelpInfo.review_count > 1 ? 's' : ''}</a>`;
+      yelpContent += `<p><address>${getYelpAddressHtml(yelpInfo.location.display_address)}`;
+      yelpContent += `</address></p>`;
+      yelpContent += `<p class="yelp__info__open-now">Currently <strong>`;
+      yelpContent += `${yelpInfo.is_closed ? 'CLOSED' : 'OPEN'}</strong><br>`;
       yelpContent += `Phone: ${yelpInfo.display_phone}</p>`;
       // Close <div class="yelp__info">
       yelpContent += `</div>`;
@@ -526,7 +538,9 @@ on <strong>${yelpInfo.review_count}</strong> review${yelpInfo.review_count > 1 ?
       marker.setAnimation(undefined);
     } else {
       // Disable bounce on all markers and set temporary bounce on selected marker
-      GoogleMapView.markers.forEach(otherMarker => { otherMarker.setAnimation(undefined); });
+      GoogleMapView.markers.forEach(function (otherMarker) {
+        otherMarker.setAnimation(undefined);
+      });
       marker.setAnimation(window.google.maps.Animation.BOUNCE);
       setTimeout(() => marker.setAnimation(undefined), 1500);
     }
