@@ -14,7 +14,7 @@ class DisplayViewModel {
     self.mapReady = window.ko.observable(false);
     self.query = window.ko.observable('');
 
-    // Determine if to include local language heading in title
+    // Determine if to include local language heading in title TODO
     if (currentModel.area.locallang) {
       self.mainTitle = `${currentModel.area.locallang} - ${currentModel.area.city} \
 ${currentModel.area.type} Map Guide`;
@@ -50,7 +50,7 @@ ${currentModel.area.type} Map Guide`;
     // Filter obsrvable location list and markers based on query
     self.filterMarkerList = function (searchInput) {
       // Search query is a non-empty string
-      if (searchInput) {
+      if (searchInput !== '') {
         // Empty the observable list
         self.markersObservable([]);
         GoogleMapView.markers.forEach(function (checkMarker) {
@@ -299,7 +299,7 @@ class GoogleMapView {
       // Inject Spinner HTML (taken from http://tobiasahlin.com/spinkit/)
       markerContent += getInfoWindowSpinner();
       // Insert navigation arrows
-      markerContent += getInfoWindowArrows();
+      markerContent += getInfoWindowArrowsHtml();
       // Close <div class="info-window">
       markerContent += `</div>`;
 
@@ -313,35 +313,19 @@ class GoogleMapView {
       getYelp(marker).then(yelpInfo => {
         // Only enter here if no connection issues
         if (yelpInfo) {
+          // if (/*check if infoWindow is still open on marker for which fetch occured. If not, don't display*/) {
+          //
+          // }
           // Yelp result exists
           // Remove spinner by reassigning markerContent with Yelp info
           markerContent = `<div class="info-window">`;
           markerContent += `<div class="info-window__title"><strong>${marker.title}</strong></div>`;
 
           // Begin Yelp injection
-          markerContent += `<div class="yelp">`;
-          // Image
-          markerContent += `<img class="yelp__image" src=${yelpInfo.image_url} alt="Museum">`;
-          // Rating & Info
-          markerContent += `<div class="yelp__info">${getRatingImg(yelpInfo.rating)}`;
-          markerContent += `<a target="_blank" href="${yelpInfo.url}">`;
-          markerContent += `<img class="yelp__info__logo" src="img/yelp_trademark_rgb_outline.png" \
-srcset="img/yelp_trademark_rgb_outline_2x.png 2x" alt="Yelp Logo">`;
-          markerContent += `</a>`;
-          markerContent += `<a class="yelp__info__reviews" href="${yelpInfo.url}" target="_blank">Based \
-on <strong>${yelpInfo.review_count}</strong> review${yelpInfo.review_count > 1 ? 's' : ''}</a>`;
-          markerContent += `<p><address>${getYelpAddressHtml(yelpInfo.location.display_address)}\
-</address></p>`;
-          markerContent += `<p class="yelp__info__open-now">Currently \
-<strong>${yelpInfo.is_closed ? 'CLOSED' : 'OPEN'}</strong><br>`;
-          markerContent += `Phone: ${yelpInfo.display_phone}</p>`;
-          // Close <div class="yelp__info">
-          markerContent += `</div>`;
-          // Close <div class="yelp">
-          markerContent += `</div>`;
+          markerContent += getYelpInfoHtml(yelpInfo);
 
           // Add previosu/next arrow buttons
-          markerContent += getInfoWindowArrows();
+          markerContent += getInfoWindowArrowsHtml();
           // Close <div class="info-window">
           markerContent += `</div>`;
 
@@ -358,7 +342,7 @@ on <strong>${yelpInfo.review_count}</strong> review${yelpInfo.review_count > 1 ?
 directory. Try a different location.</p>`;
 
           // Add previous/next arrow buttons
-          markerContent += getInfoWindowArrows();
+          markerContent += getInfoWindowArrowsHtml();
 
           // Close <div class="info-window">
           markerContent += `</div>`;
@@ -376,7 +360,7 @@ directory. Try a different location.</p>`;
         markerContent += `<div class="title"><strong>${marker.title}</strong></div>`;
         markerContent += `<p>Unable to retrieve this location's Yelp data due to a \
 connection error. Please try again later.</p>`;
-        markerContent += getInfoWindowArrows();
+        markerContent += getInfoWindowArrowsHtml();
         // Close <div class="info-window">
         markerContent += `</div>`;
 
@@ -401,7 +385,7 @@ connection error. Please try again later.</p>`;
     }
 
     // Helper method for constructing InfoWindow arrows HTML
-    function getInfoWindowArrows () {
+    function getInfoWindowArrowsHtml () {
       let infoWindowArrows = `<div class="info-window__arrows">`;
       infoWindowArrows += `<a href="#" role="button" class="btn info-window__arrows-prev" \
 >&lt;</a>`;
@@ -470,6 +454,32 @@ ${mapMarker.position.lat()}&longitude=${mapMarker.position.lng()}`,
         yelpAddress = yelpAddress.slice(0, yelpAddress.length - 1);
       }
       return yelpAddress.join('<br>');
+    }
+
+    // Helper method for inserting Yelp html into info window
+    function getYelpInfoHtml (yelpInfo) {
+      let yelpContent = `<div class="yelp">`;
+      // Image
+      yelpContent += `<img class="yelp__image" src=${yelpInfo.image_url} alt="Museum">`;
+      // Rating & Info
+      yelpContent += `<div class="yelp__info">${getRatingImg(yelpInfo.rating)}`;
+      yelpContent += `<a target="_blank" href="${yelpInfo.url}">`;
+      yelpContent += `<img class="yelp__info__logo" src="img/yelp_trademark_rgb_outline.png" \
+srcset="img/yelp_trademark_rgb_outline_2x.png 2x" alt="Yelp Logo">`;
+      yelpContent += `</a>`;
+      yelpContent += `<a class="yelp__info__reviews" href="${yelpInfo.url}" target="_blank">Based \
+on <strong>${yelpInfo.review_count}</strong> review${yelpInfo.review_count > 1 ? 's' : ''}</a>`;
+      yelpContent += `<p><address>${getYelpAddressHtml(yelpInfo.location.display_address)}\
+</address></p>`;
+      yelpContent += `<p class="yelp__info__open-now">Currently \
+<strong>${yelpInfo.is_closed ? 'CLOSED' : 'OPEN'}</strong><br>`;
+      yelpContent += `Phone: ${yelpInfo.display_phone}</p>`;
+      // Close <div class="yelp__info">
+      yelpContent += `</div>`;
+      // Close <div class="yelp">
+      yelpContent += `</div>`;
+
+      return yelpContent;
     }
 
   // END of method popInfoWindow(marker)
