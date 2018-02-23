@@ -7,6 +7,7 @@ class GoogleMapView {
   static closeInfoWindow () {
     GoogleMapView.mainInfoWindow.close();
     GoogleMapView.mainInfoWindow.marker = undefined;
+    DisplayViewModel.instance.setSelectedMarker(undefined);
   }
 
   // maps.googleapis.com script initial loading error callback
@@ -45,12 +46,14 @@ class GoogleMapView {
     });
     GoogleMapView.mainInfoWindow.addListener('closeclick', function () {
       GoogleMapView.mainInfoWindow.marker = undefined;
+      DisplayViewModel.instance.setSelectedMarker(undefined);
     });
 
     // Declare listener callback outside of loop to avoid jshint warning
     const listenerPopInfo = function () {
       // Hide sidebar if open to display InfoWindow
       hideListView();
+      // 'this' will be the marker inside listener cb
       GoogleMapView.popInfoWindow(this);
     };
 
@@ -133,6 +136,9 @@ class GoogleMapView {
     // Check if InfoWindow not already on clicked marker
     if (GoogleMapView.mainInfoWindow.marker !== marker) {
       GoogleMapView.mainInfoWindow.marker = marker;
+
+      // Let DisplayViewModel know that marker has been selected
+      DisplayViewModel.instance.setSelectedMarker(marker);
 
       // Center on marker & move up map to allow for info window display
       GoogleMapView.map.panTo(marker.position);
@@ -354,6 +360,8 @@ class GoogleMapView {
     GoogleMapView.map.fitBounds(GoogleMapView.originalBounds);
     GoogleMapView.mainInfoWindow.marker = undefined;
     GoogleMapView.mainInfoWindow.close();
+    // Let DisplayViewModel know to unselect list-item
+    DisplayViewModel.instance.setSelectedMarker(undefined);
   }
 
   static setMarkerMap (marker, set) {

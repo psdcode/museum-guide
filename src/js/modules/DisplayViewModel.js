@@ -18,6 +18,8 @@ class DisplayViewModel {
 
     // Observable Markers Array that will determine display of list and markers
     self.markersObservable = window.ko.observableArray([]);
+    self.selectedMarker = window.ko.observable(undefined);
+
     // Computed observable loads markers once map initialization complete
     self.createMarkersObservable = window.ko.computed(function () {
       if (self.mapReady()) {
@@ -109,12 +111,12 @@ class DisplayViewModel {
   }
 
   // When click a location in sidebar
-  clickLocationList (clickedMarker) {
+  clickLocationList (clickedListItemMarker) {
     // Hide sidebar if open to display InfoWindow
     if (window.matchMedia('(max-width: 767px)').matches) {
       DisplayViewModel.instance.toggleSidebar();
     }
-    GoogleMapView.popInfoWindow(clickedMarker);
+    GoogleMapView.popInfoWindow(clickedListItemMarker);
   }
 
   // Navigate to next available marker InfoWindow in list
@@ -125,6 +127,20 @@ class DisplayViewModel {
   // Navigate to previous available marker InfoWindow in list
   clickPrevArrow () {
     DisplayViewModel.instance.clickArrow(-1);
+  }
+
+  // Method bound to each list element determines if selection class applied
+  listElementInfoWindowOpen (listMarker) {
+    if (this.selectedMarker() === listMarker) {
+      return true;
+    }
+    return false;
+  }
+
+  // Allows GoogleMapView class to inform DisplayViewModel of openInfoWindow on
+  // marker
+  setSelectedMarker (marker) {
+    this.selectedMarker(marker);
   }
 
   // Alphabetically sort display of locations by title
