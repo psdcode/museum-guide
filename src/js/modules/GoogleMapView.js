@@ -253,7 +253,7 @@ class GoogleMapView {
     function getRatingImg (rating) {
       const ratingWhole = Math.floor(rating);
       const ratingHalf = (rating - ratingWhole === 0.5 ? '_half' : '');
-      let imgHtml = `<img class="yelp-rating" src="img/yelp_stars_reg/regular_`;
+      let imgHtml = `<img class="yelp__rating" src="img/yelp_stars_reg/regular_`;
       imgHtml += `${ratingWhole}${ratingHalf}.png" srcset="img/yelp_stars_reg/`;
       imgHtml += `regular_${ratingWhole}${ratingHalf}@2x.png 2x">`;
       return imgHtml;
@@ -313,15 +313,15 @@ class GoogleMapView {
       // Rating & Info
       yelpContent += `<div class="yelp__info">${getRatingImg(yelpInfo.rating)}`;
       yelpContent += `<a target="_blank" href="${yelpInfo.url}">`;
-      yelpContent += `<img class="yelp__info__logo" src="img/yelp_trademark_rgb_outline.png" `;
+      yelpContent += `<img class="yelp__logo" src="img/yelp_trademark_rgb_outline.png" `;
       yelpContent += `srcset="img/yelp_trademark_rgb_outline_2x.png 2x" alt="Yelp Logo">`;
       yelpContent += `</a>`;
-      yelpContent += `<a class="yelp__info__reviews" href="${yelpInfo.url}" target="_blank">Based `;
+      yelpContent += `<a class="yelp__reviews" href="${yelpInfo.url}" target="_blank">Based `;
       yelpContent += `on <strong>${yelpInfo.review_count}</strong> review`;
       yelpContent += `${yelpInfo.review_count > 1 ? 's' : ''}</a>`;
       yelpContent += `<p><address>${getYelpAddressHtml(yelpInfo.location.display_address)}`;
       yelpContent += `</address></p>`;
-      yelpContent += `<p class="yelp__info__open-now">Currently <strong>`;
+      yelpContent += `<p class="yelp__open-now">Currently <strong>`;
       yelpContent += `${yelpInfo.is_closed ? 'CLOSED' : 'OPEN'}</strong><br>`;
       yelpContent += `Phone: ${yelpInfo.display_phone}</p>`;
       // Close <div class="yelp__info">

@@ -1,12 +1,12 @@
 import DisplayViewModel from './modules/DisplayViewModel';
 import GoogleMapView from './modules/GoogleMapView';
-import {model as currentModel} from '../model/model';
-
-/* Initialization */
 
 // Import model currently from local model.js file
 // TODO may implement import data from server or search result in the future
 // const currentModel = Object.assign({}, model);
+import {model as currentModel} from '../model/model';
+
+/* Initialization */
 
 // Yelp service access token
 GoogleMapView.YELP_TOKEN = `n9BZFWy_zC3jyQyNV9u0Tdc6IhfkwyV8b4JBg2NYD9AaQuHaUx6II9\

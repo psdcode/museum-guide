@@ -9,37 +9,37 @@
 
   &__info {
     position: relative;
+  }
 
-    &__open-now {
-      margin: 5px 0 8px;
+  &__open-now {
+    margin: 5px 0 8px;
+  }
+
+  &__rating {
+    margin: 4px 0;
+  }
+
+  &__reviews {
+    color: var(--yelpReviewFontColor);
+    display: block;
+    text-decoration: none;
+
+    &:hover {
+      color: var(--yelpReviewFontHover);
     }
 
-    &__rating {
-      margin: 4px 0;
-    }
-
-    &__reviews {
+    &:visited {
       color: var(--yelpReviewFontColor);
-      display: block;
-      text-decoration: none;
-
-      &:hover {
-        color: var(--yelpReviewFontHover);
-      }
-
-      &:visited {
-        color: var(--yelpReviewFontColor);
-      }
     }
+  }
 
-    &__logo {
-      position: absolute;
-      right: 20px;
-      top: -2px;
-    }
+  &__logo {
+    position: absolute;
+    right: 20px;
+    top: -2px;
+  }
 
-    & p {
-      line-height: 1.4;
-    }
+  & p {
+    line-height: 1.4;
   }
 }

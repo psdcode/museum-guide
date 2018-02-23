@@ -27,18 +27,6 @@
     @media screen and (min-width: 768px) {
       display: none;
     }
-
-    &__bar {
-      background-color: var(--mainFontColor);
-      display: block;
-      width: 21.7px;
-      height: 5px;
-      margin-bottom: 4px;
-
-      &:first-of-type {
-        margin-top: 4px;
-      }
-    }
   }
 
   &__title {
