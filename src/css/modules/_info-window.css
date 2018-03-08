@@ -9,6 +9,10 @@
     color: var(--mainFontColor);
   }
 
+  &__arrows {
+    margin-bottom: 16px;
+  }
+
   &__arrows-next,
   &__arrows-prev {
     font-size: 30px;

@@ -227,7 +227,7 @@ class GoogleMapView {
       }
 
       let infoWindowContent = `<div class="info-window">`;
-      infoWindowContent += `<div class="title"><strong>${markerTitle}</strong></div>`;
+      infoWindowContent += `<div class="info-window__title"><strong>${markerTitle}</strong></div>`;
 
       // Insert custom content
       infoWindowContent += content;
