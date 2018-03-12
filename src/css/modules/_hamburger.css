@@ -1,15 +1,22 @@
 /* HAMBURGER MENU */
 
 .hamburger {
+  text-decoration: none;
+
   &__bar {
-    background-color: var(--mainFontColor);
+    background-color: var(--hamburgerColor);
     display: block;
     width: 21.7px;
     height: 5px;
     margin-bottom: 4px;
-
+    transition: background-color 0.3s ease-out;
+    
     &:first-of-type {
       margin-top: 4px;
+    }
+
+    &--active {
+      background-color: var(--hamburgerColorActive);
     }
   }
 }

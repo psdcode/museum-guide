@@ -30,7 +30,7 @@
   }
 
   &__filter {
-    border: 2px solid var(--btnBorder);
+    border: var(--btnBorderWidth) solid var(--btnBorderColor);
     border-radius: var(--btnBorderRadius);
     padding: 5px 4px;
     width: 61%;
@@ -62,7 +62,7 @@
   }
 
   &__list {
-    padding: 5px 15px 5px;
+    padding: 18px 15px 5px;
     margin-top: 0;
   }
 
@@ -73,9 +73,14 @@
     padding: 5px 3px;
     border-bottom: 1px solid var(--listItemBorderBottom);
     line-height: 1.42;
+    transition: background-color 0.3s ease-out;
 
     &--open {
       background-color: var(--listElmntSelectedColor);
+    }
+
+    &:first-child {
+      border-top: 1px solid var(--listItemBorderBottom);
     }
   }
 }
