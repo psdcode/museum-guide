@@ -151,9 +151,10 @@ class GoogleMapView {
       GoogleMapView.mainInfoWindow.setContent(markerContent);
       GoogleMapView.mainInfoWindow.open(GoogleMapView.map, marker);
 
+      // Apply bindings to arrow btns
       applyArrowBtnsBindings();
 
-      // Begin fetching data from Yelp
+      // Begin fetching data about current marker location from Yelp
       getYelp(marker).then(function (yelpInfo) {
         // Only enter here if no connection issues
 
@@ -184,20 +185,20 @@ class GoogleMapView {
       })
       // In case of connection error to cors-anywhere.herokuapp.com or
       // api.yelp.com
-      .catch(function (err) {
-        // Check if InfoWindow still on requested marker, else don't render
-        if (GoogleMapView.mainInfoWindow.marker === marker) {
-          let errorHtml = `<p>Unable to retrieve this location's Yelp data due to a `;
-          errorHtml += `connection error. Please try again later.</p>`;
-          markerContent = getInfoWindowMainHtml(errorHtml, undefined);
+        .catch(function (err) {
+          // Check if InfoWindow still on requested marker, else don't render
+          if (GoogleMapView.mainInfoWindow.marker === marker) {
+            let errorHtml = `<p>Unable to retrieve this location's Yelp data due to a `;
+            errorHtml += `connection error. Please try again later.</p>`;
+            markerContent = getInfoWindowMainHtml(errorHtml, undefined);
 
-          GoogleMapView.mainInfoWindow.setContent(markerContent);
-          console.log(err); // TODO
+            GoogleMapView.mainInfoWindow.setContent(markerContent);
+            console.log(err); // TODO
 
-          // Apply ViewModel bindings to the arrow buttons
-          applyArrowBtnsBindings();
-        }
-      });
+            // Apply ViewModel bindings to the arrow buttons
+            applyArrowBtnsBindings();
+          }
+        });
     }
 
     // Helper method for applying Knockout bindings to arrow prev/next buttons
@@ -253,7 +254,7 @@ class GoogleMapView {
     function getRatingImg (rating) {
       const ratingWhole = Math.floor(rating);
       const ratingHalf = (rating - ratingWhole === 0.5 ? '_half' : '');
-      let imgHtml = `<img class="yelp__rating" src="img/yelp_stars_reg/regular_`;
+      let imgHtml = `<img src="img/yelp_stars_reg/regular_`;
       imgHtml += `${ratingWhole}${ratingHalf}.png" srcset="img/yelp_stars_reg/`;
       imgHtml += `regular_${ratingWhole}${ratingHalf}@2x.png 2x">`;
       return imgHtml;
@@ -311,7 +312,9 @@ class GoogleMapView {
       // Image
       yelpContent += `<img class="yelp__image" src=${yelpInfo.image_url} alt="Museum">`;
       // Rating & Info
-      yelpContent += `<div class="yelp__info">${getRatingImg(yelpInfo.rating)}`;
+      yelpContent += `<div class="yelp__info">`;
+      yelpContent += `<a class="yelp__rating" href="${yelpInfo.url}" target="_blank">`;
+      yelpContent += `${getRatingImg(yelpInfo.rating)}</a>`;
       yelpContent += `<a target="_blank" href="${yelpInfo.url}">`;
       yelpContent += `<img class="yelp__logo" src="img/yelp_trademark_rgb_outline.png" `;
       yelpContent += `srcset="img/yelp_trademark_rgb_outline_2x.png 2x" alt="Yelp Logo">`;
@@ -382,7 +385,7 @@ class GoogleMapView {
         otherMarker.setAnimation(undefined);
       });
       marker.setAnimation(window.google.maps.Animation.BOUNCE);
-      setTimeout(() => marker.setAnimation(undefined), 1500);
+      setTimeout(() => (marker.setAnimation(undefined)), 1500);
     }
   }
 }
