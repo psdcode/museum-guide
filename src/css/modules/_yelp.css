@@ -23,6 +23,8 @@
     color: var(--yelpReviewFontColor);
     display: block;
     text-decoration: none;
+    width: 125px;
+    padding-top: 4px;
 
     &:hover {
       color: var(--yelpReviewFontHover);
