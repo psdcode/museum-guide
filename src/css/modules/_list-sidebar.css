@@ -24,7 +24,7 @@
   }
 
   &__top {
-    padding: 17px 0;
+    padding: 17px 16px;
     height: 70px;
     border-bottom: 1px solid var(--mainElmntBorderColor);
   }
@@ -34,7 +34,6 @@
     border-radius: var(--btnBorderRadius);
     padding: 5px 4px;
     width: 61%;
-    margin: 0 3px 0 8px;
     font-family: inherit;
     font-size: 14px;
     line-height: 1.43;
@@ -48,17 +47,15 @@
   }
 
   &__reset {
-    margin-left: 1px;
     padding: 5px 7px;
     font-family: inherit;
     font-size: 14px;
     line-height: 1.43;
     display: inline-block;
+    float: right;
 
     /* Adjust to align with input element */
-    height: 34.7px;
-    position: relative;
-    top: -0.52px;
+    height: 34.8px;
   }
 
   &__list {
