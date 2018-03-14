@@ -36,6 +36,7 @@
     white-space: normal;
     line-height: 0.98;
     align-self: center;
+    -webkit-text-stroke: 0.5px;
 
     @media screen and (min-width: 480px) {
       font-size: 31px;
