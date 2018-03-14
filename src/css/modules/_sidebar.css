@@ -1,7 +1,7 @@
 /* SIDEBAR */
 
-@import 'modules/_sidebar-top';
-@import 'modules/_sidebar-list';
+@import '_sidebar-top';
+@import '_sidebar-list';
 
 .sidebar {
   background-color: inherit;
