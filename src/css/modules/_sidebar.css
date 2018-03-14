@@ -1,0 +1,42 @@
+/* SIDEBAR */
+
+@import 'modules/_sidebar-top';
+@import 'modules/_sidebar-list';
+
+.sidebar {
+  background-color: inherit;
+  font-weight: 400;
+  width: 300px;
+  position: fixed;
+  right: auto;
+  z-index: 3;
+  overflow-y: auto;
+  border-right: 1px solid var(--mainElmntBorderColor);
+  transform: translateX(-100%);
+
+  &--show {
+    animation: show 0.4s forwards;
+  }
+
+  &--hide {
+    animation: hide 0.4s forwards;
+  }
+}
+
+/* SIDEBAR ANIMATION */
+
+@keyframes show {
+  100% {
+    transform: translateX(0);
+  }
+}
+
+@keyframes hide {
+  0% {
+    transform: translateX(0);
+  }
+
+  100% {
+    transform: translateX(-100%);
+  }
+}

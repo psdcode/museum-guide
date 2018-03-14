@@ -80,11 +80,13 @@ class GoogleMapView {
 
     // Helper Method for hiding sidebar if it is open
     function hideListView () {
-      const listView = document.getElementsByClassName('list-sidebar')[0];
-      const state = listView.classList.contains('list-sidebar--show');
+      const sidebars = document.getElementsByClassName('sidebar');
+      const state = sidebars[0].classList.contains('sidebar--show');
       if (state) {
-        listView.classList.add('list-sidebar--hide');
-        listView.classList.remove('list-sidebar--show');
+        for (const sidebar of sidebars) {
+          sidebar.classList.add('sidebar--hide');
+          sidebar.classList.remove('sidebar--show');
+        }
       }
     }
   }
@@ -124,8 +126,11 @@ class GoogleMapView {
 
     // Slide sidebar into initial position automatically when window enlarge
     if (window.matchMedia('(min-width: 768px)').matches) {
-      const listView = document.getElementsByClassName('list-sidebar')[0];
-      listView.classList.remove('list-sidebar--show');
+      const sidebars = document.getElementsByClassName('sidebar');
+      for (const sidebar of sidebars) {
+        sidebar.classList.remove('sidebar--show');
+        // TODO add class sidebar--hide ???
+      }
     }
   }
 

@@ -158,22 +158,24 @@ class DisplayViewModel {
 
   // Shows/hides sidebar with hamburger <button>
   toggleSidebar () {
-    const listView = document.getElementsByClassName('list-sidebar')[0];
+    const sidebars = document.getElementsByClassName('sidebar');
     const hamburgerBars = document.getElementsByClassName('hamburger__bar');
-    const state = listView.classList.contains('list-sidebar--show');
+    const state = sidebars[0].classList.contains('sidebar--show');
     // Hides sidebar if open and vice versa
     if (state) {
-      listView.classList.add('list-sidebar--hide');
-      listView.classList.remove('list-sidebar--show');
-
+      for (const sidebar of sidebars) {
+        sidebar.classList.add('sidebar--hide');
+        sidebar.classList.remove('sidebar--show');
+      }
       // Inactivate hamburger bars color
       for (const hamburgerBar of hamburgerBars) {
         hamburgerBar.classList.remove('hamburger__bar--active');
       }
     } else {
-      listView.classList.remove('list-sidebar--hide');
-      listView.classList.add('list-sidebar--show');
-
+      for (const sidebar of sidebars) {
+        sidebar.classList.remove('sidebar--hide');
+        sidebar.classList.add('sidebar--show');
+      }
       // Activate hamburger bars color
       for (const hamburgerBar of hamburgerBars) {
         hamburgerBar.classList.add('hamburger__bar--active');

@@ -1,0 +1,38 @@
+/* SIDEBAR TOP */
+
+.sidebar-top {
+  top: 0;
+  /* bottom: 0; */
+  padding: 17px 16px;
+  height: 70px;
+  border-bottom: 1px solid var(--mainElmntBorderColor);
+
+  &__filter {
+    border: var(--btnBorderWidth) solid var(--btnBorderColor);
+    border-radius: var(--btnBorderRadius);
+    padding: 5px 4px;
+    width: 61%;
+    font-family: inherit;
+    font-size: 14px;
+    line-height: 1.43;
+    display: inline-block;
+    height: 35px;
+
+    &:focus {
+      outline: auto;
+      outline-offset: 0.5px;
+    }
+  }
+
+  &__reset {
+    padding: 5px 7px;
+    font-family: inherit;
+    font-size: 14px;
+    line-height: 1.43;
+    display: inline-block;
+    float: right;
+
+    /* Adjust to align with input element */
+    height: 34.8px;
+  }
+}

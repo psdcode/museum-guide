@@ -13,13 +13,13 @@
   <!-- /build -->
 </head>
 <body>
-  <div class="list-sidebar">
-    <div class="list-sidebar__top">
-      <input class="list-sidebar__filter" placeholder="Filter..." type="search" data-bind="textInput: query"/>
-      <a href="#" class="btn list-sidebar__reset" data-bind="click: resetMap" role="button">Reset Map</a>
-    </div>
-    <ul class="list-sidebar__list" data-bind="foreach: markersObservable">
-      <li class="list-sidebar__item" data-bind="text: title, click: $root.clickLocationList, css: { 'list-sidebar__item--open': $root.listElementInfoWindowOpen($data) }">Loading Data...</li>
+  <div class="sidebar sidebar-top">
+    <input class="sidebar-top__filter" placeholder="Filter..." type="search" data-bind="textInput: query"/>
+    <a href="#" class="btn sidebar-top__reset" data-bind="click: resetMap" role="button">Reset Map</a>
+  </div>
+  <div class="sidebar sidebar-list">
+    <ul class="sidebar-list__list" data-bind="foreach: markersObservable">
+      <li class="sidebar-list__item" data-bind="text: title, click: $root.clickLocationList, css: { 'sidebar-list__item--open': $root.listElementInfoWindowOpen($data) }">Loading Data...</li>
     </ul>
   </div>
   <header class="header">
