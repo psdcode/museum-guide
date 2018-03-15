@@ -40,7 +40,7 @@ module.exports = function (grunt) {
         esversion: 6,
         forin: true
       },
-      all: ['docs/js/**/*', 'docs/model/**/*']
+      all: ['src/js/**/*', 'src/model/**/*']
     },
 
     rename: {
@@ -63,7 +63,8 @@ module.exports = function (grunt) {
             },
             {
               match: /\/\/\sEnd\s+}\(\)\);/,
-              replacement: 'return {errorLoadMap: GoogleMapView.errorLoadMap, initMap: GoogleMapView.initMap}\n }(window));'
+              replacement: 'return {errorLoadMap: GoogleMapView.errorLoadMap' +
+                ', initMap: GoogleMapView.initMap};\n }(window));'
             }
           ]
         },
@@ -125,7 +126,7 @@ module.exports = function (grunt) {
     },
 
     stylelint: {
-      all: ['docs/css/**/*.css']
+      all: ['src/css/**/*.css']
     },
 
     uglify: {
@@ -166,6 +167,7 @@ module.exports = function (grunt) {
     'clean:prebuild',
     'copy:build',
     'rollup',
+    'replace',
     'uglify',
     'clean:postuglify',
     'processhtml',
