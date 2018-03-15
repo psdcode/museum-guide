@@ -10,7 +10,7 @@
     height: 5px;
     margin-bottom: 4px;
     transition: background-color 0.3s ease-out;
-    
+
     &:first-of-type {
       margin-top: 4px;
     }

@@ -1,6 +1,6 @@
 /* MIXINS */
 
-@define-mixin downToSmall {
+/* @define-mixin downToSmall {
   @media (min-width: 530px) {
     @mixin-content;
   }
@@ -16,4 +16,4 @@
   @media (min-width: 530px) {
     @mixin-content;
   }
-}
+} */
