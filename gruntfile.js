@@ -8,7 +8,7 @@ module.exports = function (grunt) {
           expand: true,
           cwd: 'src',
           src: ['img/**', 'model/**'],
-          dest: 'dist/'
+          dest: 'docs/'
         }]
       },
       dev: {
@@ -16,17 +16,17 @@ module.exports = function (grunt) {
           expand: true,
           cwd: 'src',
           src: ['img/**/*', 'model/**/*', 'index.html'],
-          dest: 'dist/'
+          dest: 'docs/'
         }]
       }
     },
 
     clean: {
       prebuild: {
-        src: ['dist/*']
+        src: ['docs/*']
       },
       postuglify: {
-        src: ['dist/js/app.js']
+        src: ['docs/js/app.js']
       }
     },
 
@@ -40,14 +40,14 @@ module.exports = function (grunt) {
         esversion: 6,
         forin: true
       },
-      all: ['dist/js/**/*', 'dist/model/**/*']
+      all: ['docs/js/**/*', 'docs/model/**/*']
     },
 
     rename: {
       main: {
         files: [
           {
-            src: ['dist/css/styles.css'], dest: 'dist/css/styles.min.css'
+            src: ['docs/css/styles.css'], dest: 'docs/css/styles.min.css'
           }
         ]
       }
@@ -64,9 +64,9 @@ module.exports = function (grunt) {
         ]
       },
 
-      dist: {
+      docs: {
         files: {
-          'dist/js/app.js': ['src/js/app.js']
+          'docs/js/app.js': ['src/js/app.js']
         }
       }
     },
@@ -82,26 +82,26 @@ module.exports = function (grunt) {
           require('cssnano')()
         ]
       },
-      dist: {
+      docs: {
         files: [{
           expand: true,
           cwd: 'src/css/',
           src: 'styles.css',
-          dest: 'dist/css/'
+          dest: 'docs/css/'
         }]
       }
     },
 
     processhtml: {
-      dist: {
+      docs: {
         files: {
-          'dist/index.html': ['src/index.html']
+          'docs/index.html': ['src/index.html']
         }
       }
     },
 
     stylelint: {
-      all: ['dist/css/**/*.css']
+      all: ['docs/css/**/*.css']
     },
 
     uglify: {
@@ -110,8 +110,8 @@ module.exports = function (grunt) {
         banner: '/*! <%= pkg.name %> | <%= pkg.author %> | <%= pkg.license %> */\n'
       },
       build: {
-        src: 'dist/js/app.js',
-        dest: 'dist/js/app.min.js'
+        src: 'docs/js/app.js',
+        dest: 'docs/js/app.min.js'
       }
     },
 

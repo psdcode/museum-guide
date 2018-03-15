@@ -9,14 +9,14 @@ This app is an expanded version of my [final project](https://github.com/psdcode
 ## Local Viewing & Build Instructions
 
 1. Download and unzip the repository.
-2. Navigate to the 'dist' folder and open 'index.html' in a web browser.
+2. Navigate to the 'docs' folder and open 'index.html' in a web browser.
 
 Alternatively, you may build the production code yourself from source.
 
 1. Download and unzip the repository.
 2. Navigate to the downloaded directory and run 'npm install' from the command line.
 3. Run 'grunt build' from the command line.
-2. Navigate to the 'dist' folder and open 'index.html' in a web browser.
+2. Navigate to the 'docs' folder and open 'index.html' in a web browser.
 
 ## Usage Tips
 
