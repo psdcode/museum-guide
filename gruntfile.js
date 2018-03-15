@@ -161,7 +161,7 @@ module.exports = function (grunt) {
 
   require('load-grunt-tasks')(grunt);
 
-  grunt.registerTask('build', [
+  grunt.registerTask('prod', [
     'jshint',
     'stylelint',
     'clean:prebuild',
