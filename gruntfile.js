@@ -56,17 +56,24 @@ module.exports = function (grunt) {
     rollup: {
       options: {
         format: 'es',
+        // name: 'Bundle',
         plugins: [
           require('rollup-plugin-babel')({
             presets: [['env', { 'modules': false }]],
             plugins: ['external-helpers']
-          })
+          }),
+          require('rollup-plugin-node-resolve')()
         ]
       },
 
-      docs: {
+      app: {
         files: {
           'docs/js/app.js': ['src/js/app.js']
+        }
+      },
+      vendor: {
+        files: {
+          'docs/js/vendor.js': ['src/js/vendor.js']
         }
       }
     },

@@ -1,1 +1,2 @@
-//
+// Vendor scripts
+import 'picturefill';

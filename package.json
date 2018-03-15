@@ -39,11 +39,13 @@
     "postcss-nested": "^3.0.0",
     "postcss-sass": "^0.2.0",
     "rollup-plugin-babel": "^3.0.2",
+    "rollup-plugin-node-resolve": "^3.2.0",
     "stylelint": "^8.3.1",
     "stylelint-config-standard": "^18.0.0"
   },
   "dependencies": {
     "normalize.css": "^7.0.0",
+    "picturefill": "^3.0.2",
     "postcss-import": "^11.0.0"
   }
 }
