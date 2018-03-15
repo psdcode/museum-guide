@@ -53,16 +53,33 @@ module.exports = function (grunt) {
       }
     },
 
+    replace: {
+      dist: {
+        options: {
+          patterns: [
+            {
+              match: /^\(function\s\(\)/,
+              replacement: 'window.museumMapApp = (function (global)'
+            },
+            {
+              match: /\/\/\sEnd\s+}\(\)\);/,
+              replacement: 'return {errorLoadMap: GoogleMapView.errorLoadMap, initMap: GoogleMapView.initMap}\n }(window));'
+            }
+          ]
+        },
+        files: [{expand: true, flatten: true, src: ['docs/js/app.js'], dest: 'docs/js/'}]
+      }
+    },
+
     rollup: {
       options: {
-        format: 'es',
-        // name: 'Bundle',
+        format: 'iife',
         plugins: [
           require('rollup-plugin-babel')({
             presets: [['env', { 'modules': false }]],
             plugins: ['external-helpers']
           }),
-          require('rollup-plugin-node-resolve')()
+          require('rollup-plugin-node-resolve')({ jsnext: true })
         ]
       },
 
@@ -160,6 +177,7 @@ module.exports = function (grunt) {
     'clean:prebuild',
     'copy:dev',
     'rollup',
-    'postcss'
+    'postcss',
+    'replace'
   ]);
 };
