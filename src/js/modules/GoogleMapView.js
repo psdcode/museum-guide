@@ -12,14 +12,14 @@ class GoogleMapView {
 
   // maps.googleapis.com script initial loading error callback
   static errorLoadMap () {
-    window.alert('Unable to load Google Map at this time. Check your internet connection or try again later.');
+    global.alert('Unable to load Google Map at this time. Check your internet connection or try again later.');
   }
 
   // googleapis.com initalization success callback
   static initMap () {
     // Create new map
     const mapElement = document.getElementsByClassName('map')[0];
-    GoogleMapView.map = new window.google.maps.Map(mapElement, {
+    GoogleMapView.map = new global.google.maps.Map(mapElement, {
       // Center on city
       center: {
         lat: currentModel.area.position.lat,
@@ -30,7 +30,7 @@ class GoogleMapView {
     });
 
     // Recenter map on window resize
-    window.onresize = GoogleMapView.onWindowResize;
+    global.onresize = GoogleMapView.onWindowResize;
 
     // Clicking on map while sidebar is open will hide it
     mapElement.addEventListener('click', hideListView);
@@ -38,10 +38,10 @@ class GoogleMapView {
     // Markers corresponding to data locations
     GoogleMapView.markers = [];
     // Map bounds
-    GoogleMapView.originalBounds = new window.google.maps.LatLngBounds();
+    GoogleMapView.originalBounds = new global.google.maps.LatLngBounds();
 
     // InfoWindow configuration
-    GoogleMapView.mainInfoWindow = new window.google.maps.InfoWindow({
+    GoogleMapView.mainInfoWindow = new global.google.maps.InfoWindow({
       maxWidth: 250
     });
     GoogleMapView.mainInfoWindow.addListener('closeclick', function () {
@@ -59,10 +59,10 @@ class GoogleMapView {
 
     // Create array of Markers from provided location info
     currentModel.locations.forEach(function (location) {
-      const newMarker = new window.google.maps.Marker({
+      const newMarker = new global.google.maps.Marker({
         position: location.position,
         title: location.title,
-        animation: window.google.maps.Animation.DROP,
+        animation: global.google.maps.Animation.DROP,
         icon: 'img/icons/' + location.type + '.png',
         map: GoogleMapView.map
       });
@@ -105,7 +105,7 @@ class GoogleMapView {
 
         // InfoWindow not open on any marker, fit bounds based on all visible markers
         } else {
-          GoogleMapView.resizeBounds = new window.google.maps.LatLngBounds();
+          GoogleMapView.resizeBounds = new global.google.maps.LatLngBounds();
           visibleMarkers.forEach(function (markerOnMap) {
             GoogleMapView.resizeBounds.extend(markerOnMap.position);
           });
@@ -125,7 +125,7 @@ class GoogleMapView {
     }
 
     // Slide sidebar into initial position automatically when window enlarge
-    if (window.matchMedia('(min-width: 768px)').matches) {
+    if (global.matchMedia('(min-width: 768px)').matches) {
       const sidebars = document.getElementsByClassName('sidebar');
       for (const sidebar of sidebars) {
         sidebar.classList.remove('sidebar--show');
@@ -216,7 +216,7 @@ class GoogleMapView {
           .setAttribute('data-bind', 'click: clickPrevArrow, ' + dataBindStyle);
         arrowBtnsDiv.children[1]
           .setAttribute('data-bind', 'click: clickNextArrow, ' + dataBindStyle);
-        window.ko.applyBindings(DisplayViewModel.instance, arrowBtnsDiv);
+        global.ko.applyBindings(DisplayViewModel.instance, arrowBtnsDiv);
       }
     }
 
@@ -279,7 +279,7 @@ class GoogleMapView {
       fetchString += `latitude=${mapMarker.position.lat()}&longitude=`;
       fetchString += `${mapMarker.position.lng()}`;
 
-      return window.fetch(fetchString,
+      return global.fetch(fetchString,
         {
           method: 'GET',
           headers: {
@@ -288,7 +288,7 @@ class GoogleMapView {
         })
         .catch(err => {
           // In case connection error to cors-anywhere.herokuapp.com
-          // window.alert(`Unable to retrieve this locations's Yelp data due to a \
+          // global.alert(`Unable to retrieve this locations's Yelp data due to a \
           // connection error. Please try again later.`); TODO
           return Promise.reject(err);
         })
@@ -346,7 +346,7 @@ class GoogleMapView {
   static queryBoundsExtend (markerPosition) {
     // Create new LatLngBounds object for every query
     if (!GoogleMapView.queryBounds) {
-      GoogleMapView.queryBounds = new window.google.maps.LatLngBounds();
+      GoogleMapView.queryBounds = new global.google.maps.LatLngBounds();
     }
     GoogleMapView.queryBounds.extend(markerPosition);
   }
@@ -389,7 +389,7 @@ class GoogleMapView {
       GoogleMapView.markers.forEach(function (otherMarker) {
         otherMarker.setAnimation(undefined);
       });
-      marker.setAnimation(window.google.maps.Animation.BOUNCE);
+      marker.setAnimation(global.google.maps.Animation.BOUNCE);
       setTimeout(() => (marker.setAnimation(undefined)), 1500);
     }
   }

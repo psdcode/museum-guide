@@ -5,8 +5,8 @@ class DisplayViewModel {
   constructor (currentModel) {
     /* Instance Variables */
     const self = this;
-    self.mapReady = window.ko.observable(false);
-    self.query = window.ko.observable('');
+    self.mapReady = global.ko.observable(false);
+    self.query = global.ko.observable('');
 
     // Determine if to include local language heading in title TODO
     if (currentModel.area.locallang) {
@@ -17,11 +17,11 @@ class DisplayViewModel {
     }
 
     // Observable Markers Array that will determine display of list and markers
-    self.markersObservable = window.ko.observableArray([]);
-    self.selectedMarker = window.ko.observable(undefined);
+    self.markersObservable = global.ko.observableArray([]);
+    self.selectedMarker = global.ko.observable(undefined);
 
     // Computed observable loads markers once map initialization complete
-    self.createMarkersObservable = window.ko.computed(function () {
+    self.createMarkersObservable = global.ko.computed(function () {
       if (self.mapReady()) {
         self.markersObservable(GoogleMapView.markers);
         self.sort(self.markersObservable);
@@ -52,7 +52,7 @@ class DisplayViewModel {
   // When click a location in sidebar
   clickLocationList (clickedListItemMarker) {
     // Hide sidebar if open to display InfoWindow
-    if (window.matchMedia('(max-width: 767px)').matches) {
+    if (global.matchMedia('(max-width: 767px)').matches) {
       DisplayViewModel.instance.toggleSidebar();
     }
     GoogleMapView.popInfoWindow(clickedListItemMarker);
