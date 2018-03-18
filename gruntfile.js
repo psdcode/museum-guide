@@ -7,7 +7,7 @@ module.exports = function (grunt) {
         files: [{
           expand: true,
           cwd: 'src',
-          src: ['img/**', 'model/**'],
+          src: ['img/**'],
           dest: 'docs/'
         }]
       },
@@ -26,7 +26,7 @@ module.exports = function (grunt) {
         src: ['docs/*']
       },
       postuglify: {
-        src: ['docs/js/app.js']
+        src: ['docs/js/app.js', 'docs/js/vendor.js']
       }
     },
 
@@ -41,59 +41,6 @@ module.exports = function (grunt) {
         forin: true
       },
       all: ['src/js/**/*', 'src/model/**/*']
-    },
-
-    rename: {
-      main: {
-        files: [
-          {
-            src: ['docs/css/styles.css'], dest: 'docs/css/styles.min.css'
-          }
-        ]
-      }
-    },
-
-    replace: {
-      dist: {
-        options: {
-          patterns: [
-            {
-              match: /^\(function\s\(\)/,
-              replacement: 'window.museumMapApp = (function (global)'
-            },
-            {
-              match: /\/\/\sEnd\s+}\(\)\);/,
-              replacement: 'return {errorLoadMap: GoogleMapView.errorLoadMap' +
-                ', initMap: GoogleMapView.initMap};\n }(window));'
-            }
-          ]
-        },
-        files: [{expand: true, flatten: true, src: ['docs/js/app.js'], dest: 'docs/js/'}]
-      }
-    },
-
-    rollup: {
-      options: {
-        format: 'iife',
-        plugins: [
-          require('rollup-plugin-babel')({
-            presets: [['env', { 'modules': false }]],
-            plugins: ['external-helpers']
-          }),
-          require('rollup-plugin-node-resolve')({ jsnext: true })
-        ]
-      },
-
-      app: {
-        files: {
-          'docs/js/app.js': ['src/js/app.js']
-        }
-      },
-      vendor: {
-        files: {
-          'docs/js/vendor.js': ['src/js/vendor.js']
-        }
-      }
     },
 
     postcss: {
@@ -129,15 +76,89 @@ module.exports = function (grunt) {
       all: ['src/css/**/*.css']
     },
 
+    rename: {
+      main: {
+        files: [
+          {
+            src: ['docs/css/styles.css'], dest: 'docs/css/styles.min.css'
+          }
+        ]
+      }
+    },
+
+    replace: {
+      dist: {
+        options: {
+          patterns: [
+            {
+              match: /^\(function\s\(\)/,
+              replacement: 'var museumMapApp = (function (global)'
+            },
+            {
+              match: /\/\/\sEnd\s+}\(\)\);/,
+              replacement: 'return {\n\t\terrorLoadMap: GoogleMapView.errorLoadMap' +
+                ',\n\t\tinitMap: GoogleMapView.initMap\n\t};\n }(window));'
+            }
+          ]
+        },
+        files: [{expand: true, flatten: true, src: ['docs/js/app.js'], dest: 'docs/js/'}]
+      }
+    },
+
+    filerev: {
+      assets: {
+        files: [{
+          src: [
+            'docs/js/*.js',
+            'docs/css/*.css'
+          ]
+        }]
+      }
+    },
+
+    rollup: {
+      options: {
+        format: 'iife',
+        plugins: [
+          require('rollup-plugin-babel')({
+            presets: [['env', { 'modules': false }]],
+            plugins: ['external-helpers']
+          }),
+          require('rollup-plugin-node-resolve')({ jsnext: true })
+        ]
+      },
+
+      app: {
+        files: {
+          'docs/js/app.js': ['src/js/app.js']
+        }
+      },
+      vendor: {
+        files: {
+          'docs/js/vendor.js': ['src/js/vendor.js']
+        }
+      }
+    },
+
     uglify: {
       options: {
-        sourceMap: false,
-        banner: '/*! <%= pkg.name %> | <%= pkg.author %> | <%= pkg.license %> */\n'
+        sourceMap: false
       },
-      build: {
+      app: {
+        options: {
+          banner: '/*! <%= pkg.name %> | <%= pkg.author %> | <%= pkg.license %> */\n'
+        },
         src: 'docs/js/app.js',
         dest: 'docs/js/app.min.js'
+      },
+      vendor: {
+        src: 'docs/js/vendor.js',
+        dest: 'docs/js/vendor.min.js'
       }
+    },
+
+    usemin: {
+      html: 'docs/index.html'
     },
 
     watch: {
@@ -172,14 +193,16 @@ module.exports = function (grunt) {
     'clean:postuglify',
     'processhtml',
     'postcss',
-    'rename'
+    'rename',
+    'filerev',
+    'usemin'
   ]);
 
   grunt.registerTask('dev', [
     'clean:prebuild',
     'copy:dev',
     'rollup',
-    'postcss',
-    'replace'
+    'replace',
+    'postcss'
   ]);
 };
