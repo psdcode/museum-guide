@@ -1,9 +1,5 @@
 /* HEADER */
-
 .header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
   position: fixed;
   text-align: center;
   height: 70px;
@@ -15,8 +11,18 @@
   background-color: inherit;
   margin: 0;
 
+  /* Modernizr flexbox setup */
+  .flexbox & {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    @media screen and (min-width: 768px) {
+      justify-content: center;
+    }
+  }
+
   @media screen and (min-width: 768px) {
-    justify-content: center;
     padding-left: 300px;
   }
 
@@ -24,23 +30,49 @@
     padding: 0 4px;
     margin: 17px 20px 17px 12px;
 
+    /* Non-flexbox settings */
+    display: inline-block;
+    float: right;
+
     @media screen and (min-width: 768px) {
       display: none;
+    }
+
+    .flexbox & {
+      display: inline;
+      float: none;
+
+      @media screen and (min-width: 768px) {
+        display: none;
+      }
     }
   }
 
   &__title {
     font-weight: 600;
     font-size: 25px;
-    margin: 5px 0 5px 12px;
+    margin: 5px 12px;
     white-space: normal;
     line-height: 0.98;
     align-self: center;
     -webkit-text-stroke: 0.5px;
 
+    /* Non-flexbox settings */
+    width: 78%;
+    display: inline-block;
+
+    .flexbox & {
+      width: auto;
+      display: block;
+    }
+
     @media screen and (min-width: 480px) {
       font-size: 31px;
       line-height: 0.95;
+    }
+
+    @media screen and (min-width: 768px) {
+      width: auto;
     }
 
     @media screen and (min-width: 960px) {

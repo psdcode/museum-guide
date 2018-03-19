@@ -28,6 +28,7 @@
     "grunt-contrib-uglify": "^3.2.1",
     "grunt-contrib-watch": "^1.0.0",
     "grunt-filerev": "^2.3.1",
+    "grunt-modernizr": "^1.0.2",
     "grunt-open": "^0.2.3",
     "grunt-postcss": "^0.9.0",
     "grunt-processhtml": "^0.4.1",
@@ -49,6 +50,8 @@
   "dependencies": {
     "normalize.css": "^7.0.0",
     "picturefill": "^3.0.2",
-    "postcss-import": "^11.0.0"
+    "postcss-import": "^11.0.0",
+    "promise-polyfill": "7.1.0",
+    "whatwg-fetch": "^2.0.3"
   }
 }

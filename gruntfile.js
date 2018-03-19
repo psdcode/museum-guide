@@ -43,6 +43,21 @@ module.exports = function (grunt) {
       all: ['src/js/**/*', 'src/model/**/*']
     },
 
+    modernizr: {
+      dist: {
+        crawl: true,
+        files: {
+          src: ['./docs/js/**/*.js', './docs/css/**/*.css']
+        },
+        customTests: [],
+        dest: './src/temp/modernizr.js',
+        options: [
+          'setClasses'
+        ],
+        uglify: true
+      }
+    },
+
     postcss: {
       options: {
         map: false,
@@ -55,12 +70,8 @@ module.exports = function (grunt) {
         ]
       },
       docs: {
-        files: [{
-          expand: true,
-          cwd: 'src/css/',
-          src: 'styles.css',
-          dest: 'docs/css/'
-        }]
+        src: 'src/css/styles.css',
+        dest: 'docs/css/styles.min.css'
       }
     },
 
@@ -74,16 +85,6 @@ module.exports = function (grunt) {
 
     stylelint: {
       all: ['src/css/**/*.css']
-    },
-
-    rename: {
-      main: {
-        files: [
-          {
-            src: ['docs/css/styles.css'], dest: 'docs/css/styles.min.css'
-          }
-        ]
-      }
     },
 
     replace: {
@@ -193,9 +194,9 @@ module.exports = function (grunt) {
     'clean:postuglify',
     'processhtml',
     'postcss',
-    'rename',
     'filerev',
-    'usemin'
+    'usemin',
+    'modernizr'
   ]);
 
   grunt.registerTask('dev', [
