@@ -12,20 +12,40 @@
   transition: all 0.3s ease-out;
 
   &--visible {
-    opacity: 100;
+    opacity: 1;
     visibility: visible;
     transform: scale(1);
   }
 
-  &__wrapper {
-
+  &__content {
+    position: absolute;
+    width: 100%;
+    top: 50%;
+    transform: translateY(-50%);
   }
 
-  &__heading {
+  &__headline {
+    font-size: 30px;
+    text-align: center;
 
+    @media screen and (min-width: 468px) {
+      font-size: 40px;
+    }
+
+    @media screen and (min-width: 768px) {
+      font-size: 50px;
+    }
+
+    @media screen and (min-width: 1080px) {
+      font-size: 60px;
+    }
+
+    @media screen and (min-width: 1120px) {
+      font-size: 70px;
+    }
   }
 
   &__form {
-
+    border: 1px solid var(--mainElmntBorderColor);
   }
 }

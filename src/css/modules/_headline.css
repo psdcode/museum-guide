@@ -1,3 +1,21 @@
 .headline {
-  
+  font-weight: 600;
+  line-height: 0.98;
+  -webkit-text-stroke: 0.5px;
+
+  &--no-t-margin {
+    margin-top: 0;
+  }
+
+  &--sm-b-margin {
+    margin-bottom: 0.15em;
+  }
+
+  &--red {
+    color: #ad0101;
+  }
+
+  &--underline-black {
+    text-decoration: underline solid var(--mainFontColor);
+  }
 }
