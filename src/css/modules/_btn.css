@@ -2,12 +2,16 @@
 
 .btn {
   background-color: transparent;
+  font-family: 'Spectral SC', sans-serif;
   border: var(--btnBorderWidth) solid var(--btnBorderColor);
   border-radius: var(--btnBorderRadius);
   cursor: pointer;
   color: var(--mainFontColor);
   text-decoration: none;
   transition-duration: 0.2s;
+  padding: 5px 7px;
+  font-size: 14px;
+  line-height: 1.43;
 
   &:visited {
     color: var(--mainFontColor);

@@ -49,13 +49,10 @@
   }
 
   &__headline {
-    font-weight: 600;
     font-size: 25px;
     margin: 5px 12px;
     white-space: normal;
-    line-height: 0.98;
     align-self: center;
-    -webkit-text-stroke: 0.5px;
 
     /* Non-flexbox settings */
     width: 78%;

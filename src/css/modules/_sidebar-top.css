@@ -9,7 +9,7 @@
   &__filter {
     border: var(--btnBorderWidth) solid var(--btnBorderColor);
     border-radius: var(--btnBorderRadius);
-    padding: 5px 4px;
+    padding: 5px 7px;
     width: 61%;
     font-family: inherit;
     font-size: 14px;
@@ -24,10 +24,6 @@
   }
 
   &__reset {
-    padding: 5px 7px;
-    font-family: inherit;
-    font-size: 14px;
-    line-height: 1.43;
     display: inline-block;
     float: right;
 
