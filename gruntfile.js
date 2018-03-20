@@ -1,8 +1,19 @@
 module.exports = function (grunt) {
-  const paths = grunt.file.readYAML('Gruntconfig.yml');
+  const paths = grunt.file.readYAML('Gruntpaths.yml');
 
   grunt.initConfig({
     pkg: grunt.file.readJSON('package.json'),
+
+    concurrent: {
+      target: [
+        'watch:reload',
+        'watch:js',
+        'watch:css'
+      ],
+      options: {
+        logConcurrentOutput: true
+      }
+    },
 
     copy: {
       build: {
@@ -160,6 +171,9 @@ module.exports = function (grunt) {
     },
 
     stylelint: {
+      options: {
+        failOnError: false
+      },
       all: [paths.srcDirCss + '**/*.css']
     },
 
@@ -186,18 +200,18 @@ module.exports = function (grunt) {
 
     watch: {
       reload: {
-        files: [paths.prodDirJs + '**/*.js'],
-        tasks: ['jshint'],
+        files: [paths.prodDirCss + '**/*.css'],
+        tasks: [],
         options: {
           livereload: true
         }
       },
-      // js: {
-      //   files: [paths.prodDirJs + '**/*'],
-      //   tasks: ['jshint']
-      // },
+      js: {
+        files: [paths.srcDirJs + '**/*.js'],
+        tasks: ['jshint']
+      },
       css: {
-        files: [paths.prodDirCss + '**/*'],
+        files: [paths.srcDirCss + '**/*.css'],
         tasks: ['stylelint']
       }
     }
@@ -227,5 +241,9 @@ module.exports = function (grunt) {
     'rollup',
     'replace',
     'postcss:dev'
+  ]);
+
+  grunt.registerTask('watchAll', [
+    'concurrent'
   ]);
 };
