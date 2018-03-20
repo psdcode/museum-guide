@@ -32,6 +32,17 @@ module.exports = function (grunt) {
       }
     },
 
+    filerev: {
+      assets: {
+        files: [{
+          src: [
+            paths.prodDirJs + '*.js',
+            paths.prodDirCss + '*.css'
+          ]
+        }]
+      }
+    },
+
     jshint: {
       options: {
         force: true,
@@ -61,19 +72,32 @@ module.exports = function (grunt) {
     },
 
     postcss: {
-      options: {
-        map: false,
-        processors: [
-          require('postcss-import')(),
-          require('postcss-mixins')(),
-          require('postcss-nested')(),
-          require('postcss-cssnext')(),
-          require('cssnano')()
-        ]
-      },
-      docs: {
+      prod: {
+        options: {
+          map: false,
+          processors: [
+            require('postcss-import')(),
+            require('postcss-mixins')(),
+            require('postcss-nested')(),
+            require('postcss-cssnext')(),
+            require('cssnano')()
+          ]
+        },
         src: paths.srcDirCss + 'styles.css',
         dest: paths.prodDirCss + 'styles.min.css'
+      },
+      dev: {
+        options: {
+          map: false,
+          processors: [
+            require('postcss-import')(),
+            require('postcss-mixins')(),
+            require('postcss-nested')(),
+            require('postcss-cssnext')()
+          ]
+        },
+        src: paths.srcDirCss + 'styles.css',
+        dest: paths.prodDirCss + 'styles.css'
       }
     },
 
@@ -83,10 +107,6 @@ module.exports = function (grunt) {
           [paths.prodDir + 'index.html']: [paths.srcDir + 'index.html']
         }
       }
-    },
-
-    stylelint: {
-      all: [paths.srcDirCss + '**/*.css']
     },
 
     replace: {
@@ -115,17 +135,6 @@ module.exports = function (grunt) {
       }
     },
 
-    filerev: {
-      assets: {
-        files: [{
-          src: [
-            paths.prodDirJs + '*.js',
-            paths.prodDirCss + '*.css'
-          ]
-        }]
-      }
-    },
-
     rollup: {
       options: {
         format: 'iife',
@@ -148,6 +157,10 @@ module.exports = function (grunt) {
           [paths.prodDirJs + 'vendor.js']: [paths.srcDirJs + 'vendor.js']
         }
       }
+    },
+
+    stylelint: {
+      all: [paths.srcDirCss + '**/*.css']
     },
 
     uglify: {
@@ -173,18 +186,18 @@ module.exports = function (grunt) {
 
     watch: {
       reload: {
-        files: [paths.srcDir + '**/*'],
-        tasks: ['dev'],
+        files: [paths.prodDirJs + '**/*.js'],
+        tasks: ['jshint'],
         options: {
           livereload: true
         }
       },
-      js: {
-        files: [paths.srcDirJs + '**/*'],
-        tasks: ['jshint']
-      },
+      // js: {
+      //   files: [paths.prodDirJs + '**/*'],
+      //   tasks: ['jshint']
+      // },
       css: {
-        files: [paths.srcDirCss + '**/*'],
+        files: [paths.prodDirCss + '**/*'],
         tasks: ['stylelint']
       }
     }
@@ -202,7 +215,7 @@ module.exports = function (grunt) {
     'uglify',
     'clean:postuglify',
     'processhtml',
-    'postcss',
+    'postcss:prod',
     'filerev',
     'usemin',
     'modernizr'
@@ -213,6 +226,6 @@ module.exports = function (grunt) {
     'copy:dev',
     'rollup',
     'replace',
-    'postcss'
+    'postcss:dev'
   ]);
 };
