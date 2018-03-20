@@ -1,0 +1,6 @@
+srcDir: src/
+srcDirJs: src/js/
+srcDirCss: src/css/
+prodDir: docs/
+prodDirJs: docs/js/
+prodDirCss: docs/css/

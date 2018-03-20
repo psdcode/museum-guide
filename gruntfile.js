@@ -1,4 +1,6 @@
 module.exports = function (grunt) {
+  const paths = grunt.file.readYAML('Gruntconfig.yml');
+
   grunt.initConfig({
     pkg: grunt.file.readJSON('package.json'),
 
@@ -6,27 +8,27 @@ module.exports = function (grunt) {
       build: {
         files: [{
           expand: true,
-          cwd: 'src',
+          cwd: paths.srcDir,
           src: ['img/**'],
-          dest: 'docs/'
+          dest: paths.prodDir
         }]
       },
       dev: {
         files: [{
           expand: true,
-          cwd: 'src',
+          cwd: paths.srcDir,
           src: ['img/**/*', 'model/**/*', 'index.html'],
-          dest: 'docs/'
+          dest: paths.prodDir
         }]
       }
     },
 
     clean: {
       prebuild: {
-        src: ['docs/*']
+        src: [paths.prodDir + '*']
       },
       postuglify: {
-        src: ['docs/js/app.js', 'docs/js/vendor.js']
+        src: [paths.prodDirJs + 'app.js', paths.prodDirJs + 'vendor.js']
       }
     },
 
@@ -40,17 +42,17 @@ module.exports = function (grunt) {
         esversion: 6,
         forin: true
       },
-      all: ['src/js/**/*', 'src/model/**/*']
+      all: [paths.srcDirJs + '**/*', paths.srcDir + 'model/**/*']
     },
 
     modernizr: {
       dist: {
         crawl: true,
         files: {
-          src: ['./docs/js/**/*.js', './docs/css/**/*.css']
+          src: [paths.prodDirJs + '**/*.js', paths.prodDirCss + '**/*.css']
         },
         customTests: [],
-        dest: './src/temp/modernizr.js',
+        dest: paths.srcDir + '/temp/modernizr.js',
         options: [
           'setClasses'
         ],
@@ -70,21 +72,21 @@ module.exports = function (grunt) {
         ]
       },
       docs: {
-        src: 'src/css/styles.css',
-        dest: 'docs/css/styles.min.css'
+        src: paths.srcDirCss + 'styles.css',
+        dest: paths.prodDirCss + 'styles.min.css'
       }
     },
 
     processhtml: {
       docs: {
         files: {
-          'docs/index.html': ['src/index.html']
+          [paths.prodDir + 'index.html']: [paths.srcDir + 'index.html']
         }
       }
     },
 
     stylelint: {
-      all: ['src/css/**/*.css']
+      all: [paths.srcDirCss + '**/*.css']
     },
 
     replace: {
@@ -102,7 +104,14 @@ module.exports = function (grunt) {
             }
           ]
         },
-        files: [{expand: true, flatten: true, src: ['docs/js/app.js'], dest: 'docs/js/'}]
+        files: [
+          {
+            expand: true,
+            flatten: true,
+            src: [paths.prodDirJs + 'app.js'],
+            dest: paths.prodDirJs
+          }
+        ]
       }
     },
 
@@ -110,8 +119,8 @@ module.exports = function (grunt) {
       assets: {
         files: [{
           src: [
-            'docs/js/*.js',
-            'docs/css/*.css'
+            paths.prodDirJs + '*.js',
+            paths.prodDirCss + '*.css'
           ]
         }]
       }
@@ -131,12 +140,12 @@ module.exports = function (grunt) {
 
       app: {
         files: {
-          'docs/js/app.js': ['src/js/app.js']
+          [paths.prodDirJs + 'app.js']: [paths.srcDirJs + 'app.js']
         }
       },
       vendor: {
         files: {
-          'docs/js/vendor.js': ['src/js/vendor.js']
+          [paths.prodDirJs + 'vendor.js']: [paths.srcDirJs + 'vendor.js']
         }
       }
     },
@@ -149,35 +158,35 @@ module.exports = function (grunt) {
         options: {
           banner: '/*! <%= pkg.name %> | <%= pkg.author %> | <%= pkg.license %> */\n'
         },
-        src: 'docs/js/app.js',
-        dest: 'docs/js/app.min.js'
+        src: paths.prodDirJs + 'app.js',
+        dest: paths.prodDirJs + 'app.min.js'
       },
       vendor: {
-        src: 'docs/js/vendor.js',
-        dest: 'docs/js/vendor.min.js'
+        src: paths.prodDirJs + 'vendor.js',
+        dest: paths.prodDirJs + 'vendor.min.js'
       }
     },
 
     usemin: {
-      html: 'docs/index.html'
+      html: paths.prodDir + 'index.html'
     },
 
     watch: {
       reload: {
-        files: ['src/**/*'],
+        files: [paths.srcDir + '**/*'],
         tasks: ['dev'],
         options: {
           livereload: true
         }
-      }// ,
-      // js: {
-      //   files: ['src/js/**/*'],
-      //   tasks: ['jshint']
-      // },
-      // css: {
-      //   files: ['src/css/**/*'],
-      //   tasks: ['stylelint']
-      // }
+      },
+      js: {
+        files: [paths.srcDirJs + '**/*'],
+        tasks: ['jshint']
+      },
+      css: {
+        files: [paths.srcDirCss + '**/*'],
+        tasks: ['stylelint']
+      }
     }
   });
 
