@@ -28,7 +28,7 @@
     </ul>
   </div>
   <header class="header">
-    <h1 class="header__title" data-bind="text: mainTitle"></h1>
+    <h1 class="header__headline headline" data-bind="text: mainTitle"></h1>
     <a data-bind="click: toggleSidebar" role="button" href="#" class="header__hamburger hamburger">
       <span class="hamburger__bar">&nbsp;</span>
       <span class="hamburger__bar">&nbsp;</span>
@@ -36,6 +36,11 @@
     </a>
   </header>
   <div class="map"></div>
+  <div class="modal modal--visible">
+    <div class="modal__wrapper">
+      <h1 class="modal__headline headline">Museum Map Guide</h1>
+    </div>
+  </div>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/knockout/3.4.2/knockout-min.js"></script>
   <!-- build:js js/app.min.js -->
   <script src="js/app.js"></script>

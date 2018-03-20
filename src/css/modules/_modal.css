@@ -1,0 +1,31 @@
+.modal {
+  background-color: var(--mainBkgndColor);
+  z-index: 15;
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  left: 0;
+  opacity: 0;
+  visibility: hidden;
+  transform: scale(1.2);
+  transition: all 0.3s ease-out;
+
+  &--visible {
+    opacity: 100;
+    visibility: visible;
+    transform: scale(1);
+  }
+
+  &__wrapper {
+
+  }
+
+  &__heading {
+
+  }
+
+  &__form {
+
+  }
+}
