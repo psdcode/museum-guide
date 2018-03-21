@@ -8,11 +8,15 @@
   }
 
   &--sm-b-margin {
-    margin-bottom: 0.15em;
+    margin-bottom: 0.2em;
+  }
+
+  &--sm-t-margin {
+    margin-top: 0.2em;
   }
 
   &--red {
-    color: #ad0101;
+    color: var(--headlineRedColor);
   }
 
   &--underline-black {
