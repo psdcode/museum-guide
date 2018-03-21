@@ -13,6 +13,7 @@
   --listItemBorderBottom: var(--btnBorderColor);
   --yelpReviewFontColor: #ccc;
   --yelpReviewFontHover: var(--btnBorderColor);
+  --headlineRedColor: #ad0101;
 
   /* Button Variables */
   --btnBorderWidth: 2px;
