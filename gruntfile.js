@@ -91,6 +91,7 @@ module.exports = function (grunt) {
             require('postcss-mixins')(),
             require('postcss-nested')(),
             require('postcss-cssnext')(),
+            require('postcss-hexrgba')(),
             require('cssnano')()
           ]
         },
@@ -104,7 +105,8 @@ module.exports = function (grunt) {
             require('postcss-import')(),
             require('postcss-mixins')(),
             require('postcss-nested')(),
-            require('postcss-cssnext')()
+            require('postcss-cssnext')(),
+            require('postcss-hexrgba')()
           ]
         },
         src: paths.srcDirCss + 'styles.css',

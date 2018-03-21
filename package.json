@@ -40,6 +40,7 @@
     "jshint-stylish": "^2.2.1",
     "load-grunt-tasks": "^3.5.2",
     "postcss-cssnext": "^3.0.2",
+    "postcss-hexrgba": "^1.0.0",
     "postcss-mixins": "^6.2.0",
     "postcss-nested": "^3.0.0",
     "postcss-sass": "^0.2.0",
