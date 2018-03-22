@@ -8,6 +8,7 @@
   --listElmntSelectedColor: var(--mainElmntBorderColor);
   --btnActive: var(--mainElmntBorderColor);
   --btnBorderColor: #5b5b5b;
+  --modalBorderColor: var(--btnBorderColor);
   --hamburgerColor: var(--btnBorderColor);
   --hamburgerColorActive: var(--mainFontColor);
   --listItemBorderBottom: var(--btnBorderColor);
