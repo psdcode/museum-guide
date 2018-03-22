@@ -6,10 +6,19 @@
   &__bar {
     background-color: var(--hamburgerColor);
     display: block;
-    width: 21.7px;
-    height: 5px;
-    margin-bottom: 4px;
     transition: background-color 0.3s ease-out;
+
+    /* Size setting for very small screens */
+    width: 15px;
+    height: 4px;
+    margin-bottom: 3px;
+
+    /* Size setting for all other screens */
+    @media screen and (min-width: 330px) {
+      width: 21.7px;
+      height: 5px;
+      margin-bottom: 4px;
+    }
 
     &:first-of-type {
       margin-top: 4px;
