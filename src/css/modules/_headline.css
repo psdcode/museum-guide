@@ -1,10 +1,19 @@
 .headline {
   font-weight: 600;
-  line-height: 0.98;
   -webkit-text-stroke: 0.5px;
 
-  &--no-t-margin {
-    margin-top: 0;
+  &--no-t-margin-uptolg {
+    @media screen and (max-width: 1133px) {
+      margin-top: 0;
+    }
+  }
+
+  &--no-b-margin {
+    margin-bottom: 0;
+  }
+
+  &--fw-light {
+    font-weight: 500;
   }
 
   &--sm-b-margin {

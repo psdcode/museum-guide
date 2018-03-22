@@ -2,7 +2,7 @@
 .header {
   position: fixed;
   text-align: center;
-  height: 70px;
+  height: 80px;
   top: 0;
   border-bottom: 1px solid var(--mainElmntBorderColor);
   right: 0;
@@ -13,12 +13,12 @@
 
   /* Modernizr flexbox setup */
   .flexbox & {
-    display: flex;
+    /* display: flex;
     align-items: center;
-    justify-content: space-between;
+    justify-content: space-between; */
 
     @media screen and (min-width: 768px) {
-      justify-content: center;
+      /* justify-content: center; */
     }
   }
 
@@ -26,74 +26,75 @@
     padding-left: 300px;
   }
 
-  &__hamburger {
-    padding: 0 4px;
-    margin: 17px 20px 17px 12px;
+  &__headlines {
+    padding: 5px 32px 5px 0;
+    height: 80px;
+    width: auto;
+    display: block;
+    overflow: hidden;
+    /* white-space: normal; */
 
-    /* Non-flexbox settings */
-    display: inline-block;
-    float: right;
-
-    @media screen and (min-width: 768px) {
-      display: none;
+    @media screen and (min-width: 370px) {
+      padding-right: 0;
+      /* line-height: 0.95; */
     }
 
-    .flexbox & {
-      display: inline;
-      float: none;
+    /* Non-flexbox settings */
+    
+    /* display: inline-block; */
 
-      @media screen and (min-width: 768px) {
-        display: none;
-      }
+    .flexbox & {
+
+      /* align-self: center; */
     }
   }
 
   &__headline {
     font-size: 25px;
-    margin: 5px 12px;
-    white-space: normal;
-    align-self: center;
+    margin: 5px 0;
+    max-height: 35px;
+    line-height: 1.08;
 
-    /* Non-flexbox settings */
-    width: 78%;
-    display: inline-block;
-
-    .flexbox & {
-      width: auto;
-      display: block;
+    @media screen and (min-width: 424px) {
+      font-size: 32px;
+      line-height: 0.98;
     }
 
-    @media screen and (min-width: 480px) {
-      font-size: 31px;
-      line-height: 0.95;
-    }
-
-    @media screen and (min-width: 768px) {
-      width: auto;
-    }
-
-    @media screen and (min-width: 960px) {
-      white-space: nowrap;
-    }
-
-    @media screen and (min-width: 1020px) {
-      font-size: 35.2px;
-    }
-
-    @media screen and (min-width: 1080px) {
+    @media screen and (min-width: 1134px) {
+      display: inline-block;
+      margin: 15px 0 0 20px;
       font-size: 38.4px;
-    }
-
-    @media screen and (min-width: 1120px) {
-      font-size: 40px;
-    }
-
-    @media screen and (min-width: 1200px) {
-      font-size: 43.2px;
+      float: left;
     }
 
     @media screen and (min-width: 1280px) {
+      font-size: 43.2px;
+    }
+
+    @media screen and (min-width: 1380px) {
       font-size: 46.4px;
+    }
+  }
+
+  &__hamburger {
+    position: absolute;
+    top: 24.5px;
+
+    /* Offset for very small screens */
+    right: 2px;
+
+    /* Offset for small screens */
+    @media screen and (min-width: 330px) {
+      right: 5px;
+    }
+
+    /* Offset for all other screens */
+    @media screen and (min-width: 345px) {
+      right: 20px;
+    }
+
+    @media screen and (min-width: 768px) {
+      display: none;
     }
   }
 }
