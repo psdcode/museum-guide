@@ -24,11 +24,14 @@
   </div>
   <div class="sidebar sidebar-list">
     <ul class="sidebar-list__list" data-bind="foreach: markersObservable">
-      <li class="sidebar-list__item" data-bind="text: title, click: $root.clickLocationList, css: { 'sidebar-list__item--open': $root.listElementInfoWindowOpen($data) }">Loading Data...</li>
+      <li class="sidebar-list__item" data-bind="text: title, click: $root.clickLocationList, css: { 'sidebar-list__item--open': $root.listElementInfoWindowOpen($data) }"></li>
     </ul>
   </div>
   <header class="header">
-    <h1 class="header__headline headline" data-bind="text: mainTitle"></h1>
+    <div class="header__headlines">
+      <h1 class="header__headline headline headline--no-t-margin-uptolg">Museum Map Guide</h1>
+      <h1 class="header__headline headline headline--red headline--fw-light headline--underline-black headline--no-b-margin" data-bind="text: mainTitle"></h1>
+    </div>
     <a data-bind="click: toggleSidebar" role="button" href="#" class="header__hamburger hamburger">
       <span class="hamburger__bar">&nbsp;</span>
       <span class="hamburger__bar">&nbsp;</span>
@@ -36,7 +39,7 @@
     </a>
   </header>
   <div class="map"></div>
-  <div class="modal">
+  <div class="modal modal--hidden">
     <div class="wrapper wrapper--w-90">
       <div class="modal__content">
         <h1 class="modal__headline headline headline--no-t-margin headline--sm-b-margin headline--sm-t-margin">Museum Map Guide</h1>
