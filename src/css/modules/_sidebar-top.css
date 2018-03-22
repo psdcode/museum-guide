@@ -3,7 +3,7 @@
 .sidebar-top {
   top: 0;
   padding: 17px 16px;
-  height: 70px;
+  height: 80px;
   border-bottom: 1px solid var(--mainElmntBorderColor);
 
   &__filter {
