@@ -32,7 +32,6 @@
     width: auto;
     display: block;
     overflow: hidden;
-    /* white-space: normal; */
 
     @media screen and (min-width: 370px) {
       padding-right: 0;
@@ -40,7 +39,7 @@
     }
 
     /* Non-flexbox settings */
-    
+
     /* display: inline-block; */
 
     .flexbox & {
