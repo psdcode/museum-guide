@@ -10,10 +10,9 @@ class DisplayViewModel {
 
     // Determine if to include local language heading in title TODO
     if (currentModel.area.locallang) {
-      self.mainTitle = `${currentModel.area.locallang} - ${currentModel.area.city} `;
-      self.mainTitle += `${currentModel.area.type} Map Guide`;
+      self.mainTitle = `${currentModel.area.city} - ${currentModel.area.locallang}`;
     } else {
-      self.mainTitle = `${currentModel.area.city} ${currentModel.area.type} Map Guide`;
+      self.mainTitle = `${currentModel.area.city}`;
     }
 
     // Observable Markers Array that will determine display of list and markers
