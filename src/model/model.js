@@ -3,7 +3,7 @@ export const model = {
     "city": "Tokyo",
     "country": "Japan",
     "countrycode": "jp",
-    "locallang": "東京博物館",
+    "locallang": "東京都",
     "type": "Museum",
     "position": {
       "lat": 35.6732619,
