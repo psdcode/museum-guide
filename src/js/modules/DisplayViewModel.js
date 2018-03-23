@@ -149,10 +149,15 @@ class DisplayViewModel {
     });
   }
 
-  // Called by Reset btn
+  // Called by 'Reset Map' btn
   resetMap () {
     this.query('');
     GoogleMapView.resetMap();
+  }
+
+  // Called by 'Change City' btn
+  changeCity () {
+    console.log('Change City');
   }
 
   // Shows/hides sidebar with hamburger <button>
