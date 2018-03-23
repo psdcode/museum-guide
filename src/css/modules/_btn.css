@@ -1,17 +1,18 @@
 /* BTN BUTTONS */
 
 .btn {
+  padding: 5px 7px;
   background-color: transparent;
+  color: var(--mainFontColor);
   font-family: 'Spectral SC', sans-serif;
+  font-size: 15px;
+  text-align: center;
+  text-decoration: none;
+  line-height: 1.43;
   border: var(--btnBorderWidth) solid var(--btnBorderColor);
   border-radius: var(--btnBorderRadius);
   cursor: pointer;
-  color: var(--mainFontColor);
-  text-decoration: none;
   transition-duration: 0.2s;
-  padding: 5px 7px;
-  font-size: 14px;
-  line-height: 1.43;
 
   &:visited {
     color: var(--mainFontColor);
