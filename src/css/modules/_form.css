@@ -1,7 +1,45 @@
+/* FORM */
+
 .form {
   padding: 10px 15px 15px;
+  position: relative;
   text-align: center;
   font-size: 17px;
+
+  &__load-screen {
+    position: absolute;
+    visibility: hidden;
+    top: 0;
+    right: 0;
+    left: 0;
+    bottom: 0;
+    opacity: 0;
+    transition: opacity 0.3s ease-out;
+
+    &--visible {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    & .sk-circle {
+      margin: 0;
+      position: absolute;
+      top: 45%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+    }
+  }
+
+  &__load-screen-inner {
+    height: 100%;
+    background-color: var(--mainBkgndColor);
+    opacity: 0;
+    transition: opacity 0.3s ease-out;
+
+    .form__load-screen--visible & {
+      opacity: 0.65;
+    }
+  }
 
   &__text {
     font-size: 20px;
