@@ -2,6 +2,7 @@ import {mapStyle} from './mapStyle';
 import {model as currentModel} from '../../model/model';
 import DisplayViewModel from './DisplayViewModel';
 import yelp from './yelp';
+import spinnerHtmlString from './spinner';
 
 // Class for handling google map display/view/update
 class GoogleMapView {
@@ -151,7 +152,7 @@ class GoogleMapView {
       GoogleMapView.map.panBy(0, -280);
 
       // Construction of pre-fetch InfoWindow content
-      let markerContent = getInfoWindowMainHtml(getInfoWindowSpinnerHtml(), marker.title);
+      let markerContent = getInfoWindowMainHtml(spinnerHtmlString, marker.title);
 
       // Place title & spinner into InfoWindow & open it
       GoogleMapView.mainInfoWindow.setContent(markerContent);
@@ -245,16 +246,6 @@ class GoogleMapView {
       // Close <div class="info-window">
       infoWindowContent += `</div>`;
       return infoWindowContent;
-    }
-
-    // Helper method for constructing InfoWindow spinner HTML
-    function getInfoWindowSpinnerHtml () {
-      let spinner = '<div class="sk-circle">';
-      for (let circleNum = 1; circleNum <= 12; circleNum += 1) {
-        spinner += `<div class="sk-circle${circleNum} sk-child"></div>`;
-      }
-      spinner += '</div>';
-      return spinner;
     }
 
   // END of method popInfoWindow(marker)
