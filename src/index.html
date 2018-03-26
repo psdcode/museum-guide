@@ -30,8 +30,8 @@
   </div>
   <header class="header">
     <div class="header__headlines">
-      <h1 class="header__headline headline headline--no-t-margin-uptolg">Museum Map Guide</h1>
-      <h1 class="header__headline headline headline--red headline--fw-light headline--underline-black headline--no-b-margin" data-bind="text: mainTitle"></h1>
+      <h1 class="header__headline headline headline--no-t-margin-upto-lg headline--sm-l-margin-from-lg">Museum Map Guide</h1>
+      <h1 class="header__headline headline headline--red headline--fw-light headline--underline-black headline--no-b-margin headline--flex-sm-b-margin-upto-lg headline--sm-l-margin-from-lg" data-bind="text: mainTitle"></h1>
     </div>
     <a data-bind="click: toggleSidebar" role="button" href="#" class="header__hamburger hamburger">
       <span class="hamburger__bar">&nbsp;</span>
@@ -40,23 +40,29 @@
     </a>
   </header>
   <div class="map"></div>
-  <div class="modal modal--hidden">
+  <div class="modal">
     <div class="wrapper wrapper--w-90">
-      <div class="modal__content">
-        <h1 class="modal__headline headline headline--no-t-margin headline--sm-b-margin headline--sm-t-margin">Museum Map Guide</h1>
-        <h1 class="modal__headline headline headline--no-t-margin headline--red headline--sm-b-margin headline--underline-black">Japan - 日本国</h1>
-        <form class="modal__form form">
+      <div class="modal__content modal__content--hidden">
+        <a href="#" class="modal__close-btn modal__close-btn--hidden btn" data-bind="click: closeModal" role="button"><span class="modal__close-btn-x">X</span></a>
+        <div class="modal__headlines">
+          <h1 class="modal__headline headline headline--no-b-margin headline--sm-t-margin">Museum Map Guide</h1>
+          <h1 class="modal__headline headline headline--no-t-margin headline--red headline--sm-b-margin headline--underline-black">Japan - 日本国</h1>
+        </div>
+        <form class="modal__form form" data-bind="submit: submitModal">
+          <div class="form__load-screen">
+            <div class="form__load-screen-inner"></div>
+          </div>
           <div class="form__radio form__radio--b-margin">
             <span class="form__text form__text--b-margin">Locations Display:</span>
-            <input type="radio" name="locationsListType" value="curated" checked>Curated
-            <input type="radio" name="locationsListType" value="liveSearch">Live Search<br>
+            <input type="radio" name="locationsListType" value="curated" checked data-bind="">Curated
+            <input type="radio" name="locationsListType" value="liveSearch" data-bind="">Live Search<br>
           </div>
           <div class="form__select form__select--b-margin">
             <span class="form__text form__text--b-margin">City:</span>
-            <select name="city">
+            <select name="city" data-bind="">
               <option value="tokyo">Tokyo - 東京都</option>
-              <option value="saab">Yokohama - 大阪市</option>
-              <option value="fiat">Osaka - 大阪市</option>
+              <option value="yokohama">Yokohama - 大阪市</option>
+              <option value="osaka">Osaka - 大阪市</option>
             </select>
           </div>
           <input type="submit" class="btn form__submit">
