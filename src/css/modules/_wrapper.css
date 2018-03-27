@@ -5,7 +5,7 @@
   position: relative;
 
   &--w-90 {
-    width: 90%;
+    width: 80%;
     max-width: 900px;
   }
 }
