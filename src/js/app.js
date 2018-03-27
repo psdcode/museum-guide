@@ -11,8 +11,11 @@ import {model as currentModel} from '../model/model';
 GoogleMapView.YELP_TOKEN = `n9BZFWy_zC3jyQyNV9u0Tdc6IhfkwyV8b4JBg2NYD9AaQuHaUx6II9\
 ukiEQp2Z03m7Cmycz29Lu2n4Gc5LPu1wDjVVCGyignkEoZn167yyq07sbPEN7gF5GzE20YWnYx`;
 
-// Knockout.js DisplayViewModel initialization
+// Give GoogleMapView access to model
+GoogleMapView.defaultPosition = currentModel.defaultArea.position;
+
+// Knockout.js DisplayViewModel initialization with model
 DisplayViewModel.instance = new DisplayViewModel(currentModel);
-global.ko.applyBindings(DisplayViewModel.instance);
+window.ko.applyBindings(DisplayViewModel.instance);
 
 // End
