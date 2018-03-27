@@ -46,26 +46,21 @@ class Modal {
     this.modalElement.classList.remove('modal--hidden');
   }
 
-  closeModal () {
+  closeModal (thisModal) {
     // Hide entire modal
-    this.modalElement.classList.add('modal--hidden');
+    thisModal.modalElement.classList.add('modal--hidden');
     // Hide load screen within modal
-    this.loadingFormElement.classList.remove('form__load-screen--visible');
+    thisModal.loadingFormElement.classList.remove('form__load-screen--visible');
   }
 
   keyPressHandler (event) {
     if (event.keyCode === 27 && this.isInitialModal === false) {
-      this.closeModal();
+      this.closeModal(this);
     }
   }
 
   openFormLoadScreen () {
     this.loadingFormElement.classList.add('form__load-screen--visible');
-  }
-
-  submitBtnSequence () {
-    this.openFormLoadScreen();
-    setTimeout(this.closeModal.bind(this), 1500);
   }
 }
 
