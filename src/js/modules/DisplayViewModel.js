@@ -1,5 +1,6 @@
 // ViewModel class utilized in Knockout.js initialization and data management
 import GoogleMapView from './GoogleMapView';
+import modal from './Modal';
 
 class DisplayViewModel {
   constructor (currentModel) {
@@ -34,6 +35,7 @@ class DisplayViewModel {
 
   // Method to open InfoWindow using prev/next buttons
   clickArrow (direction) {
+    // direction: -1 for entry above, 1 for entry below in list
     // Check if current search result has more than 1 item
     if (this.markersObservable().length > 1) {
       const currentMarkerIndex = this.markersObservable.indexOf(GoogleMapView.mainInfoWindow.marker);
@@ -157,10 +159,18 @@ class DisplayViewModel {
 
   // Called by 'Change City' btn
   changeCity () {
-    console.log('Change City');
+    modal.openModal();
   }
 
-  // Shows/hides sidebar with hamburger <button>
+  closeModal () {
+    modal.closeModal();
+  }
+
+  submitModal () {
+    modal.submitBtnSequence();
+  }
+
+  // Shows/hides modal with hamburger <hiddenon>
   toggleSidebar () {
     const sidebars = document.getElementsByClassName('sidebar');
     const hamburgerBars = document.getElementsByClassName('hamburger__bar');
