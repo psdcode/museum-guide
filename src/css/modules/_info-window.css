@@ -16,7 +16,6 @@
 
   &__arrows-next,
   &__arrows-prev {
-    background-color: var(--mainBkgndColor);
     font-size: 30px;
     font-family: monospace;
     padding: 0 10px;
