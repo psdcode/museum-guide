@@ -128,12 +128,12 @@ module.exports = function (grunt) {
           patterns: [
             {
               match: /^\(function\s\(\)/,
-              replacement: 'var museumMapApp = (function (global)'
+              replacement: 'var museumMapApp = (function ()'
             },
             {
               match: /\/\/\sEnd\s+}\(\)\);/,
               replacement: 'return {\n\t\terrorLoadMap: GoogleMapView.errorLoadMap' +
-                ',\n\t\tinitMap: GoogleMapView.initMap\n\t};\n }(window));'
+                ',\n\t\tinitMap: GoogleMapView.initMap\n\t};\n }());'
             }
           ]
         },
