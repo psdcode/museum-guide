@@ -18,7 +18,7 @@ const yelp = (function () {
   // Helper method for formatting Yelp address html string
   function getYelpAddressHtml (yelpAddress, country) {
     // Remove country from address since it's redundant in the context of a city map
-    if (yelpAddress[yelpAddress.length - 1] === country) {
+    if (yelpAddress[yelpAddress.length - 1].toLowerCase() === country.toLowerCase()) {
       yelpAddress = yelpAddress.slice(0, yelpAddress.length - 1);
     }
     return yelpAddress.join('<br>');
@@ -62,7 +62,7 @@ const yelp = (function () {
     fetchString += `latitude=${mapMarker.position.lat()}&longitude=`;
     fetchString += `${mapMarker.position.lng()}`;
 
-    return global.fetch(fetchString,
+    return window.fetch(fetchString,
       {
         method: 'GET',
         headers: {
@@ -71,7 +71,7 @@ const yelp = (function () {
       })
       .catch(err => {
         // In case connection error to cors-anywhere.herokuapp.com
-        // global.alert(`Unable to retrieve this locations's Yelp data due to a \
+        // window.alert(`Unable to retrieve this locations's Yelp data due to a \
         // connection error. Please try again later.`); TODO
         return Promise.reject(err);
       })
