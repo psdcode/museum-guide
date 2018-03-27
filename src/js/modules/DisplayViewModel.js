@@ -4,25 +4,52 @@ import modal from './Modal';
 
 class DisplayViewModel {
   constructor (currentModel) {
-    /* Instance Variables */
     const self = this;
-    self.mapReady = global.ko.observable(false);
-    self.query = global.ko.observable('');
 
-    // Determine if to include local language heading in title TODO
-    if (currentModel.area.locallang) {
-      self.mainTitle = `${currentModel.area.city} - ${currentModel.area.locallang}`;
-    } else {
-      self.mainTitle = `${currentModel.area.city}`;
-    }
+    // Google Map load state
+    self.markersReady = window.ko.observable('');
+    // Filter query string
+    self.query = window.ko.observable('');
 
-    // Observable Markers Array that will determine display of list and markers
-    self.markersObservable = global.ko.observableArray([]);
-    self.selectedMarker = global.ko.observable(undefined);
+    // Form selection values
+    self.selectedCityValue = window.ko.observable();
+    self.selectedSearchValue = window.ko.observable('curated');
+
+    // Display variables
+    self.computedCityString = window.ko.observable();
+    self.displayedCityString = window.ko.observable();
+
+    // Array of city info for modal form__select element
+    self.cities = currentModel.cities.map((cityObj) => ({
+      cityString: `${cityObj.cityName} - ${cityObj.localLang}`,
+      cityValue: cityObj.cityName
+    }));
+
+    // Object holding all city information, computed based on modal form selection
+    self.selectedCityObj = window.ko.computed(function () {
+      // Find corresponding city object to selected city value from modal dropdown
+      const cityObj = currentModel.cities.find((cityLook) => (cityLook.cityName === self.selectedCityValue()));
+      // Set selected to be displayed after form submission
+      if (cityObj) {
+        // Determine if to include local language heading in title
+        if (cityObj.localLang) {
+          self.computedCityString(`${cityObj.cityName} - ${cityObj.localLang}`);
+        } else {
+          self.computedCityString(cityObj.cityName);
+        }
+      }
+      return cityObj;
+    });
+
+    // Observable Markers Array that will determine display of list of locations and map markers
+    self.markersObservable = window.ko.observableArray([]);
+    // Current marker
+    self.selectedMarker = window.ko.observable(undefined);
 
     // Computed observable loads markers once map initialization complete
-    self.createMarkersObservable = global.ko.computed(function () {
-      if (self.mapReady()) {
+    self.createMarkersObservable = window.ko.computed(function () {
+      if (self.markersReady()) {
+        console.log('Load New MarkersObservable'); // TODO
         self.markersObservable(GoogleMapView.markers);
         self.sort(self.markersObservable);
         return true;
@@ -53,20 +80,20 @@ class DisplayViewModel {
   // When click a location in sidebar
   clickLocationList (clickedListItemMarker) {
     // Hide sidebar if open to display InfoWindow
-    if (global.matchMedia('(max-width: 767px)').matches) {
-      DisplayViewModel.instance.toggleSidebar();
+    if (window.matchMedia('(max-width: 767px)').matches) {
+      this.toggleSidebar();
     }
     GoogleMapView.popInfoWindow(clickedListItemMarker);
   }
 
   // Navigate to next available marker InfoWindow in list
   clickNextArrow () {
-    DisplayViewModel.instance.clickArrow(1);
+    this.clickArrow(1);
   }
 
   // Navigate to previous available marker InfoWindow in list
   clickPrevArrow () {
-    DisplayViewModel.instance.clickArrow(-1);
+    this.clickArrow(-1);
   }
 
   // Filter obsrvable location list and markers based on query
@@ -138,6 +165,21 @@ class DisplayViewModel {
     return false;
   }
 
+  loadData () {
+    if (this.selectedSearchValue() === 'curated') {
+
+    } else if (this.selectedSearchValue() === 'liveSearch') {
+
+    }
+
+    // Temporary setTimeout until search function is properly working TODO
+    setTimeout(function () {
+      GoogleMapView.loadCuratedMarkers(this.selectedCityObj());
+      modal.closeModal(modal);
+      this.displayedCityString(this.computedCityString());
+    }.bind(this), 1500);
+  }
+
   // Allows GoogleMapView class to inform DisplayViewModel of openInfoWindow on
   // marker
   setSelectedMarker (marker) {
@@ -163,11 +205,12 @@ class DisplayViewModel {
   }
 
   closeModal () {
-    modal.closeModal();
+    modal.closeModal(modal);
   }
 
   submitModal () {
-    modal.submitBtnSequence();
+    modal.openFormLoadScreen();
+    this.loadData();
   }
 
   // Shows/hides modal with hamburger <hiddenon>

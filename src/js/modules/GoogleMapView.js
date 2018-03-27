@@ -1,5 +1,4 @@
 import {mapStyle} from './mapStyle';
-import {model as currentModel} from '../../model/model';
 import DisplayViewModel from './DisplayViewModel';
 import yelp from './yelp';
 import spinnerHtmlString from './spinner';
@@ -14,36 +13,48 @@ class GoogleMapView {
 
   // maps.googleapis.com script initial loading error callback
   static errorLoadMap () {
-    global.alert('Unable to load Google Map at this time. Check your internet connection or try again later.');
+    window.alert('Unable to load Google Map at this time. Check your internet connection or try again later.');
+  }
+
+  // Helper Method for hiding sidebar if it is open
+  static hideListView () {
+    const sidebars = document.getElementsByClassName('sidebar');
+    const state = sidebars[0].classList.contains('sidebar--show');
+    if (state) {
+      for (const sidebar of sidebars) {
+        sidebar.classList.add('sidebar--hide');
+        sidebar.classList.remove('sidebar--show');
+      }
+    }
   }
 
   // googleapis.com initalization success callback
   static initMap () {
     // Create new map
     const mapElement = document.getElementsByClassName('map')[0];
-    GoogleMapView.map = new global.google.maps.Map(mapElement, {
-      // Center on city
+    GoogleMapView.map = new window.google.maps.Map(mapElement, {
+      // Center on default location
       center: {
-        lat: currentModel.area.position.lat,
-        lng: currentModel.area.position.lng
+        lat: GoogleMapView.defaultPosition.lat,
+        lng: GoogleMapView.defaultPosition.lng
       },
       zoom: 12,
       styles: mapStyle
     });
 
     // Recenter map on window resize
-    global.onresize = GoogleMapView.onWindowResize;
+    window.onresize = GoogleMapView.onWindowResize;
 
     // Clicking on map while sidebar is open will hide it
-    mapElement.addEventListener('click', hideListView);
+    mapElement.addEventListener('click', GoogleMapView.hideListView);
 
     // Markers corresponding to data locations
     GoogleMapView.markers = [];
     // Map bounds
-    GoogleMapView.originalBounds = new global.google.maps.LatLngBounds();
+    GoogleMapView.originalBounds = new window.google.maps.LatLngBounds();
 
     // InfoWindow configuration
-    GoogleMapView.mainInfoWindow = new global.google.maps.InfoWindow({
+    GoogleMapView.mainInfoWindow = new window.google.maps.InfoWindow({
       maxWidth: 250
     });
     GoogleMapView.mainInfoWindow.addListener('closeclick', function () {
@@ -51,46 +62,70 @@ class GoogleMapView {
       DisplayViewModel.instance.setSelectedMarker(undefined);
     });
 
+    // // Declare listener callback outside of loop to avoid jshint warning
+    // const listenerPopInfo = function () {
+    //   // Hide sidebar if open to display InfoWindow
+    //   hideListView();
+    //   // 'this' will be the marker inside listener cb
+    //   GoogleMapView.popInfoWindow(this);
+    // };
+    //
+    // // Create array of Markers from provided location info
+    // GoogleMapView.model.cities[0].locations.forEach(function (location) {
+    //   const newMarker = new window.google.maps.Marker({
+    //     position: location.position,
+    //     title: location.title,
+    //     animation: window.google.maps.Animation.DROP,
+    //     icon: 'img/icons/' + location.type + '.png',
+    //     map: GoogleMapView.map
+    //   });
+    //   newMarker.addListener('click', listenerPopInfo);
+    //   GoogleMapView.markers.push(newMarker);
+    //   GoogleMapView.originalBounds.extend(newMarker.position);
+    // });
+    //
+    // // Adjust map bounds to fit all markers
+    // GoogleMapView.resetMap();
+  }
+
+  static loadCuratedMarkers (modelCityObj) {
     // Declare listener callback outside of loop to avoid jshint warning
     const listenerPopInfo = function () {
       // Hide sidebar if open to display InfoWindow
-      hideListView();
+      GoogleMapView.hideListView();
       // 'this' will be the marker inside listener cb
       GoogleMapView.popInfoWindow(this);
     };
 
-    // Create array of Markers from provided location info
-    currentModel.locations.forEach(function (location) {
-      const newMarker = new global.google.maps.Marker({
-        position: location.position,
-        title: location.title,
-        animation: global.google.maps.Animation.DROP,
-        icon: 'img/icons/' + location.type + '.png',
-        map: GoogleMapView.map
+    // Only add new markers if loading for the first time, or city has been changed
+    if (GoogleMapView.markers.length === 0 ||
+        (GoogleMapView.modelCityObj && GoogleMapView.modelCityObj.locations !== modelCityObj.locations)) {
+      // Clear markers and bounds
+      console.log('Load new map Markers'); // TODO
+      GoogleMapView.markers = [];
+      GoogleMapView.originalBounds = new window.google.maps.LatLngBounds();
+      // Create array of Markers from provided location info
+      modelCityObj.locations.forEach(function (location) {
+        const newMarker = new window.google.maps.Marker({
+          position: location.position,
+          title: location.title,
+          animation: window.google.maps.Animation.DROP,
+          icon: 'img/icons/' + location.type + '.png',
+          map: GoogleMapView.map
+        });
+        newMarker.addListener('click', listenerPopInfo);
+        GoogleMapView.markers.push(newMarker);
+        GoogleMapView.originalBounds.extend(newMarker.position);
       });
-      newMarker.addListener('click', listenerPopInfo);
-      GoogleMapView.markers.push(newMarker);
-      GoogleMapView.originalBounds.extend(newMarker.position);
-    });
 
+      GoogleMapView.modelCityObj = modelCityObj;
+    }
     // Adjust map bounds to fit all markers
     GoogleMapView.resetMap();
 
     // Notify current instance of DisplayViewModel that
-    // google map initialization is complete
-    DisplayViewModel.instance.mapReady(true);
-
-    // Helper Method for hiding sidebar if it is open
-    function hideListView () {
-      const sidebars = document.getElementsByClassName('sidebar');
-      const state = sidebars[0].classList.contains('sidebar--show');
-      if (state) {
-        for (const sidebar of sidebars) {
-          sidebar.classList.add('sidebar--hide');
-          sidebar.classList.remove('sidebar--show');
-        }
-      }
-    }
+    // google map and marker initialization is complete
+    DisplayViewModel.instance.markersReady(modelCityObj.cityName);
   }
 
   static onWindowResize () {
@@ -103,11 +138,11 @@ class GoogleMapView {
         // If infoWindow currently open, center on info window
         if (GoogleMapView.mainInfoWindow.marker) {
           GoogleMapView.map.panTo(GoogleMapView.mainInfoWindow.marker.position);
-          GoogleMapView.map.panBy(0, -280);
+          GoogleMapView.map.panBy(0, -300);
 
         // InfoWindow not open on any marker, fit bounds based on all visible markers
         } else {
-          GoogleMapView.resizeBounds = new global.google.maps.LatLngBounds();
+          GoogleMapView.resizeBounds = new window.google.maps.LatLngBounds();
           visibleMarkers.forEach(function (markerOnMap) {
             GoogleMapView.resizeBounds.extend(markerOnMap.position);
           });
@@ -121,13 +156,13 @@ class GoogleMapView {
       // Only 1 marker, don't extend bounds, go directly to marker
       } else if (visibleMarkers.length === 1) {
         GoogleMapView.map.panTo(visibleMarkers[0].position);
-        GoogleMapView.map.panBy(0, -280);
+        GoogleMapView.map.panBy(0, -300);
       }
       // If no visible markers, no fitting bounds
     }
 
     // Slide sidebar into initial position automatically when window enlarge
-    if (global.matchMedia('(min-width: 768px)').matches) {
+    if (window.matchMedia('(min-width: 768px)').matches) {
       const sidebars = document.getElementsByClassName('sidebar');
       for (const sidebar of sidebars) {
         sidebar.classList.remove('sidebar--show');
@@ -149,7 +184,7 @@ class GoogleMapView {
 
       // Center on marker & move up map to allow for info window display
       GoogleMapView.map.panTo(marker.position);
-      GoogleMapView.map.panBy(0, -280);
+      GoogleMapView.map.panBy(0, -300);
 
       // Construction of pre-fetch InfoWindow content
       let markerContent = getInfoWindowMainHtml(spinnerHtmlString, marker.title);
@@ -170,7 +205,7 @@ class GoogleMapView {
           // Check if Yelp result exists
           if (yelpInfo) {
             // Remove spinner by reassigning markerContent with Yelp info
-            const yelpHtml = yelp.getYelpInfoHtml(yelpInfo, currentModel.area.country);
+            const yelpHtml = yelp.getYelpInfoHtml(yelpInfo, GoogleMapView.modelCityObj.country);
             markerContent = getInfoWindowMainHtml(yelpHtml, marker.title);
 
             GoogleMapView.mainInfoWindow.setContent(markerContent);
@@ -219,7 +254,7 @@ class GoogleMapView {
           .setAttribute('data-bind', 'click: clickPrevArrow, ' + dataBindStyle);
         arrowBtnsDiv.children[1]
           .setAttribute('data-bind', 'click: clickNextArrow, ' + dataBindStyle);
-        global.ko.applyBindings(DisplayViewModel.instance, arrowBtnsDiv);
+        window.ko.applyBindings(DisplayViewModel.instance, arrowBtnsDiv);
       }
     }
 
@@ -254,7 +289,7 @@ class GoogleMapView {
   static queryBoundsExtend (markerPosition) {
     // Create new LatLngBounds object for every query
     if (!GoogleMapView.queryBounds) {
-      GoogleMapView.queryBounds = new global.google.maps.LatLngBounds();
+      GoogleMapView.queryBounds = new window.google.maps.LatLngBounds();
     }
     GoogleMapView.queryBounds.extend(markerPosition);
   }
@@ -297,7 +332,7 @@ class GoogleMapView {
       GoogleMapView.markers.forEach(function (otherMarker) {
         otherMarker.setAnimation(undefined);
       });
-      marker.setAnimation(global.google.maps.Animation.BOUNCE);
+      marker.setAnimation(window.google.maps.Animation.BOUNCE);
       setTimeout(() => (marker.setAnimation(undefined)), 1500);
     }
   }
