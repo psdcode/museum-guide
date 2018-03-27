@@ -1,8 +1,8 @@
 /* HEADER */
 
 .header {
-  /* background: url(../../../img/pic/Naha_Okinawa_Japan_Shuri-Castle-01_1x.jpg) top center no-repeat;
-  background-size: cover; */
+  /* background: url(../../../img/pic/Naha_Okinawa_Japan_Shuri-Castle-01_1x.jpg) top center no-repeat; */
+  /* background-size: cover; */
   position: fixed;
   text-align: center;
   height: 80px;
@@ -68,6 +68,10 @@
       float: left;
     }
 
+    @media screen and (min-width: 1280px) {
+      font-size: 43.2px;
+    }
+
     /* Flexbox settings (Modernizr) */
     .flexbox & {
       margin: 0;
@@ -76,14 +80,13 @@
       @media screen and (min-width: 1134px) {
         flex-basis: auto;
         display: block;
-        margin-left: 20px;
         font-size: 38.4px;
         float: none;
       }
-    }
 
-    @media screen and (min-width: 1280px) {
-      font-size: 43.2px;
+      @media screen and (min-width: 1280px) {
+        font-size: 43.2px;
+      }
     }
   }
 
