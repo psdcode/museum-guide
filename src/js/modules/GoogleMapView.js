@@ -61,31 +61,6 @@ class GoogleMapView {
       GoogleMapView.mainInfoWindow.marker = undefined;
       DisplayViewModel.instance.setSelectedMarker(undefined);
     });
-
-    // // Declare listener callback outside of loop to avoid jshint warning
-    // const listenerPopInfo = function () {
-    //   // Hide sidebar if open to display InfoWindow
-    //   hideListView();
-    //   // 'this' will be the marker inside listener cb
-    //   GoogleMapView.popInfoWindow(this);
-    // };
-    //
-    // // Create array of Markers from provided location info
-    // GoogleMapView.model.cities[0].locations.forEach(function (location) {
-    //   const newMarker = new window.google.maps.Marker({
-    //     position: location.position,
-    //     title: location.title,
-    //     animation: window.google.maps.Animation.DROP,
-    //     icon: 'img/icons/' + location.type + '.png',
-    //     map: GoogleMapView.map
-    //   });
-    //   newMarker.addListener('click', listenerPopInfo);
-    //   GoogleMapView.markers.push(newMarker);
-    //   GoogleMapView.originalBounds.extend(newMarker.position);
-    // });
-    //
-    // // Adjust map bounds to fit all markers
-    // GoogleMapView.resetMap();
   }
 
   static loadCuratedMarkers (modelCityObj) {
