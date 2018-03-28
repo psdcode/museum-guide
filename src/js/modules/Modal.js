@@ -22,16 +22,15 @@ class Modal {
   }
 
   events () {
-    // Clicking the x close modal buttons
-    // this.closeModalButton.click(this.closeModal.bind(this));
     // Key push event listener
     document.addEventListener('keyup', this.keyPressHandler.bind(this));
   }
 
-  isModalHidden () {
-    const modalState = this.modalElement.classList.contains('modal--hidden');
-    return modalState;
-  }
+  // TODO may be unnecessary
+  // isModalHidden () {
+  //   const modalState = this.modalElement.classList.contains('modal--hidden');
+  //   return modalState;
+  // }
 
   launchFirstModal () {
     this.modalElementContent.classList.remove('modal__content--hidden');
