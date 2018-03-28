@@ -81,7 +81,7 @@ class DisplayViewModel {
   clickLocationList (clickedListItemMarker) {
     // Hide sidebar if open to display InfoWindow
     if (window.matchMedia('(max-width: 767px)').matches) {
-      this.toggleSidebar();
+      DisplayViewModel.instance.toggleSidebar();
     }
     GoogleMapView.popInfoWindow(clickedListItemMarker);
   }
