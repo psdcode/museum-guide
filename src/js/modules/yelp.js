@@ -30,8 +30,6 @@ const yelp = (function () {
 
   // Helper method for inserting Yelp html into info window
   function getYelpInfoHtml (yelpInfo, country) {
-    console.dir(yelpInfo);
-    console.log(yelpInfo.hours);
     let yelpContent = `<div class="yelp">`;
     // Image
     yelpContent += `<img class="yelp__image" src=${getSmallerImageUrl(yelpInfo.image_url)} alt="Museum">`;
@@ -49,7 +47,7 @@ const yelp = (function () {
     yelpContent += `<p><address>${getYelpAddressHtml(yelpInfo.location.display_address, country)}`;
     yelpContent += `</address></p>`;
     yelpContent += `<p class="yelp__open-now">Currently <strong>`;
-    yelpContent += `${yelpInfo.is_closed ? 'CLOSED' : 'OPEN'}</strong><br>`;
+    yelpContent += `${yelpInfo.is_open_now ? 'OPEN' : 'CLOSED'}</strong><br>`;
     yelpContent += `Phone: ${yelpInfo.display_phone}</p>`;
     // Close <div class="yelp__info">
     yelpContent += `</div>`;
@@ -60,14 +58,7 @@ const yelp = (function () {
   }
 
   // Helper method for fetching Yelp info
-  function fetchYelp (mapMarker, token) {
-    // Since client-side requests to Yelp V3 API are not possible due to lack
-    // of support for CORS and JSONP, 'cors-anywhere' app hack is employed as a proxy
-    let fetchString = `https://cors-anywhere.herokuapp.com/https://api.yelp.com/v3/`;
-    fetchString += `businesses/search?term=${getSearchString(mapMarker.title)}&`;
-    fetchString += `latitude=${mapMarker.position.lat()}&longitude=`;
-    fetchString += `${mapMarker.position.lng()}`;
-
+  function fetchYelp (fetchString, token) {
     return window.fetch(fetchString,
       {
         method: 'GET',
@@ -83,17 +74,44 @@ const yelp = (function () {
       })
       .then(function (response) {
         // Both cors-anywhere.herokuapp.com and api.yelp.com reachable
-        if (response.ok) return response;
+        if (response.ok) {
+          return response;
+
         // cors-anywhere.herokuapp.com ok, api.yelp.com fails
-        else return Promise.reject(new Error('api.yelp.com connection error'));
+        } else {
+          return Promise.reject(new Error('api.yelp.com connection error'));
+        }
       })
-      .then((response) => (response.json()))
-      .then((responseJSON) => (responseJSON.businesses[0]));
+      .then((response) => (response.json()));
   }
 
+  function fetchYelpHours (yelpData, token) {
+    // Since client-side requests to Yelp V3 API are not possible due to lack
+    // of support for CORS and JSONP, 'cors-anywhere' app hack is employed as a proxy
+    let fetchHoursString = `https://cors-anywhere.herokuapp.com/https://api.yelp.com/v3/`;
+    fetchHoursString += `businesses/${yelpData.id}`;
+    return fetchYelp(fetchHoursString, token).then(function (responseJSON) {
+      const yelpDataAndHours = Object.assign(yelpData, {is_open_now: responseJSON.hours.is_open_now});
+      return yelpDataAndHours;
+    });
+  }
+
+  function fetchYelpInfo (mapMarker, token) {
+    // Since client-side requests to Yelp V3 API are not possible due to lack
+    // of support for CORS and JSONP, 'cors-anywhere' app hack is employed as a proxy
+    let fetchInfoString = `https://cors-anywhere.herokuapp.com/https://api.yelp.com/v3/`;
+    fetchInfoString += `businesses/search?term=${getSearchString(mapMarker.title)}&`;
+    fetchInfoString += `latitude=${mapMarker.position.lat()}&longitude=`;
+    fetchInfoString += `${mapMarker.position.lng()}`;
+    return fetchYelp(fetchInfoString, token).then(
+      (responseJSON) => (fetchYelpHours(responseJSON.businesses[0], token))
+    );
+  }
+
+  // return Yelp module
   return {
     getYelpInfoHtml,
-    fetchYelp
+    fetchYelpInfo
   };
 }());
 
