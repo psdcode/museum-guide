@@ -15,6 +15,10 @@ const yelp = (function () {
     return locationTitle.replace(/\s+/g, '+');
   }
 
+  function getSmallerImageUrl (url) {
+    return url.replace(/o\.jpg$/, 'l.jpg');
+  }
+
   // Helper method for formatting Yelp address html string
   function getYelpAddressHtml (yelpAddress, country) {
     // Remove country from address since it's redundant in the context of a city map
@@ -26,9 +30,11 @@ const yelp = (function () {
 
   // Helper method for inserting Yelp html into info window
   function getYelpInfoHtml (yelpInfo, country) {
+    console.dir(yelpInfo);
+    console.log(yelpInfo.hours);
     let yelpContent = `<div class="yelp">`;
     // Image
-    yelpContent += `<img class="yelp__image" src=${yelpInfo.image_url} alt="Museum">`;
+    yelpContent += `<img class="yelp__image" src=${getSmallerImageUrl(yelpInfo.image_url)} alt="Museum">`;
     // Rating & Info
     yelpContent += `<div class="yelp__info">`;
     yelpContent += `<a class="yelp__rating" href="${yelpInfo.url}" target="_blank">`;
@@ -75,14 +81,14 @@ const yelp = (function () {
         // connection error. Please try again later.`); TODO
         return Promise.reject(err);
       })
-      .then(response => {
+      .then(function (response) {
         // Both cors-anywhere.herokuapp.com and api.yelp.com reachable
         if (response.ok) return response;
         // cors-anywhere.herokuapp.com ok, api.yelp.com fails
         else return Promise.reject(new Error('api.yelp.com connection error'));
       })
-      .then(response => response.json())
-      .then(responseJSON => responseJSON.businesses[0]);
+      .then((response) => (response.json()))
+      .then((responseJSON) => (responseJSON.businesses[0]));
   }
 
   return {
