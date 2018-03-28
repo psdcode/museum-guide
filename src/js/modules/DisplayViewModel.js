@@ -166,18 +166,20 @@ class DisplayViewModel {
   }
 
   loadData () {
+    // Form radio 'Curated' option
     if (this.selectedSearchValue() === 'curated') {
-
-    } else if (this.selectedSearchValue() === 'liveSearch') {
-
-    }
-
-    // Temporary setTimeout until search function is properly working TODO
-    setTimeout(function () {
       GoogleMapView.loadCuratedMarkers(this.selectedCityObj());
       modal.closeModal(modal);
       this.displayedCityString(this.computedCityString());
-    }.bind(this), 1500);
+    // Form radio option 'Live Search'
+    } else if (this.selectedSearchValue() === 'liveSearch') {
+      // Temporary setTimeout until search function is properly working TODO
+      setTimeout(function () {
+        GoogleMapView.loadCuratedMarkers(this.selectedCityObj());
+        modal.closeModal(modal);
+        this.displayedCityString(this.computedCityString());
+      }.bind(this), 1500);
+    }
   }
 
   // Allows GoogleMapView class to inform DisplayViewModel of openInfoWindow on
