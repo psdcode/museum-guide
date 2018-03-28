@@ -46,9 +46,13 @@
 
   &__content {
     /* "Photo by CEphoto, Uwe Aranas" */
+
     /* background: url(../../../img/pic/Naha_Okinawa_Japan_Shuri-Castle-01_1x.jpg) top center no-repeat; */
-    /*background-image: -webkit-image-set(url(../../../img/pic/Naha_Okinawa_Japan_Shuri-Castle-01_1x.jpg) 1x, url(../../../img/pic/Naha_Okinawa_Japan_Shuri-Castle-01_2x.jpg) 2x); */
+
+    /* background-image: -webkit-image-set(url(../../../img/pic/Naha_Okinawa_Japan_Shuri-Castle-01_1x.jpg) 1x, url(../../../img/pic/Naha_Okinawa_Japan_Shuri-Castle-01_2x.jpg) 2x); */
+
     /* background-size: cover; */
+
     /* always cover containing div */
     position: absolute;
     width: 100%;
@@ -86,7 +90,6 @@
 
     /* .btn overrides */
     padding: 5px 0 0;
-
   }
 
   &__close-btn--hidden {
@@ -95,7 +98,7 @@
 
   &__close-btn-x {
     font-size: 30px;
-    font-family: Arial;
+    font-family: Arial, sans-serif;
     transform: scaleX(1.2);
     display: block;
   }

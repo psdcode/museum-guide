@@ -2,6 +2,7 @@
 
 .header {
   /* background: url(../../../img/pic/Naha_Okinawa_Japan_Shuri-Castle-01_1x.jpg) top center no-repeat; */
+
   /* background-size: cover; */
   position: fixed;
   text-align: center;
@@ -29,7 +30,6 @@
     /* All other screens padding */
     @media screen and (min-width: 370px) {
       padding-right: 0;
-      /* line-height: 0.95; */
     }
 
     /* Non-flexbox settings */
@@ -42,6 +42,7 @@
       align-items: center;
       justify-content: center;
       align-content: space-between;
+
       @media screen and (min-width: 1134px) {
         justify-content: flex-start;
         flex-wrap: nowrap;

@@ -17,7 +17,6 @@
     font-size: 15px;
     line-height: 1.43;
 
-
     &:focus {
       outline: auto;
       outline-offset: 0.5px;
@@ -27,8 +26,8 @@
   &__reset,
   &__change {
     display: inline-block;
-
     width: 7.438rem;
+
     /* Adjust to equal height with filter input element */
     height: 33.3px;
   }

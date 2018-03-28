@@ -18,14 +18,14 @@
     color: var(--mainFontColor);
   }
 
-  /* Do not change background color on disabled buttons when click/active */
-  &:not(&--off):active {
-    background-color: var(--btnActive);
-  }
-
   &:focus {
     outline: auto;
     outline-offset: 0.5px;
+  }
+
+  /* Do not change background color on disabled buttons when click/active */
+  &:not(&--off):active {
+    background-color: var(--btnActive);
   }
 
   &--off {

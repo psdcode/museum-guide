@@ -44,9 +44,9 @@
   }
 
   .flexbox &--sm-l-margin-from-lg {
-      @media screen and (min-width: 1134px) {
-        margin-left: 20px;
-      }
+    @media screen and (min-width: 1134px) {
+      margin-left: 20px;
+    }
   }
 
   &--red {
