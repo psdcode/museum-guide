@@ -120,77 +120,77 @@ export const model = {
         "type": "general",
         "place_id": "ChIJ3ZNhe1dcGGARvjq5QHdmaHM"
       }, {
-        "title": "Japan Coast Guard Museum Yokohama",
+        "title": "Yokohama Customs Museum",
         "position": {
-          "lat" : 35.4543846,
-          "lng" : 139.644207
+          "lat" : 35.4489288,
+          "lng" : 139.6425099
         },
         "type": "general",
-        "place_id": "ChIJH19OaFZcGGARAc-aTS83zVc"
+        "place_id": "ChIJ8yZGpPlcGGARlT0nV19cMnI"
       }, {
-        "title": "",
+        "title": "Yokohama Museum of Art Grand Gallery",
         "position": {
-
-
+          "lat" : 35.457223,
+          "lng" : 139.630459
         },
-        "type": "",
-        "place_id": ""
+        "type": "art",
+        "place_id": "ChIJH-7CrUJcGGARRheV9VFwl0I"
       }, {
-        "title": "",
+        "title": "NYK Maritime Museum",
         "position": {
-
-
+          "lat" : 35.4503787,
+          "lng" : 139.639431
         },
-        "type": "",
-        "place_id": ""
+        "type": "history",
+        "place_id": "ChIJRZpr7fdcGGARzUmeVzAG0B0"
       }, {
-        "title": "",
+        "title": "Silk Museum",
         "position": {
-
-
+          "lat" : 35.4472062,
+          "lng" : 139.6451657
         },
-        "type": "",
-        "place_id": ""
+        "type": "history",
+        "place_id": "ChIJUxedePxcGGARVT8JmV27_aE"
       }, {
-        "title": "",
+        "title": "Yokohama Doll Museum",
         "position": {
-
-
+          "lat" : 35.443169,
+          "lng" : 139.652108
         },
-        "type": "",
-        "place_id": ""
+        "type": "general",
+        "place_id": "ChIJsynq2h1dGGARIJ4iBe7hUpc"
       }, {
-        "title": "",
+        "title": "Kanagawa Prefectural Museum of Cultural History",
         "position": {
-
-
+          "lat" : 35.449156,
+          "lng" : 139.6362085
         },
-        "type": "",
-        "place_id": ""
+        "type": "history",
+        "place_id": "ChIJjb2TFfZcGGAR0f_ZDI5lRcg"
       }, {
-        "title": "",
+        "title": "Yokohama Archives of History",
         "position": {
-
-
+          "lat" : 35.447663,
+          "lng" : 139.643911
         },
-        "type": "",
-        "place_id": ""
+        "type": "history",
+        "place_id": "ChIJ0ZTmwftcGGARLB7D7g4o79Y"
       }, {
-        "title": "",
+        "title": "Hara Model Railway Museum",
         "position": {
-
-
+          "lat" : 35.463158,
+          "lng" : 139.62477
         },
-        "type": "",
-        "place_id": ""
+        "type": "general",
+        "place_id": "ChIJ8yJ9aWtcGGARv6WSnehPIwQ"
       }, {
-        "title": "",
+        "title": "Anpanman Museum",
         "position": {
-
-
+          "lat" : 35.4585909,
+          "lng" : 139.6254503
         },
-        "type": "",
-        "place_id": ""
+        "type": "kids",
+        "place_id": "ChIJVVXFR2lcGGAR8aCbEZKt0yo"
       }]
     },
     {
