@@ -89,14 +89,6 @@ class GoogleMapView {
   }
 
   static loadCuratedMarkers (modelCityObj) {
-    // Declare listener callback outside of loop to avoid jshint warning
-    const listenerPopInfo = function () {
-      // Hide sidebar if open to display InfoWindow
-      GoogleMapView.hideListView();
-      // 'this' will be the marker inside listener cb
-      GoogleMapView.popInfoWindow(this);
-    };
-
     // Only add new markers if loading for the first time, or city has been changed
     if (GoogleMapView.markers.length === 0 ||
         (GoogleMapView.modelCityObj && GoogleMapView.modelCityObj.locations !== modelCityObj.locations)) {
@@ -113,7 +105,12 @@ class GoogleMapView {
           icon: 'img/icons/' + location.type + '.png',
           map: GoogleMapView.map
         });
-        newMarker.addListener('click', listenerPopInfo);
+        newMarker.addListener('click', function listenerPopInfo () {
+          // Hide sidebar if open to display InfoWindow
+          GoogleMapView.hideListView();
+          // 'this' will be the marker inside listener cb
+          GoogleMapView.popInfoWindow(this);
+        });
         GoogleMapView.markers.push(newMarker);
         GoogleMapView.originalBounds.extend(newMarker.position);
       });
@@ -138,7 +135,7 @@ class GoogleMapView {
         // If infoWindow currently open, center on info window
         if (GoogleMapView.mainInfoWindow.marker) {
           GoogleMapView.map.panTo(GoogleMapView.mainInfoWindow.marker.position);
-          GoogleMapView.map.panBy(0, -300);
+          GoogleMapView.map.panBy(0, -340);
 
         // InfoWindow not open on any marker, fit bounds based on all visible markers
         } else {
@@ -156,7 +153,7 @@ class GoogleMapView {
       // Only 1 marker, don't extend bounds, go directly to marker
       } else if (visibleMarkers.length === 1) {
         GoogleMapView.map.panTo(visibleMarkers[0].position);
-        GoogleMapView.map.panBy(0, -300);
+        GoogleMapView.map.panBy(0, -340);
       }
       // If no visible markers, no fitting bounds
     }
@@ -184,7 +181,7 @@ class GoogleMapView {
 
       // Center on marker & move up map to allow for info window display
       GoogleMapView.map.panTo(marker.position);
-      GoogleMapView.map.panBy(0, -300);
+      GoogleMapView.map.panBy(0, -340);
 
       // Construction of pre-fetch InfoWindow content
       let markerContent = getInfoWindowMainHtml(spinnerHtmlString, marker.title);
