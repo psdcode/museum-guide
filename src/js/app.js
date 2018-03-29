@@ -15,7 +15,9 @@ ukiEQp2Z03m7Cmycz29Lu2n4Gc5LPu1wDjVVCGyignkEoZn167yyq07sbPEN7gF5GzE20YWnYx`;
 GoogleMapView.defaultPosition = currentModel.defaultArea.position;
 
 // Knockout.js DisplayViewModel initialization with model
-DisplayViewModel.instance = new DisplayViewModel(currentModel);
-window.ko.applyBindings(DisplayViewModel.instance);
+if (window.ko) {
+  DisplayViewModel.instance = new DisplayViewModel(currentModel);
+  window.ko.applyBindings(DisplayViewModel.instance);
+}
 
 // End
