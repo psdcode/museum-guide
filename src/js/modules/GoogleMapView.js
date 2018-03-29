@@ -64,11 +64,13 @@ class GoogleMapView {
   }
 
   static loadCuratedMarkers (modelCityObj) {
-    // Only add new markers if loading for the first time, or city has been changed
+    // Only add new markers if loading for the first time OR city has been changed
     if (GoogleMapView.markers.length === 0 ||
         (GoogleMapView.modelCityObj && GoogleMapView.modelCityObj.locations !== modelCityObj.locations)) {
       // Clear markers and bounds
-      console.log('Load new map Markers'); // TODO
+      GoogleMapView.markers.forEach(function (marker) {
+        marker.setMap(undefined);
+      });
       GoogleMapView.markers = [];
       GoogleMapView.originalBounds = new window.google.maps.LatLngBounds();
       // Create array of Markers from provided location info
