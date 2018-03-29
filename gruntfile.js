@@ -150,7 +150,6 @@ module.exports = function (grunt) {
 
     rollup: {
       options: {
-        format: 'iife',
         plugins: [
           require('rollup-plugin-babel')({
             presets: [['env', { 'modules': false }]],
@@ -161,11 +160,17 @@ module.exports = function (grunt) {
       },
 
       app: {
+        options: {
+          format: 'iife'
+        },
         files: {
           [paths.prodDirJs + 'app.js']: [paths.srcDirJs + 'app.js']
         }
       },
       vendor: {
+        options: {
+          format: 'es'
+        },
         files: {
           [paths.prodDirJs + 'vendor.js']: [paths.srcDirJs + 'vendor.js']
         }
