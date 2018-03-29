@@ -10,6 +10,7 @@ class DisplayViewModel {
     self.markersReady = window.ko.observable('');
     // Filter query string
     self.query = window.ko.observable('');
+    self.mapLoadFail = window.ko.observable(false);
 
     // Form selection values
     self.selectedCityValue = window.ko.observable();
@@ -86,6 +87,11 @@ class DisplayViewModel {
     GoogleMapView.popInfoWindow(clickedListItemMarker);
   }
 
+  // Called by 'Change City' btn
+  changeCity () {
+    modal.openModal();
+  }
+
   // Navigate to next available marker InfoWindow in list
   clickNextArrow () {
     this.clickArrow(1);
@@ -94,6 +100,11 @@ class DisplayViewModel {
   // Navigate to previous available marker InfoWindow in list
   clickPrevArrow () {
     this.clickArrow(-1);
+  }
+
+  // Called by X close modal button
+  closeModal () {
+    modal.closeModal(modal);
   }
 
   // Filter obsrvable location list and markers based on query
@@ -182,6 +193,10 @@ class DisplayViewModel {
     }
   }
 
+  notifyMapLoadFail (failState) {
+    this.mapLoadFail(failState);
+  }
+
   // Allows GoogleMapView class to inform DisplayViewModel of openInfoWindow on
   // marker
   setSelectedMarker (marker) {
@@ -199,15 +214,6 @@ class DisplayViewModel {
   resetMap () {
     this.query('');
     GoogleMapView.resetMap();
-  }
-
-  // Called by 'Change City' btn
-  changeCity () {
-    modal.openModal();
-  }
-
-  closeModal () {
-    modal.closeModal(modal);
   }
 
   submitModal () {
