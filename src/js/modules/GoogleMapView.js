@@ -205,7 +205,7 @@ class GoogleMapView {
           if (GoogleMapView.mainInfoWindow.marker === marker) {
             let errorHtml = `<p>Unable to retrieve this location's Yelp data due to a `;
             errorHtml += `connection error. Please try again later.</p>`;
-            markerContent = getInfoWindowMainHtml(errorHtml, undefined);
+            markerContent = getInfoWindowMainHtml(errorHtml, 'Loading Error');
 
             GoogleMapView.mainInfoWindow.setContent(markerContent);
             console.log(err); // TODO
