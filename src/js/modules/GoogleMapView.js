@@ -3,7 +3,7 @@ import DisplayViewModel from './DisplayViewModel';
 import yelp from './yelp';
 import spinnerHtmlString from './spinner';
 
-// Class for handling google map display/view/update
+// Class for handling Google Map & InfoWindow display/update
 class GoogleMapView {
   static closeInfoWindow () {
     GoogleMapView.mainInfoWindow.close();
@@ -14,6 +14,9 @@ class GoogleMapView {
   // maps.googleapis.com script initial loading error callback
   static errorLoadMap () {
     window.alert('Unable to load Google Map at this time. Check your internet connection or try again later.');
+    if (DisplayViewModel.instance) {
+      DisplayViewModel.instance.notifyMapLoadFail(true);
+    }
   }
 
   // Helper Method for hiding sidebar if it is open
@@ -140,7 +143,6 @@ class GoogleMapView {
       const sidebars = document.getElementsByClassName('sidebar');
       for (const sidebar of sidebars) {
         sidebar.classList.remove('sidebar--show');
-        // TODO add class sidebar--hide ???
       }
     }
   }
