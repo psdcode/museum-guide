@@ -15,7 +15,7 @@ class Modal {
     // Inject spinner html into Modal load screen
     this.loadingFormElement.insertAdjacentHTML('beforeend', spinnerHtmlString);
     // Delay & Animate initial modal appearance
-    setTimeout(this.launchFirstModal.bind(this), 400);
+    setTimeout(this.launchFirstModal.bind(this), 350);
 
     // Initialize event handlers
     this.events();
