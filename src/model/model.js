@@ -283,6 +283,138 @@ export const model = {
         "type": "science",
         "place_id": "ChIJDXa8qOjmAGARGeBCBnhGKOY"
       }]
+    },
+    {
+      "cityName": "Nagoya",
+      "country": "Japan",
+      "countrycode": "jp",
+      "localLang": "名古屋市",
+      "position": {
+        "lat": 35.183333,
+        "lng": 136.9
+      },
+      "locations": []
+    },
+    {
+      "cityName": "Nagoya",
+      "country": "Japan",
+      "countrycode": "jp",
+      "localLang": "名古屋市",
+      "position": {
+        "lat": 35.183333,
+        "lng": 136.9
+      },
+      "locations": []
+    },
+    {
+      "cityName": "Sapporo",
+      "country": "Japan",
+      "countrycode": "jp",
+      "localLang": "札幌市",
+      "position": {
+        "lat": 43.066667,
+        "lng": 141.35
+      },
+      "locations": []
+    },
+    {
+      "cityName": "Kobe",
+      "country": "Japan",
+      "countrycode": "jp",
+      "localLang": "神戸市",
+      "position": {
+        "lat": 34.69,
+        "lng": 135.195556
+      },
+      "locations": []
+    },
+    {
+      "cityName": "Kyoto",
+      "country": "Japan",
+      "countrycode": "jp",
+      "localLang": "京都市",
+      "position": {
+        "lat": 35.011667,
+        "lng": 135.768333
+      },
+      "locations": []
+    },
+    {
+      "cityName": "Fukuoka",
+      "country": "Japan",
+      "countrycode": "jp",
+      "localLang": "福岡市",
+      "position": {
+        "lat": 33.583333,
+        "lng": 130.4
+      },
+      "locations": []
+    },
+    {
+      "cityName": "Kawasaki",
+      "country": "Japan",
+      "countrycode": "jp",
+      "localLang": "川崎市",
+      "position": {
+        "lat": 35.516667,
+        "lng": 139.7
+      },
+      "locations": []
+    },
+    {
+      "cityName": "Saitama",
+      "country": "Japan",
+      "countrycode": "jp",
+      "localLang": "さいたま市",
+      "position": {
+        "lat": 35.861389,
+        "lng": 139.645556
+      },
+      "locations": []
+    },
+    {
+      "cityName": "Hiroshima",
+      "country": "Japan",
+      "countrycode": "jp",
+      "localLang": "広島市",
+      "position": {
+        "lat": 34.385278,
+        "lng": 132.455278
+      },
+      "locations": []
+    },
+    {
+      "cityName": "Sendai",
+      "country": "Japan",
+      "countrycode": "jp",
+      "localLang": "仙台市",
+      "position": {
+        "lat": 38.268222,
+        "lng": 140.869417
+      },
+      "locations": []
+    },
+    {
+      "cityName": "Kitakyushu",
+      "country": "Japan",
+      "countrycode": "jp",
+      "localLang": "北九州市",
+      "position": {
+        "lat": 33.883333,
+        "lng": 130.883333
+      },
+      "locations": []
+    },
+    {
+      "cityName": "Chiba",
+      "country": "Japan",
+      "countrycode": "jp",
+      "localLang": "千葉市",
+      "position": {
+        "lat": 35.607278,
+        "lng": 140.106361
+      },
+      "locations": []
     }
   ]
 };
