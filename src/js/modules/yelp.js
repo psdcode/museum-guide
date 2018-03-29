@@ -44,10 +44,15 @@ const yelp = (function () {
     yelpContent += `<a class="yelp__reviews" href="${yelpInfo.url}" target="_blank">Based `;
     yelpContent += `on <strong>${yelpInfo.review_count}</strong> review`;
     yelpContent += `${yelpInfo.review_count > 1 ? 's' : ''}</a>`;
-    yelpContent += `<p><address>${getYelpAddressHtml(yelpInfo.location.display_address, country)}`;
-    yelpContent += `</address></p>`;
-    yelpContent += `<p class="yelp__open-now">Currently <strong>`;
-    yelpContent += `${yelpInfo.is_open_now ? 'OPEN' : 'CLOSED'}</strong><br>`;
+    yelpContent += `<address class="yelp__address">${getYelpAddressHtml(yelpInfo.location.display_address, country)}`;
+    yelpContent += `</address>`;
+    // Omit open status if data not present in returned yelp business info
+    if (yelpInfo.hasOwnProperty('is_open_now')) {
+      yelpContent += `<p class="yelp__open-now-phone">Currently <strong>`;
+      yelpContent += `${yelpInfo.is_open_now ? 'OPEN' : 'CLOSED'}</strong><br>`;
+    } else {
+      yelpContent += `<p class="yelp__open-now-phone">`;
+    }
     yelpContent += `Phone: ${yelpInfo.display_phone}</p>`;
     // Close <div class="yelp__info">
     yelpContent += `</div>`;
@@ -90,10 +95,19 @@ const yelp = (function () {
     // of support for CORS and JSONP, 'cors-anywhere' app hack is employed as a proxy
     let fetchHoursString = `https://cors-anywhere.herokuapp.com/https://api.yelp.com/v3/`;
     fetchHoursString += `businesses/${yelpData.id}`;
-    return fetchYelp(fetchHoursString, token).then(function (responseJSON) {
-      const yelpDataAndHours = Object.assign(yelpData, {is_open_now: responseJSON.hours.is_open_now});
-      return yelpDataAndHours;
-    });
+    return fetchYelp(fetchHoursString, token)
+      .then(function (responseJSON) {
+        // Check if 'hours' property is present in returned object
+        if (responseJSON.hours && responseJSON.hours[0] &&
+          responseJSON.hours[0].hasOwnProperty('is_open_now')) {
+          // 'is_open_now' property is present
+          const yelpDataAndHours = Object.assign(yelpData, {is_open_now: responseJSON.hours[0].is_open_now});
+          return yelpDataAndHours;
+        } else {
+          // no 'hours' info present, so return yelpData unmodified
+          return yelpData;
+        }
+      });
   }
 
   function fetchYelpInfo (mapMarker, token) {
@@ -103,9 +117,8 @@ const yelp = (function () {
     fetchInfoString += `businesses/search?term=${getSearchString(mapMarker.title)}&`;
     fetchInfoString += `latitude=${mapMarker.position.lat()}&longitude=`;
     fetchInfoString += `${mapMarker.position.lng()}`;
-    return fetchYelp(fetchInfoString, token).then(
-      (responseJSON) => (fetchYelpHours(responseJSON.businesses[0], token))
-    );
+    return fetchYelp(fetchInfoString, token)
+      .then((responseJSON) => (fetchYelpHours(responseJSON.businesses[0], token)));
   }
 
   // return Yelp module
