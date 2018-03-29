@@ -118,7 +118,13 @@ const yelp = (function () {
     fetchInfoString += `latitude=${mapMarker.position.lat()}&longitude=`;
     fetchInfoString += `${mapMarker.position.lng()}`;
     return fetchYelp(fetchInfoString, token)
-      .then((responseJSON) => (fetchYelpHours(responseJSON.businesses[0], token)));
+      .then(function (responseJSON) {
+        if (responseJSON.businesses[0] !== undefined) {
+          return fetchYelpHours(responseJSON.businesses[0], token);
+        } else {
+          return responseJSON.businesses[0];
+        }
+      });
   }
 
   // return Yelp module
