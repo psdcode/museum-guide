@@ -1,6 +1,11 @@
 /* YELP  */
 
 .yelp {
+  &__address {
+    margin: 7px 0 5px;
+    line-height: 1.4;
+  }
+
   &__image {
     margin: 4px 0;
     width: 230px;
@@ -11,8 +16,8 @@
     position: relative;
   }
 
-  &__open-now {
-    margin: 5px 0 8px;
+  &__open-now-phone {
+    margin: 5px 0 10px;
   }
 
   &__rating {
