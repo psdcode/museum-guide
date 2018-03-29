@@ -41,6 +41,35 @@
     }
   }
 
+  &__load-error-screen {
+    position: absolute;
+    top: 0;
+    right: 0;
+    left: 0;
+    bottom: 0;
+    background-color: rgba(var(--mainBkgndColor), 0.70);
+  }
+
+  &__load-error-text {
+    font-size: 15px;
+    margin: 50px 0 0;
+
+    @media screen and (min-width: 512px) {
+      font-size: 18px;
+      margin: 30px 0 0;
+    }
+
+    @media screen and (min-width: 800px) {
+      font-size: 20px;
+      margin: 33px 0 0;
+    }
+
+    @media screen and (min-width: 940px) {
+      font-size: 24px;
+      margin: 33px 0 0;
+    }
+  }
+
   &__text {
     font-size: 20px;
     display: block;
