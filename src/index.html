@@ -21,7 +21,7 @@
   <div class="sidebar sidebar-top">
     <a href="#" class="btn sidebar-top__reset" data-bind="click: resetMap" role="button">Reset Map</a>
     <a href="#" class="btn sidebar-top__change" data-bind="click: changeCity" role="button">Change City</a>
-    <input class="sidebar-top__filter" placeholder="Filter..." type="search" data-bind="textInput: query"/>
+    <input class="sidebar-top__filter" type="search" data-bind="textInput: query"/>
   </div>
   <div class="sidebar sidebar-list">
     <ul class="sidebar-list__list" data-bind="foreach: markersObservable">
@@ -52,6 +52,9 @@
           <div class="form__load-screen">
             <div class="form__load-screen-inner"></div>
           </div>
+          <div class="form__load-error-screen" data-bind="visible: mapLoadFail">
+            <p class="form__load-error-text">Unable to load Google Map at this time.<br>Check your internet connection or try again later.</p>
+          </div>
           <div class="form__radio form__radio--b-margin">
             <span class="form__text form__text--b-margin">Locations Display:</span>
             <input type="radio" name="locationsListType" value="curated" checked data-bind="checked: selectedSearchValue" />Curated
@@ -59,10 +62,10 @@
           </div>
           <div class="form__select form__select--b-margin">
             <span class="form__text form__text--b-margin">City:</span>
-            <select name="city" data-bind="value: selectedCityValue,options: cities, optionsText: 'cityString', optionsValue: 'cityValue'">
+            <select name="city" data-bind="value: selectedCityValue,options: cities, optionsText: 'cityString', optionsValue: 'cityValue', disable: mapLoadFail">
             </select>
           </div>
-          <input type="submit" class="btn form__submit" />
+          <input type="submit" class="btn form__submit" data-bind="disable: mapLoadFail, css: { 'btn--off': mapLoadFail }" />
         </form>
       </div>
     </div>
