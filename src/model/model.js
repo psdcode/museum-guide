@@ -296,17 +296,6 @@ export const model = {
       "locations": []
     },
     {
-      "cityName": "Nagoya",
-      "country": "Japan",
-      "countrycode": "jp",
-      "localLang": "名古屋市",
-      "position": {
-        "lat": 35.183333,
-        "lng": 136.9
-      },
-      "locations": []
-    },
-    {
       "cityName": "Sapporo",
       "country": "Japan",
       "countrycode": "jp",
