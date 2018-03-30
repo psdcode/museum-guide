@@ -103,6 +103,12 @@
     }
   }
 
+  &__radio-curated-text {
+    &--disabled {
+      opacity: 0.5;
+    }
+  }
+
   &__submit {
     font-size: 16px;
   }
