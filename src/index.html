@@ -21,12 +21,10 @@
   <div class="sidebar sidebar-top">
     <a href="#" class="btn sidebar-top__reset" data-bind="click: resetMap" role="button">Reset Map</a>
     <a href="#" class="btn sidebar-top__change" data-bind="click: changeCity" role="button">Change City</a>
-    <input class="sidebar-top__filter" type="search" data-bind="textInput: query"/>
+    <input class="sidebar-top__filter" type="search" data-bind="textInput: query, attr: {placeholder: queryPlaceholder}"/>
   </div>
   <div class="sidebar sidebar-list">
-    <ul class="sidebar-list__list" data-bind="foreach: markersObservable">
-      <li class="sidebar-list__item" data-bind="text: title, click: $root.clickLocationList, css: { 'sidebar-list__item--open': $root.listElementInfoWindowOpen($data) }"></li>
-    </ul>
+    <ul class="sidebar-list__list" data-bind="template: {name: 'list-item-venue', foreach: markersObservable}"></ul>
   </div>
   <header class="header">
     <div class="header__headlines">
@@ -57,19 +55,22 @@
           </div>
           <div class="form__radio form__radio--b-margin">
             <span class="form__text form__text--b-margin">Locations Display:</span>
-            <input type="radio" name="locationsListType" value="curated" checked data-bind="checked: selectedSearchValue" />Curated
-            <input type="radio" name="locationsListType" value="liveSearch" data-bind="checked: selectedSearchValue" />Live Search<br>
+            <input type="radio" name="locationsListType" value="curated" checked data-bind="checked: form.selectedSearchMode, disable: curatedDisabled" /><span class="form__radio-curated-text" data-bind="css: {'form__radio-curated-text--disabled': curatedDisabled}">Curated</span>
+            <input type="radio" name="locationsListType" value="liveSearch" data-bind="checked: form.selectedSearchMode" />Live Search<br>
           </div>
           <div class="form__select form__select--b-margin">
             <span class="form__text form__text--b-margin">City:</span>
-            <select name="city" data-bind="value: selectedCityValue,options: cities, optionsText: 'cityString', optionsValue: 'cityValue', disable: mapLoadFail">
+            <select name="city" data-bind="value: form.selectedCityValue, options: form.optionsCities, optionsText: 'cityString', optionsValue: 'cityValue', disable: mapLoadFail">
             </select>
           </div>
-          <input type="submit" class="btn form__submit" data-bind="disable: mapLoadFail, css: { 'btn--off': mapLoadFail }" />
+          <input type="submit" class="btn form__submit" data-bind="disable: mapLoadFail, css: { 'btn--disabled': mapLoadFail }" />
         </form>
       </div>
     </div>
   </div>
+  <script type="text/html" id="list-item-venue">
+    <li class="sidebar-list__item" data-bind="text: title, click: $root.clickLocationList, css: { 'sidebar-list__item--open': $root.listElementInfoWindowOpen($data) }"></li>
+  </script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/knockout/3.4.2/knockout-min.js"></script>
   <!-- build:js js/app.min.js -->
   <script src="js/app.js"></script>
