@@ -24,11 +24,11 @@
   }
 
   /* Do not change background color on disabled buttons when click/active */
-  &:not(&--off):active {
+  &:not(&--disabled):active {
     background-color: var(--btnActive);
   }
 
-  &--off {
+  &--disabled {
     cursor: not-allowed;
     opacity: 0.6;
     background-color: var(--btnBorderColor);
