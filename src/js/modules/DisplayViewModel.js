@@ -6,30 +6,48 @@ class DisplayViewModel {
   constructor (currentModel) {
     const self = this;
 
-    // Google Map load state
-    self.markersReady = window.ko.observable('');
-    // Filter query string
-    self.query = window.ko.observable('');
+    // Google Map load fail state indicator
     self.mapLoadFail = window.ko.observable(false);
 
-    // Form selection values
-    self.selectedCityValue = window.ko.observable();
-    self.selectedSearchValue = window.ko.observable('curated');
+    // Map markers values
+    self.markersReady = window.ko.observable('');
+    // Observable Markers Array that will determine display of list of locations and map markers
+    self.markersObservable = window.ko.observableArray([]);
+    // Current marker
+    self.selectedMarker = window.ko.observable(undefined);
+    // Computed observable loads markers once map & markers initialization by GoogleMapView is complete
+    self.createMarkersObservable = window.ko.computed(function () {
+      if (self.markersReady()) {
+        console.log('Load New MarkersObservable'); // TODO
+        self.markersObservable(GoogleMapView.markers);
+        self.markersSort(self.markersObservable);
+        return true;
+      }
+    }, self);
 
-    // Display variables
+    // Filter/Search query string values
+    self.queryPlaceholder = window.ko.observable('');
+    self.query = window.ko.observable('');
+    // Observable subscription for instant filtering of query results
+    self.query.subscribe(self.filterMarkerList.bind(self));
+
+    // Display values
     self.computedCityString = window.ko.observable();
     self.displayedCityString = window.ko.observable();
 
+    // Form values
+    self.form = {};
+    self.form.selectedCityValue = window.ko.observable('Tokyo');
+    self.form.selectedSearchMode = window.ko.observable('curated');
     // Array of city info for modal form__select element
-    self.cities = currentModel.cities.map((cityObj) => ({
-      cityString: `${cityObj.cityName} - ${cityObj.localLang}`,
+    self.form.optionsCities = currentModel.cities.map((cityObj) => ({
+      cityString: `${cityObj.cityName}${cityObj.localLang ? ' - ' + cityObj.localLang : ''}`,
       cityValue: cityObj.cityName
     }));
-
     // Object holding all city information, computed based on modal form selection
-    self.selectedCityObj = window.ko.computed(function () {
+    self.form.selectedCityObj = window.ko.computed(function () {
       // Find corresponding city object to selected city value from modal dropdown
-      const cityObj = currentModel.cities.find((cityLook) => (cityLook.cityName === self.selectedCityValue()));
+      const cityObj = currentModel.cities.find((cityLookup) => (cityLookup.cityName === self.form.selectedCityValue()));
       // Set selected to be displayed after form submission
       if (cityObj) {
         // Determine if to include local language heading in title
@@ -41,24 +59,17 @@ class DisplayViewModel {
       }
       return cityObj;
     });
-
-    // Observable Markers Array that will determine display of list of locations and map markers
-    self.markersObservable = window.ko.observableArray([]);
-    // Current marker
-    self.selectedMarker = window.ko.observable(undefined);
-
-    // Computed observable loads markers once map initialization complete
-    self.createMarkersObservable = window.ko.computed(function () {
-      if (self.markersReady()) {
-        console.log('Load New MarkersObservable'); // TODO
-        self.markersObservable(GoogleMapView.markers);
-        self.sort(self.markersObservable);
+    // Determine if curated locations available for city.
+    // If not, disable curated radio button and select liveSearch
+    self.curatedDisabled = window.ko.computed(function () {
+      if (self.form.selectedCityObj().locations.length === 0) {
+        self.form.selectedSearchMode('liveSearch');
         return true;
+      } else {
+        self.form.selectedSearchMode('curated');
+        return false;
       }
-    }, self);
-
-    // Observable subscription for instant filtering of query results
-    self.query.subscribe(self.filterMarkerList.bind(self));
+    });
   }
 
   // Method to open InfoWindow using prev/next buttons
@@ -144,7 +155,7 @@ class DisplayViewModel {
       } else if (markersLength > 1) {
         // Close InfoWindow if open on a marker
         GoogleMapView.closeInfoWindow();
-        this.sort(this.markersObservable);
+        this.markersSort(this.markersObservable);
         // Fit query bounds
         GoogleMapView.queryBoundsFit(true);
       }
@@ -159,7 +170,7 @@ class DisplayViewModel {
       });
       // Display all list items
       this.markersObservable(GoogleMapView.markers);
-      this.sort(this.markersObservable);
+      this.markersSort(this.markersObservable);
       this.resetMap();
     }
   }
@@ -178,15 +189,21 @@ class DisplayViewModel {
 
   loadData () {
     // Form radio 'Curated' option
-    if (this.selectedSearchValue() === 'curated') {
-      GoogleMapView.loadCuratedMarkers(this.selectedCityObj());
+    if (this.form.selectedSearchMode() === 'curated') {
+      this.queryPlaceholder('Filter...');
+      GoogleMapView.loadCuratedMarkers(this.form.selectedCityObj());
       modal.closeModal(modal);
       this.displayedCityString(this.computedCityString());
     // Form radio option 'Live Search'
-    } else if (this.selectedSearchValue() === 'liveSearch') {
+    } else if (this.form.selectedSearchMode() === 'liveSearch') {
       // Temporary setTimeout until search function is properly working TODO
       setTimeout(function () {
-        GoogleMapView.loadCuratedMarkers(this.selectedCityObj());
+        this.queryPlaceholder('Search...');
+        GoogleMapView.markers.forEach(function (marker) {
+          marker.setMap(undefined);
+        });
+        GoogleMapView.markers = [];
+        // GoogleMapView.loadCuratedMarkers(this.form.selectedCityObj());
         modal.closeModal(modal);
         this.displayedCityString(this.computedCityString());
       }.bind(this), 1500);
@@ -205,7 +222,7 @@ class DisplayViewModel {
 
   // Alphabetically sort display of locations by title
   sort (observableArray) {
-    observableArray.sort((first, second) => {
+    observableArray.markersSort((first, second) => {
       return first.title === second.title ? 0 : (first.title > second.title ? 1 : -1);
     });
   }
