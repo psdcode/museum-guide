@@ -224,7 +224,7 @@ class GoogleMapView {
     function applyArrowBtnsBindings () {
       const arrowBtnsDiv = document.getElementsByClassName('info-window__arrows')[0];
       // Determine if buttons will be clickable
-      const dataBindStyle = `css: { 'btn--off': markersObservable().length < 2 }`;
+      const dataBindStyle = `css: { 'btn--disabled': markersObservable().length < 2 }`;
       if (arrowBtnsDiv) {
         arrowBtnsDiv.children[0]
           .setAttribute('data-bind', 'click: clickPrevArrow, ' + dataBindStyle);
