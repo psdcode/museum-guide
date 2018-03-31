@@ -131,7 +131,7 @@ module.exports = function (grunt) {
               replacement: 'var museumMapApp = (function ()'
             },
             {
-              match: /\/\/\sEnd\s+}\(\)\);/,
+              match: /\/\/\sGruntReplacePosition\s+}\(\)\);/,
               replacement: 'return {\n\t\terrorLoadMap: GoogleMapView.errorLoadMap' +
                 ',\n\t\tinitMap: GoogleMapView.initMap\n\t};\n }());'
             }
