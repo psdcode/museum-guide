@@ -118,6 +118,11 @@ class DisplayViewModel {
     modal.closeModal(modal);
   }
 
+  // Clear sidebar list
+  clearMarkersObservable () {
+    this.markersObservable([]);
+  }
+
   // Filter obsrvable location list and markers based on query
   filterMarkerList (searchInput) {
     // Search query is a non-empty string
@@ -191,7 +196,7 @@ class DisplayViewModel {
     // Form radio 'Curated' option
     if (this.form.selectedSearchMode() === 'curated') {
       this.queryPlaceholder('Filter...');
-      GoogleMapView.loadCuratedMarkers(this.form.selectedCityObj());
+      GoogleMapView.loadCuratedMode(this.form.selectedCityObj());
       modal.closeModal(modal);
       this.displayedCityString(this.computedCityString());
     // Form radio option 'Live Search'
@@ -199,11 +204,7 @@ class DisplayViewModel {
       // Temporary setTimeout until search function is properly working TODO
       setTimeout(function () {
         this.queryPlaceholder('Search...');
-        GoogleMapView.markers.forEach(function (marker) {
-          marker.setMap(undefined);
-        });
-        GoogleMapView.markers = [];
-        // GoogleMapView.loadCuratedMarkers(this.form.selectedCityObj());
+        GoogleMapView.loadSearchMode(this.form.selectedCityObj());
         modal.closeModal(modal);
         this.displayedCityString(this.computedCityString());
       }.bind(this), 1500);
@@ -221,8 +222,8 @@ class DisplayViewModel {
   }
 
   // Alphabetically sort display of locations by title
-  sort (observableArray) {
-    observableArray.markersSort((first, second) => {
+  markersSort (observableArray) {
+    observableArray.sort((first, second) => {
       return first.title === second.title ? 0 : (first.title > second.title ? 1 : -1);
     });
   }
