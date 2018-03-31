@@ -1,4 +1,3 @@
-/* eslint quotes: 0 */
 export const model = {
   "defaultArea": {
     "city": "Tokyo",
@@ -22,7 +21,7 @@ export const model = {
         "lng": 139.5703029
       },
       "locations": [{
-        "title": "ldjfkslksdfksldjfkd",
+        "title": "Tokyo Metropolitan Art Museum",
         "position": {
           "lat": 35.717181,
           "lng": 139.772818
@@ -110,85 +109,85 @@ export const model = {
       "localLang": "横浜市",
       "position": {
         "lat": 35.444167,
-        "lng": 139.638056
+        "lng": 139.638056,
       },
       "locations": [{
         "title": "Yokohama Cup Noodles Museum",
         "position": {
-          "lat": 35.4554746,
-          "lng": 139.6388986
+          "lat" : 35.4554746,
+          "lng" : 139.6388986
         },
         "type": "general",
         "place_id": "ChIJ3ZNhe1dcGGARvjq5QHdmaHM"
       }, {
         "title": "Yokohama Customs Museum",
         "position": {
-          "lat": 35.4489288,
-          "lng": 139.6425099
+          "lat" : 35.4489288,
+          "lng" : 139.6425099
         },
         "type": "general",
         "place_id": "ChIJ8yZGpPlcGGARlT0nV19cMnI"
       }, {
         "title": "Yokohama Museum of Art Grand Gallery",
         "position": {
-          "lat": 35.457223,
-          "lng": 139.630459
+          "lat" : 35.457223,
+          "lng" : 139.630459
         },
         "type": "art",
         "place_id": "ChIJH-7CrUJcGGARRheV9VFwl0I"
       }, {
         "title": "NYK Maritime Museum",
         "position": {
-          "lat": 35.4503787,
-          "lng": 139.639431
+          "lat" : 35.4503787,
+          "lng" : 139.639431
         },
         "type": "history",
         "place_id": "ChIJRZpr7fdcGGARzUmeVzAG0B0"
       }, {
         "title": "Silk Museum",
         "position": {
-          "lat": 35.4472062,
-          "lng": 139.6451657
+          "lat" : 35.4472062,
+          "lng" : 139.6451657
         },
         "type": "history",
         "place_id": "ChIJUxedePxcGGARVT8JmV27_aE"
       }, {
         "title": "Yokohama Doll Museum",
         "position": {
-          "lat": 35.443169,
-          "lng": 139.652108
+          "lat" : 35.443169,
+          "lng" : 139.652108
         },
         "type": "general",
         "place_id": "ChIJsynq2h1dGGARIJ4iBe7hUpc"
       }, {
         "title": "Kanagawa Prefectural Museum of Cultural History",
         "position": {
-          "lat": 35.449156,
-          "lng": 139.6362085
+          "lat" : 35.449156,
+          "lng" : 139.6362085
         },
         "type": "history",
         "place_id": "ChIJjb2TFfZcGGAR0f_ZDI5lRcg"
       }, {
         "title": "Yokohama Archives of History",
         "position": {
-          "lat": 35.447663,
-          "lng": 139.643911
+          "lat" : 35.447663,
+          "lng" : 139.643911
         },
         "type": "history",
         "place_id": "ChIJ0ZTmwftcGGARLB7D7g4o79Y"
       }, {
         "title": "Hara Model Railway Museum",
         "position": {
-          "lat": 35.463158,
-          "lng": 139.62477
+          "lat" : 35.463158,
+          "lng" : 139.62477
         },
         "type": "general",
         "place_id": "ChIJ8yJ9aWtcGGARv6WSnehPIwQ"
       }, {
         "title": "Anpanman Museum",
         "position": {
-          "lat": 35.4585909,
-          "lng": 139.6254503
+          "lat" : 35.4585909,
+          "lng" : 139.6254503
         },
         "type": "kids",
         "place_id": "ChIJVVXFR2lcGGAR8aCbEZKt0yo"
@@ -231,15 +230,15 @@ export const model = {
         "title": "Museum of Oriental Ceramics, Osaka",
         "position": {
           "lat": 34.693484,
-          "lng": 135.505417
+          "lng":  135.505417
         },
         "type": "art",
         "place_id": "ChIJhQQzld3mAGAR1oYbB9a77vQ"
       }, {
         "title": "Abeno Harukas Art Museum",
         "position": {
-          "lat": 34.6457933,
-          "lng": 135.5140916
+          "lat" : 34.6457933,
+          "lng" : 135.5140916
         },
         "type": "art",
         "place_id": "ChIJw_dasfHdAGARPIYrcFpn6aY"
@@ -254,32 +253,32 @@ export const model = {
       }, {
         "title": "Osaka International Peace Center",
         "position": {
-          "lat": 34.6818454,
-          "lng": 135.5298354
+          "lat" : 34.6818454,
+          "lng" : 135.5298354
         },
         "type": "history",
         "place_id": "ChIJ0X861cvgAGARSrukky_tpoI"
       }, {
         "title": "Mint Museum",
         "position": {
-          "lat": 34.6957662,
-          "lng": 135.5216638
+          "lat" : 34.6957662,
+          "lng" : 135.5216638
         },
         "type": "history",
         "place_id": "ChIJK4WCStTmAGAREg2BPGKLD-Q"
       }, {
         "title": "Kids Plaza Osaka",
         "position": {
-          "lat": 34.7045728,
-          "lng": 135.5104418
+          "lat" : 34.7045728,
+          "lng" : 135.5104418
         },
         "type": "kids",
         "place_id": "ChIJEZamxsDmAGARdScVXFQanLU"
       }, {
         "title": "Osaka Museum of Natural History",
         "position": {
-          "lat": 34.6102774,
-          "lng": 135.5216484
+          "lat" : 34.6102774,
+          "lng" : 135.5216484
         },
         "type": "science",
         "place_id": "ChIJDXa8qOjmAGARGeBCBnhGKOY"
