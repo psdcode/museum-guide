@@ -47,7 +47,7 @@
     right: 0;
     left: 0;
     bottom: 0;
-    background-color: rgba(var(--mainBkgndColor), 0.70);
+    background-color: rgba(var(--mainBkgndColor), 0.7);
   }
 
   &__load-error-text {
