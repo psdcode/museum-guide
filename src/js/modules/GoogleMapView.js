@@ -11,6 +11,14 @@ class GoogleMapView {
     DisplayViewModel.instance.setSelectedMarker(undefined);
   }
 
+  static deleteMarkers () {
+    GoogleMapView.markers.forEach(function (marker) {
+      marker.setMap(undefined);
+    });
+    GoogleMapView.markers = [];
+    DisplayViewModel.instance.clearMarkersObservable();
+  }
+
   // maps.googleapis.com script initial loading error callback
   static errorLoadMap () {
     window.alert('Unable to load Google Map at this time. Check your internet connection or try again later.');
@@ -53,8 +61,6 @@ class GoogleMapView {
 
     // Markers corresponding to data locations
     GoogleMapView.markers = [];
-    // Map bounds
-    GoogleMapView.originalBounds = new window.google.maps.LatLngBounds();
 
     // InfoWindow configuration
     GoogleMapView.mainInfoWindow = new window.google.maps.InfoWindow({
@@ -66,16 +72,13 @@ class GoogleMapView {
     });
   }
 
-  static loadCuratedMarkers (modelCityObj) {
+  static loadCuratedMode (modelCityObj) {
     // Only add new markers if loading for the first time OR city has been changed
     if (GoogleMapView.markers.length === 0 ||
         (GoogleMapView.modelCityObj && GoogleMapView.modelCityObj.locations !== modelCityObj.locations)) {
       // Clear markers and bounds
-      GoogleMapView.markers.forEach(function (marker) {
-        marker.setMap(undefined);
-      });
-      GoogleMapView.markers = [];
-      GoogleMapView.originalBounds = new window.google.maps.LatLngBounds();
+      GoogleMapView.deleteMarkers();
+      GoogleMapView.currentBounds = new window.google.maps.LatLngBounds();
       // Create array of Markers from provided location info
       modelCityObj.locations.forEach(function (location) {
         const newMarker = new window.google.maps.Marker({
@@ -92,17 +95,29 @@ class GoogleMapView {
           GoogleMapView.popInfoWindow(this);
         });
         GoogleMapView.markers.push(newMarker);
-        GoogleMapView.originalBounds.extend(newMarker.position);
+        GoogleMapView.currentBounds.extend(newMarker.position);
       });
 
       GoogleMapView.modelCityObj = modelCityObj;
     }
+    // Set mode
+    GoogleMapView.mode = 'curated';
     // Adjust map bounds to fit all markers
     GoogleMapView.resetMap();
 
     // Notify current instance of DisplayViewModel that
     // google map and marker initialization is complete
     DisplayViewModel.instance.markersReady(modelCityObj.cityName);
+  }
+
+  static loadSearchMode (modelCityObj) {
+    GoogleMapView.deleteMarkers();
+    GoogleMapView.currentBounds = new window.google.maps.LatLngBounds();
+    GoogleMapView.modelCityObj = modelCityObj;
+    GoogleMapView.mode = 'liveSearch';
+
+    // Adjust map bounds to fit all markers
+    GoogleMapView.map.panTo(modelCityObj.position);
   }
 
   static onWindowResize () {
@@ -284,7 +299,9 @@ class GoogleMapView {
   }
 
   static resetMap () {
-    GoogleMapView.map.fitBounds(GoogleMapView.originalBounds);
+    if (GoogleMapView.mode === 'curated') {
+      GoogleMapView.map.fitBounds(GoogleMapView.currentBounds);
+    }
     GoogleMapView.mainInfoWindow.marker = undefined;
     GoogleMapView.mainInfoWindow.close();
     // Let DisplayViewModel know to unselect list-item
