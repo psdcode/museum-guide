@@ -71,11 +71,15 @@
   }
 
   &__text {
-    font-size: 20px;
+    font-size: 18px;
     display: block;
 
     &--b-margin {
       margin-bottom: 5px;
+    }
+
+    @media screen and (min-width: 512px) {
+      font-size: 22px;
     }
   }
 
@@ -91,15 +95,31 @@
 
   &__radio {
     &--b-margin {
-      margin-bottom: 17px;
+      margin-bottom: 12px;
+    }
+  }
+
+  &__radio-elmnt {
+    display: block;
+    margin-bottom: 7px;
+    margin-right: 0;
+    font-size: 17px;
+
+    @media screen and (min-width: 512px) {
+      display: inline-block;
+      font-size: 19px;
+
+      &:not(:first-of-type) {
+        margin-left: 24px;
+      }
+
+      &:last-of-type {
+        margin-right: 0;
+      }
     }
 
     & input {
-      margin-right: 6px;
-    }
-
-    & input:not(:first-of-type) {
-      margin-left: 24px;
+      margin-right: 7px;
     }
   }
 
