@@ -4,10 +4,10 @@ export const model = {
     "country": "Japan",
     "countrycode": "jp",
     "localLang": "東京都",
-    "type": "Museum",
+    "type": "museum",
     "position": {
-      "lat": 35.6732619,
-      "lng": 139.5703029
+      "lat": 35.683333,
+      "lng": 139.683333
     }
   },
   "cities": [
@@ -17,8 +17,8 @@ export const model = {
       "countrycode": "jp",
       "localLang": "東京都",
       "position": {
-        "lat": 35.6732619,
-        "lng": 139.5703029
+        "lat": 35.683333,
+        "lng": 139.683333
       },
       "locations": [{
         "title": "Tokyo Metropolitan Art Museum",
