@@ -1,9 +1,9 @@
 import DisplayViewModel from './modules/DisplayViewModel';
 import GoogleMapView from './modules/GoogleMapView';
-// Import model currently from local model.js file
+
 // TODO may implement import data from server or search result in the future
-// const currentModel = Object.assign({}, model);
-import {model as currentModel} from '../model/model';
+// Import model currently from local model.json file
+import currentModel from '../model/model.json';
 
 // Initialization
 

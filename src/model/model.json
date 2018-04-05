@@ -1,4 +1,4 @@
-export const model = {
+{
   "defaultArea": {
     "city": "Tokyo",
     "country": "Japan",
@@ -109,7 +109,7 @@ export const model = {
       "localLang": "横浜市",
       "position": {
         "lat": 35.444167,
-        "lng": 139.638056,
+        "lng": 139.638056
       },
       "locations": [{
         "title": "Yokohama Cup Noodles Museum",
@@ -406,4 +406,4 @@ export const model = {
       "locations": []
     }
   ]
-};
+}
