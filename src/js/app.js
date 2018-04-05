@@ -13,9 +13,13 @@ ukiEQp2Z03m7Cmycz29Lu2n4Gc5LPu1wDjVVCGyignkEoZn167yyq07sbPEN7gF5GzE20YWnYx`;
 
 // Tell GoogleMapView initial map load position
 GoogleMapView.defaultPosition = currentModel.defaultArea.position;
+GoogleMapView.defaultType = currentModel.defaultArea.type;
 
 // Knockout.js DisplayViewModel initialization with model
 if (window.ko) {
+  // Defer Updates turns on asynchronous updating to avoid
+  // redundant intermediate updates of observables.
+  window.ko.options.deferUpdates = true;
   DisplayViewModel.instance = new DisplayViewModel(currentModel);
   window.ko.applyBindings(DisplayViewModel.instance);
 }
