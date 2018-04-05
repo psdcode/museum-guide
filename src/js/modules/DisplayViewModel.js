@@ -9,8 +9,8 @@ class DisplayViewModel {
     // Google Map load fail state indicator
     self.mapLoadFail = window.ko.observable(false);
 
-    // Map markers values
-    self.markersReady = window.ko.observable('');
+    // Map markers values, global deferred but here always notify to force markers reset on new markers load
+    self.markersReady = window.ko.observable('').extend({ notify: 'always' });
     // Observable Markers Array that will determine display of list of locations and map markers
     self.markersObservable = window.ko.observableArray([]);
     // Current marker
@@ -18,36 +18,55 @@ class DisplayViewModel {
     // Computed observable loads markers once map & markers initialization by GoogleMapView is complete
     self.createMarkersObservable = window.ko.computed(function () {
       if (self.markersReady()) {
-        console.log('Load New MarkersObservable'); // TODO
         self.markersObservable(GoogleMapView.markers);
         self.markersSort(self.markersObservable);
         return true;
       }
     }, self);
 
-    // Filter/Search query string values
-    self.queryPlaceholder = window.ko.observable('');
+    // Filter/Search query properties
     self.query = window.ko.observable('');
+    // Compare query with queryOld to ignore addition of trailing spaces
+    self.queryOld = window.ko.observable('');
+    self.queryPlaceholder = window.ko.observable('');
     // Observable subscription for instant filtering of query results
-    self.query.subscribe(self.filterMarkerList.bind(self));
+    self.query.subscribe(self.queryProcessInput, self);
+    // Input Debounce delay setup for live search Input
+    self.queryLiveSearch = window.ko.observable(self.query());
+    // Launch live search after debounce of 600ms of input query
+    self.queryLiveSearchDelayed = window.ko.pureComputed(self.queryLiveSearch)
+      .extend({
+        rateLimit: {
+          method: 'notifyWhenChangesStop',
+          timeout: 750
+        }
+      });
+    // Observable subscription for live search of query input
+    self.queryLiveSearchDelayed.subscribe(self.searchPlaces, self);
+    // Control display of search spinner
+    self.queryLiveSearchLoading = window.ko.observable(false);
+    // Abnormal search result message
+    self.queryLiveSearchResultText = window.ko.observable('');
 
-    // Display values
+    // Current city display values
     self.computedCityString = window.ko.observable();
     self.displayedCityString = window.ko.observable();
 
     // Form values
     self.form = {};
+    // Default form settings
     self.form.selectedCityValue = window.ko.observable('Tokyo');
-    self.form.selectedSearchMode = window.ko.observable('curated');
-    // Array of city info for modal form__select element
+    self.form.selectedListMode = window.ko.observable('curated');
+    // Array of city info for modal form select element
     self.form.optionsCities = currentModel.cities.map((cityObj) => ({
       cityString: `${cityObj.cityName}${cityObj.localLang ? ' - ' + cityObj.localLang : ''}`,
       cityValue: cityObj.cityName
     }));
-    // Object holding all city information, computed based on modal form selection
+    // Object holding all city information, recomputed based on modal form city selection
     self.form.selectedCityObj = window.ko.computed(function () {
       // Find corresponding city object to selected city value from modal dropdown
-      const cityObj = currentModel.cities.find((cityLookup) => (cityLookup.cityName === self.form.selectedCityValue()));
+      const cityObj = currentModel.cities.find((cityLookup) =>
+        (cityLookup.cityName.toLowerCase() === self.form.selectedCityValue().toLowerCase()));
       // Set selected to be displayed after form submission
       if (cityObj) {
         // Determine if to include local language heading in title
@@ -61,12 +80,12 @@ class DisplayViewModel {
     });
     // Determine if curated locations available for city.
     // If not, disable curated radio button and select liveSearch
-    self.curatedDisabled = window.ko.computed(function () {
+    self.form.curatedDisabled = window.ko.computed(function () {
       if (self.form.selectedCityObj().locations.length === 0) {
-        self.form.selectedSearchMode('liveSearch');
+        self.form.selectedListMode('liveSearch');
         return true;
       } else {
-        self.form.selectedSearchMode('curated');
+        self.form.selectedListMode('curated');
         return false;
       }
     });
@@ -124,30 +143,30 @@ class DisplayViewModel {
   }
 
   // Filter obsrvable location list and markers based on query
-  filterMarkerList (searchInput) {
+  filterMarkerList (filterInput) {
     // Search query is a non-empty string
-    if (searchInput !== '') {
-      // Empty the observable list
+    if (filterInput !== '') {
+      // First empty the observable list
       this.markersObservable([]);
       GoogleMapView.markers.forEach(function (checkMarker) {
         // Re-add marker to observable array only if marker title match search query
         const markerTitle = checkMarker.title.toUpperCase();
-        if (markerTitle.indexOf(searchInput.toUpperCase()) >= 0) {
+        if (markerTitle.indexOf(filterInput.toUpperCase()) >= 0) {
           // Positive match between query and marker title
           this.markersObservable.push(checkMarker);
           // Check if marker not already displayed to prevent blinking due to setting map again
           if (!checkMarker.getMap()) {
-            GoogleMapView.setMarkerMap(checkMarker, true);
+            GoogleMapView.setMarkerOnMap(checkMarker, true);
           }
           GoogleMapView.queryBoundsExtend(checkMarker.position);
         // Marker title did not match search query, remove it from map
         } else {
-          GoogleMapView.setMarkerMap(checkMarker, false);
+          GoogleMapView.setMarkerOnMap(checkMarker, false);
         }
       }, this);
 
       const markersLength = this.markersObservable().length;
-      // Open info window if 1 marker matches search
+      // Open info window automatically if only 1 marker matches search
       if (markersLength === 1) {
         if (!GoogleMapView.mainInfoWindow.marker) {
           GoogleMapView.popInfoWindow(this.markersObservable()[0]);
@@ -170,7 +189,7 @@ class DisplayViewModel {
       // Display all markers on map
       GoogleMapView.markers.forEach(function (checkMarker) {
         if (!checkMarker.getMap()) {
-          GoogleMapView.setMarkerMap(checkMarker, true);
+          GoogleMapView.setMarkerOnMap(checkMarker, true);
         }
       });
       // Display all list items
@@ -193,32 +212,29 @@ class DisplayViewModel {
   }
 
   loadData () {
-    // Form radio 'Curated' option
-    if (this.form.selectedSearchMode() === 'curated') {
+    // Form radio 'Curated' mode selected
+    if (this.form.selectedListMode() === 'curated') {
       this.queryPlaceholder('Filter...');
-      GoogleMapView.loadCuratedMode(this.form.selectedCityObj());
-      modal.closeModal(modal);
-      this.displayedCityString(this.computedCityString());
-    // Form radio option 'Live Search'
-    } else if (this.form.selectedSearchMode() === 'liveSearch') {
-      // Temporary setTimeout until search function is properly working TODO
-      setTimeout(function () {
-        this.queryPlaceholder('Search...');
-        GoogleMapView.loadSearchMode(this.form.selectedCityObj());
-        modal.closeModal(modal);
-        this.displayedCityString(this.computedCityString());
-      }.bind(this), 1500);
+      // Calls resetMap automatically at the end of call below
+      GoogleMapView.loadMode(this.form.selectedCityObj(), 'curated');
+
+    // Form radio 'Live Search' mode selected
+    } else if (this.form.selectedListMode() === 'liveSearch') {
+      this.queryPlaceholder('Search...');
+      // Calls resetMap automatically at the end of call below
+      GoogleMapView.loadMode(this.form.selectedCityObj(), 'liveSearch');
     }
+
+    // Changes to apply to either mode
+    this.query('');
+    this.queryLiveSearchResultText('');
+    this.displayedCityString(this.computedCityString());
+    // Close Modal
+    modal.closeModal(modal);
   }
 
   notifyMapLoadFail (failState) {
     this.mapLoadFail(failState);
-  }
-
-  // Allows GoogleMapView class to inform DisplayViewModel of openInfoWindow on
-  // marker
-  setSelectedMarker (marker) {
-    this.selectedMarker(marker);
   }
 
   // Alphabetically sort display of locations by title
@@ -228,12 +244,61 @@ class DisplayViewModel {
     });
   }
 
+  queryProcessInput (queryInput) {
+    queryInput = queryInput.trim();
+    // Proceed with query processing only if a non-space character was added
+    if (queryInput !== this.queryOld()) {
+      this.queryOld(queryInput);
+      if (this.form.selectedListMode() === 'curated') {
+        this.filterMarkerList(queryInput);
+      } else if (this.form.selectedListMode() === 'liveSearch') {
+        // Subscription will launch searchPlaces search automatically
+        this.queryLiveSearch(this.query());
+      }
+    }
+  }
+
   // Called by 'Reset Map' btn
   resetMap () {
     this.query('');
+    this.queryLiveSearchResultText('');
+    this.queryLiveSearchLoading(false);
     GoogleMapView.resetMap();
   }
 
+  searchPlaces (searchInput) {
+    const self = this;
+
+    // Initiate search if input longer than 2 non-space characters
+    if (searchInput.length > 2) {
+      // Turn on loading spinner
+      self.queryLiveSearchLoading(true);
+      const cityName = self.form.selectedCityObj().cityName;
+      const position = self.form.selectedCityObj().position;
+      GoogleMapView.liveSearch(cityName, position, searchInput);
+    }
+  }
+
+  searchPlacesCompleted (status) {
+    // Turn off spinner
+    this.queryLiveSearchLoading(false);
+    // Display message only if no results or error
+    if (status === 'success') {
+      this.queryLiveSearchResultText('');
+    } else if (status === 'noresults') {
+      this.queryLiveSearchResultText('No Results');
+    } else {
+      this.queryLiveSearchResultText('Search Error');
+    }
+  }
+
+  // Allows GoogleMapView class to inform DisplayViewModel of openInfoWindow on
+  // marker
+  setSelectedMarker (marker) {
+    this.selectedMarker(marker);
+  }
+
+  // Submit modal form info
   submitModal () {
     modal.openFormLoadScreen();
     this.loadData();
