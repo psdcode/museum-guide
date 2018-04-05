@@ -151,10 +151,19 @@ module.exports = function (grunt) {
       options: {
         plugins: [
           require('rollup-plugin-babel')({
+            exclude: ['./node_modules/**', '**/*.json'],
+            babelrc: false,
             presets: [['env', { 'modules': false }]],
             plugins: ['external-helpers']
           }),
-          require('rollup-plugin-node-resolve')({ jsnext: true })
+          require('rollup-plugin-node-resolve')({ jsnext: true }),
+          // Note: latest 9.1.0 version of rollup-plugin-commonjs gives error, rolled back to 8.4.1 and works
+          require('rollup-plugin-commonjs')({
+            sourceMap: false
+          }),
+          require('rollup-plugin-json')({
+            exclude: 'node_modules/**'
+          })
         ]
       },
 
