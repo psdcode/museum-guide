@@ -6,7 +6,7 @@
   height: auto;
 
   &__list {
-    padding: 18px 15px 5px;
+    padding: 18px 15px 0;
     margin-top: 0;
   }
 
@@ -26,5 +26,14 @@
     &:first-child {
       border-top: 1px solid var(--listItemBorderBottom);
     }
+  }
+
+  &__live-search-status {
+    text-align: center;
+  }
+
+  /* Live search spinner */
+  &__live-search-loading .sk-circle {
+    margin: 0 auto;
   }
 }
