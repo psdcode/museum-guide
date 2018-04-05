@@ -132,8 +132,7 @@ module.exports = function (grunt) {
             },
             {
               match: /\/\/\sGruntReplacePosition\s+}\(\)\);/,
-              replacement: 'return {\n\t\terrorLoadMap: GoogleMapView.errorLoadMap' +
-                ',\n\t\tinitMap: GoogleMapView.initMap\n\t};\n }());'
+              replacement: 'return GoogleMapView.returnModule();\n }());'
             }
           ]
         },
