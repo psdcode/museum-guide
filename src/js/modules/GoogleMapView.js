@@ -1,5 +1,6 @@
 import {mapStyle} from './mapStyle';
 import DisplayViewModel from './DisplayViewModel';
+import GoogleMapPlacesSearch from './GoogleMapPlacesSearch';
 import yelp from './yelp';
 import spinnerHtmlString from './spinner';
 
@@ -12,11 +13,15 @@ class GoogleMapView {
   }
 
   static deleteMarkers () {
+    // Reset markers
     GoogleMapView.markers.forEach(function (marker) {
       marker.setMap(undefined);
     });
     GoogleMapView.markers = [];
     DisplayViewModel.instance.clearMarkersObservable();
+
+    // Reset bounds
+    GoogleMapView.currentBounds = new window.google.maps.LatLngBounds();
   }
 
   // maps.googleapis.com script initial loading error callback
@@ -53,6 +58,13 @@ class GoogleMapView {
       styles: mapStyle
     });
 
+    // Create Google Map places search service
+    GoogleMapView.placesSearch = new GoogleMapPlacesSearch(GoogleMapView.map, GoogleMapView);
+
+    // Inject places search loading spinner HTML
+    const liveSearchLoadingDiv = document.getElementsByClassName('sidebar-list__live-search-loading')[0];
+    liveSearchLoadingDiv.insertAdjacentHTML('afterbegin', spinnerHtmlString);
+
     // Recenter map on window resize
     window.onresize = GoogleMapView.onWindowResize;
 
@@ -72,52 +84,80 @@ class GoogleMapView {
     });
   }
 
-  static loadCuratedMode (modelCityObj) {
-    // Only add new markers if loading for the first time OR city has been changed
-    if (GoogleMapView.markers.length === 0 ||
-        (GoogleMapView.modelCityObj && GoogleMapView.modelCityObj.locations !== modelCityObj.locations)) {
-      // Clear markers and bounds
-      GoogleMapView.deleteMarkers();
-      GoogleMapView.currentBounds = new window.google.maps.LatLngBounds();
-      // Create array of Markers from provided location info
-      modelCityObj.locations.forEach(function (location) {
-        const newMarker = new window.google.maps.Marker({
-          position: location.position,
-          title: location.title,
-          animation: window.google.maps.Animation.DROP,
-          icon: 'img/icons/' + location.type + '.png',
-          map: GoogleMapView.map
-        });
-        newMarker.addListener('click', function listenerPopInfo () {
-          // Hide sidebar if open to display InfoWindow
-          GoogleMapView.hideListView();
-          // 'this' will be the marker inside listener cb
-          GoogleMapView.popInfoWindow(this);
-        });
-        GoogleMapView.markers.push(newMarker);
-        GoogleMapView.currentBounds.extend(newMarker.position);
-      });
-
-      GoogleMapView.modelCityObj = modelCityObj;
-    }
-    // Set mode
-    GoogleMapView.mode = 'curated';
-    // Adjust map bounds to fit all markers
-    GoogleMapView.resetMap();
-
-    // Notify current instance of DisplayViewModel that
-    // google map and marker initialization is complete
-    DisplayViewModel.instance.markersReady(modelCityObj.cityName);
+  static liveSearch (cityName, latLng, searchTerm) {
+    GoogleMapView.placesSearch
+      .liveSearch(cityName, latLng, GoogleMapView.defaultType, searchTerm);
   }
 
-  static loadSearchMode (modelCityObj) {
-    GoogleMapView.deleteMarkers();
-    GoogleMapView.currentBounds = new window.google.maps.LatLngBounds();
-    GoogleMapView.modelCityObj = modelCityObj;
-    GoogleMapView.mode = 'liveSearch';
+  // Load app in either 'curated' or 'liveSearch' mode
+  static loadMode (modelCityObj, newMode) {
+    // Mode will be undefined on initial launch
+    // OR if cities don't match
+    // OR if cities match AND curated is previous and new selected mode
+    if (GoogleMapView.mode === undefined ||
+        GoogleMapView.modelCityObj !== modelCityObj ||
+        (newMode !== 'curated' || GoogleMapView.mode !== 'curated')) {
+      // Clear markers
+      GoogleMapView.deleteMarkers();
+
+      // Set current model city and new mode
+      GoogleMapView.modelCityObj = modelCityObj;
+      GoogleMapView.mode = newMode;
+
+      // Load curated markers if in 'curated' mode
+      if (newMode === 'curated') {
+        // Create array of Markers from provided location info
+        GoogleMapView.loadMarkers(modelCityObj.locations);
+      }
+    }
 
     // Adjust map bounds to fit all markers
-    GoogleMapView.map.panTo(modelCityObj.position);
+    GoogleMapView.resetMap();
+  }
+
+  static loadMarkers (markerInfos) {
+    // Add new markers
+    markerInfos.forEach(function (venue) {
+      const newMarker = new window.google.maps.Marker({
+        position: venue.position,
+        title: venue.title,
+        animation: window.google.maps.Animation.DROP,
+        icon: 'img/icons/' + venue.type + '.png',
+        map: GoogleMapView.map
+      });
+      newMarker.addListener('click', function listenerPopInfo () {
+        // Hide sidebar if open to display InfoWindow
+        GoogleMapView.hideListView();
+        // 'this' will be the marker inside listener cb
+        GoogleMapView.popInfoWindow(this);
+      });
+      GoogleMapView.markers.push(newMarker);
+      GoogleMapView.currentBounds.extend(newMarker.position);
+    });
+    // Notify current instance of DisplayViewModel that
+    // google map and marker initialization is complete
+    DisplayViewModel.instance.markersReady('');
+    DisplayViewModel.instance.markersReady(GoogleMapView.modelCityObj.cityName);
+  }
+
+  static loadPlacesSearchResults (results) {
+    // Search error: display generic error message
+    if (results instanceof Error) {
+      DisplayViewModel.instance.searchPlacesCompleted('error');
+      // console.error(results.message);
+
+    // No results
+    } else if (results.length === 0) {
+      DisplayViewModel.instance.searchPlacesCompleted('noresults');
+
+    // At least one successful returned result
+    } else {
+      GoogleMapView.deleteMarkers();
+      GoogleMapView.loadMarkers(results);
+
+      // Signal DisplayViewModel search is complete
+      DisplayViewModel.instance.searchPlacesCompleted('success');
+    }
   }
 
   static onWindowResize () {
@@ -288,9 +328,9 @@ class GoogleMapView {
   static queryBoundsFit (fitBounds) {
     if (fitBounds) {
       GoogleMapView.map.fitBounds(GoogleMapView.queryBounds);
-      // Set to undefined since each query creates new queryBounds
-      GoogleMapView.queryBounds = undefined;
-    } else GoogleMapView.queryBounds = undefined;
+    }
+    // Set to undefined since each query creates new queryBounds
+    GoogleMapView.queryBounds = undefined;
 
     // Check for excessive zoom if bounds very small or a single marker
     if (GoogleMapView.map.getZoom() > 18) {
@@ -301,6 +341,9 @@ class GoogleMapView {
   static resetMap () {
     if (GoogleMapView.mode === 'curated') {
       GoogleMapView.map.fitBounds(GoogleMapView.currentBounds);
+    } else if (GoogleMapView.mode === 'liveSearch') {
+      GoogleMapView.deleteMarkers();
+      GoogleMapView.map.panTo(GoogleMapView.modelCityObj.position);
     }
     GoogleMapView.mainInfoWindow.marker = undefined;
     GoogleMapView.mainInfoWindow.close();
@@ -308,7 +351,15 @@ class GoogleMapView {
     DisplayViewModel.instance.setSelectedMarker(undefined);
   }
 
-  static setMarkerMap (marker, set) {
+  // Main publically accessible module
+  static returnModule () {
+    return {
+      errorLoadMap: GoogleMapView.errorLoadMap,
+      initMap: GoogleMapView.initMap
+    };
+  }
+
+  static setMarkerOnMap (marker, set) {
     if (set) {
       marker.setMap(GoogleMapView.map);
     } else {
