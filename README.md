@@ -1,10 +1,14 @@
-# MuseumGuide App
+# Museum Map Guide: Japan
 
 ## General Overview
 
-An interactive single-page Google Maps based guide to museums in major cities from around the world. Detailed information for each location is provided via Yelp's business directory.
+An interactive single-page Google Maps based app guide to museums in major cities in Japan. Offers both a curated selection of ten museum locations for the three largest cities (Tokyo, Yokohama, Osaka), as well as a live search feature. Detailed information for each location is provided via Yelp's business directory.
 
-This app is an expanded version of my [final project](https://github.com/psdcode/fend-neighborhood-map) for Udacity's Front-End Web Developer Nanodegree.
+This project is an expanded version of my [final project](https://github.com/psdcode/fend-neighborhood-map) for Udacity's Front-End Web Developer Nanodegree.
+
+## Access & Usage
+
+The map may be accessed at ....github.io
 
 ## Local Viewing & Build Instructions
 
