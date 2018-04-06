@@ -3,6 +3,7 @@ import DisplayViewModel from './DisplayViewModel';
 import GoogleMapPlacesSearch from './GoogleMapPlacesSearch';
 import yelp from './yelp';
 import spinnerHtmlString from './spinner';
+import createHash from 'hash-generator';
 
 // Class for handling Google Map & InfoWindow display/update
 class GoogleMapView {
@@ -84,9 +85,15 @@ class GoogleMapView {
     });
   }
 
-  static liveSearch (cityName, latLng, searchTerm) {
+  static livePlacesSearch (cityName, latLng, searchTerm) {
+    // Create hash for current search session & store it
+    const searchHash = createHash(5);
+    GoogleMapView.currentSearchSessionHash = searchHash;
+    // Delete previous search results
+    GoogleMapView.deleteMarkers();
+    // Initiate Search
     GoogleMapView.placesSearch
-      .liveSearch(cityName, latLng, GoogleMapView.defaultType, searchTerm);
+      .livePlacesSearch(cityName, latLng, GoogleMapView.defaultType, searchTerm, searchHash);
   }
 
   // Load app in either 'curated' or 'liveSearch' mode
@@ -140,23 +147,26 @@ class GoogleMapView {
     DisplayViewModel.instance.markersReady(GoogleMapView.modelCityObj.cityName);
   }
 
-  static loadPlacesSearchResults (results) {
-    // Search error: display generic error message
-    if (results instanceof Error) {
-      DisplayViewModel.instance.searchPlacesCompleted('error');
-      // console.error(results.message);
+  static loadPlacesSearchResults (results, searchHash) {
+    // Only load results if current search session hash match results session hash
+    if (searchHash === GoogleMapView.currentSearchSessionHash) {
+      // Search error: display generic error message
+      if (results instanceof Error) {
+        DisplayViewModel.instance.searchPlacesCompleted('error');
+        // console.error(results.message);
 
-    // No results
-    } else if (results.length === 0) {
-      DisplayViewModel.instance.searchPlacesCompleted('noresults');
+      // No results
+      } else if (results.length === 0) {
+        DisplayViewModel.instance.searchPlacesCompleted('noresults');
 
-    // At least one successful returned result
-    } else {
-      GoogleMapView.deleteMarkers();
-      GoogleMapView.loadMarkers(results);
-
-      // Signal DisplayViewModel search is complete
-      DisplayViewModel.instance.searchPlacesCompleted('success');
+      // At least one successful returned result
+      } else {
+        GoogleMapView.deleteMarkers();
+        GoogleMapView.loadMarkers(results);
+        GoogleMapView.map.fitBounds(GoogleMapView.currentBounds);
+        // Signal DisplayViewModel search is successful and complete
+        DisplayViewModel.instance.searchPlacesCompleted('success');
+      }
     }
   }
 
@@ -342,6 +352,7 @@ class GoogleMapView {
     if (GoogleMapView.mode === 'curated') {
       GoogleMapView.map.fitBounds(GoogleMapView.currentBounds);
     } else if (GoogleMapView.mode === 'liveSearch') {
+      GoogleMapView.currentSearchSessionHash = undefined;
       GoogleMapView.deleteMarkers();
       GoogleMapView.map.panTo(GoogleMapView.modelCityObj.position);
     }

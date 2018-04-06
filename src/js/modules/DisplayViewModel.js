@@ -211,7 +211,7 @@ class DisplayViewModel {
     return false;
   }
 
-  loadData () {
+  loadFormData () {
     // Form radio 'Curated' mode selected
     if (this.form.selectedListMode() === 'curated') {
       this.queryPlaceholder('Filter...');
@@ -275,7 +275,7 @@ class DisplayViewModel {
       self.queryLiveSearchLoading(true);
       const cityName = self.form.selectedCityObj().cityName;
       const position = self.form.selectedCityObj().position;
-      GoogleMapView.liveSearch(cityName, position, searchInput);
+      GoogleMapView.livePlacesSearch(cityName, position, searchInput);
     }
   }
 
@@ -287,7 +287,7 @@ class DisplayViewModel {
       this.queryLiveSearchResultText('');
     } else if (status === 'noresults') {
       this.queryLiveSearchResultText('No Results');
-    } else {
+    } else if (status === 'error') {
       this.queryLiveSearchResultText('Search Error');
     }
   }
@@ -301,7 +301,7 @@ class DisplayViewModel {
   // Submit modal form info
   submitModal () {
     modal.openFormLoadScreen();
-    this.loadData();
+    this.loadFormData();
   }
 
   // Shows/hides modal with hamburger <hiddenon>

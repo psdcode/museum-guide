@@ -5,7 +5,7 @@ class GoogleMapPlacesSearch {
   }
 
   // Main method for initiating places search
-  liveSearch (cityName, latLng, type, searchTerm) {
+  livePlacesSearch (cityName, latLng, type, searchTerm, hash) {
     const self = this;
 
     // Nearby search request object
@@ -22,7 +22,7 @@ class GoogleMapPlacesSearch {
       if (status === window.google.maps.places.PlacesServiceStatus.OK) {
         const nearbySearchPlaceIds = results.slice(0, 10).map((place) => (place.place_id));
         // Use obtained placeIDs to fetch detailed data for each place
-        self.getDetailsFromPlaceIds(nearbySearchPlaceIds);
+        self.getDetailsFromPlaceIds(nearbySearchPlaceIds, hash);
       } else if (status === window.google.maps.places.PlacesServiceStatus.OVER_QUERY_LIMIT) {
         // If over query limit, attempt another call in 200ms
         window.setTimeout(function () {
@@ -40,7 +40,7 @@ class GoogleMapPlacesSearch {
   }
 
   // Perform getDetails call on each placeID provided
-  getDetailsFromPlaceIds (placeIds) {
+  getDetailsFromPlaceIds (placeIds, hash) {
     const self = this;
     // Create array of promises for each placeID getDetails call
     const getDetailsPromises = placeIds.map(function (placeId) {
@@ -52,9 +52,13 @@ class GoogleMapPlacesSearch {
     Promise.all(getDetailsPromises)
       .then(self.formatResults)
       // Upon resolution of promises pass search data back to GoogleMapView
-      .then(self.googleMapView.loadPlacesSearchResults)
+      .then(function (formattedResults) {
+        self.googleMapView.loadPlacesSearchResults(formattedResults, hash);
+      })
       // If error is caught, pass it also
-      .catch(self.googleMapView.loadPlacesSearchResults);
+      .catch(function (formattedResults) {
+        self.googleMapView.loadPlacesSearchResults(formattedResults, hash);
+      });
   }
 
   getDetailsFromSinglePlaceId (placeId, passedResolve, passedReject) {
@@ -62,6 +66,7 @@ class GoogleMapPlacesSearch {
     // Resolve promise on successful data retrieval
     self.placesService.getDetails({placeId}, function (results, status) {
       if (status === window.google.maps.places.PlacesServiceStatus.OK) {
+        // Status OK, resolve promise
         passedResolve(results);
       } else if (status === window.google.maps.places.PlacesServiceStatus.OVER_QUERY_LIMIT) {
         // If over query limit, attempt another call in 200ms
@@ -69,7 +74,7 @@ class GoogleMapPlacesSearch {
           self.getDetailsFromSinglePlaceId(placeId, passedResolve, passedReject);
         }, 200);
       } else {
-        // Any other status response will pass error back
+        // Any other status response will reject promise with error
         const error = new Error(status);
         passedReject(error);
       }
