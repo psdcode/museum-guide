@@ -54,7 +54,7 @@
     font-size: 15px;
     margin: 50px 0 0;
 
-    @media screen and (min-width: 512px) {
+    @media screen and (min-width: 550px) {
       font-size: 18px;
       margin: 30px 0 0;
     }
@@ -78,7 +78,7 @@
       margin-bottom: 5px;
     }
 
-    @media screen and (min-width: 512px) {
+    @media screen and (min-width: 550px) {
       font-size: 22px;
     }
   }
@@ -95,7 +95,7 @@
 
   &__radio {
     &--b-margin {
-      margin-bottom: 12px;
+      margin-bottom: 10px;
     }
   }
 
@@ -105,7 +105,7 @@
     margin-right: 0;
     font-size: 17px;
 
-    @media screen and (min-width: 512px) {
+    @media screen and (min-width: 550px) {
       display: inline-block;
       font-size: 19px;
 

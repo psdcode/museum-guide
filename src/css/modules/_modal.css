@@ -27,15 +27,11 @@
     font-size: 30px;
     text-align: center;
 
-    @media screen and (min-width: 512px) {
+    @media screen and (min-width: 550px) {
       font-size: 40px;
     }
 
     @media screen and (min-width: 768px) {
-      font-size: 50px;
-    }
-
-    @media screen and (min-width: 968px) {
       font-size: 50px;
     }
 
