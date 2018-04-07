@@ -111,6 +111,13 @@ module.exports = function (grunt) {
         },
         src: paths.srcDirCss + 'styles.css',
         dest: paths.prodDirCss + 'styles.css'
+      },
+      px2rem: {
+        options: {
+          map: false,
+          processors: [require('postcss-pxtorem')()]
+        },
+        src: paths.srcDirCss + '**/*.css'
       }
     },
 
