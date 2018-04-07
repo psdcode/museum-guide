@@ -5,7 +5,7 @@
   -webkit-text-stroke: 0.5px;
 
   &--no-t-margin-upto-lg {
-    @media screen and (max-width: 1167px) {
+    @mixin upToVeryLarge {
       margin-top: 0;
     }
   }
@@ -31,23 +31,22 @@
   }
 
   &--sm-l-margin-from-lg {
-    @media screen and (min-width: 1168px) {
+    @mixin downToVeryLarge {
       margin-left: 20px;
     }
   }
 
   /* Flexbox margin settings */
   .flexbox &--flex-xs-b-margin-upto-lg {
-    @media screen and (max-width: 1167px) {
+    @mixin upToVeryLarge {
       margin-bottom: 0.05em;
     }
   }
 
-
   .flexbox &--sm-l-margin-from-lg {
     /* Necessary to counteract the rule
     .flexbox .header__headline { margin: 0; } */
-    @media screen and (min-width: 1168px) {
+    @mixin downToVeryLarge {
       margin-left: 20px;
     }
   }

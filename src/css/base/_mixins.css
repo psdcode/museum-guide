@@ -1,19 +1,37 @@
 /* MIXINS */
 
-/* @define-mixin downToSmall {
-  @media (min-width: 530px) {
+@define-mixin downToVerySmall {
+  @media (min-width: 330px) {
     @mixin-content;
   }
 }
 
-@define-mixin downToMedium {
-  @media (min-width: 530px) {
+@define-mixin downToSmall {
+  @media (min-width: 550px) {
     @mixin-content;
   }
 }
 
-@define-mixin downToLarge {
-  @media (min-width: 530px) {
+@define-mixin downToSidebarHide {
+  @media (min-width: 768px) {
     @mixin-content;
   }
-} */
+}
+
+@define-mixin downToVeryLarge {
+  @media (min-width: 1168px) {
+    @mixin-content;
+  }
+}
+
+@define-mixin upToVeryLarge {
+  @media (max-width: 1167px) {
+    @mixin-content;
+  }
+}
+
+@define-mixin downToVeryVeryLarge {
+  @media (min-width: 1280px) {
+    @mixin-content;
+  }
+}

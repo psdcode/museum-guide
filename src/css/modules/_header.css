@@ -15,7 +15,7 @@
   background-color: inherit;
   margin: 0;
 
-  @media screen and (min-width: 768px) {
+  @mixin downToSidebarHide {
     padding-left: 300px;
   }
 
@@ -43,7 +43,7 @@
       justify-content: center;
       align-content: space-between;
 
-      @media screen and (min-width: 1168px) {
+      @mixin downToVeryLarge {
         justify-content: flex-start;
         flex-wrap: nowrap;
       }
@@ -61,7 +61,7 @@
       line-height: 0.98;
     }
 
-    @media screen and (min-width: 1168px) {
+    @mixin downToVeryLarge {
       /* Non-flexbox settings */
       display: inline-block;
       margin: 15px 0 0 20px;
@@ -69,7 +69,7 @@
       float: left;
     }
 
-    @media screen and (min-width: 1280px) {
+    @mixin downToVeryVeryLarge {
       font-size: 2.7rem;
     }
 
@@ -78,14 +78,14 @@
       margin: 0;
       flex-basis: 100%;
 
-      @media screen and (min-width: 1168px) {
+      @mixin downToVeryLarge {
         flex-basis: auto;
         display: block;
         font-size: 2.4rem;
         float: none;
       }
 
-      @media screen and (min-width: 1280px) {
+      @mixin downToVeryVeryLarge {
         font-size: 2.7rem;
       }
     }
@@ -99,7 +99,7 @@
     right: 2px;
 
     /* Offset for small screens */
-    @media screen and (min-width: 330px) {
+    @mixin downToVerySmall {
       right: 5px;
     }
 
@@ -108,7 +108,7 @@
       right: 20px;
     }
 
-    @media screen and (min-width: 768px) {
+    @mixin downToSidebarHide {
       display: none;
     }
   }
