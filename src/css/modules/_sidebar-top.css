@@ -14,7 +14,7 @@
     border: var(--btnBorderWidth) solid var(--btnBorderColor);
     border-radius: var(--btnBorderRadius);
     font-family: inherit;
-    font-size: 15px;
+    font-size: 0.9375rem;
     line-height: 1.43;
 
     &:focus {
@@ -26,7 +26,7 @@
   &__reset,
   &__change {
     display: inline-block;
-    width: 7.438rem;
+    width: 119.008px;
 
     /* Adjust to equal height with filter input element */
     height: 33.3px;

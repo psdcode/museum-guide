@@ -24,19 +24,19 @@
   }
 
   &__headline {
-    font-size: 30px;
+    font-size: 1.875rem;
     text-align: center;
 
     @media screen and (min-width: 550px) {
-      font-size: 40px;
+      font-size: 2.5rem;
     }
 
     @media screen and (min-width: 768px) {
-      font-size: 50px;
+      font-size: 3.125rem;
     }
 
     @media screen and (min-width: 1120px) {
-      font-size: 55px;
+      font-size: 3.4375rem;
     }
   }
 
@@ -93,7 +93,7 @@
   }
 
   &__close-btn-x {
-    font-size: 30px;
+    font-size: 1.875rem;
     font-family: Arial, sans-serif;
     transform: scaleX(1.2);
     display: block;

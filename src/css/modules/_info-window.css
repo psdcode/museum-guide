@@ -4,7 +4,7 @@
   min-width: 230px;
 
   &__title {
-    font-size: 15px;
+    font-size: 0.9375rem;
     margin-bottom: 4px;
     color: var(--mainFontColor);
   }
@@ -16,7 +16,7 @@
 
   &__arrows-next,
   &__arrows-prev {
-    font-size: 30px;
+    font-size: 1.875rem;
     font-family: monospace;
     padding: 0 10px;
     font-weight: 600;
