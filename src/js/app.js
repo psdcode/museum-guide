@@ -8,7 +8,7 @@ import currentModel from '../model/model.json';
 // Initialization
 
 // Yelp service access token
-GoogleMapView.YELP_TOKEN = `n9BZFWy_zC3jyQyNV9u0Tdc6IhfkwyV8b4JBg2NYD9AaQuHaUx6II9\
+GoogleMapView.YELP_API_KEY = `n9BZFWy_zC3jyQyNV9u0Tdc6IhfkwyV8b4JBg2NYD9AaQuHaUx6II9\
 ukiEQp2Z03m7Cmycz29Lu2n4Gc5LPu1wDjVVCGyignkEoZn167yyq07sbPEN7gF5GzE20YWnYx`;
 
 // Tell GoogleMapView initial map load position
