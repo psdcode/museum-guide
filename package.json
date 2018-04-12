@@ -1,19 +1,19 @@
 {
-  "name": "museum-map-guide",
+  "name": "museum-guide",
   "version": "1.0.0",
   "description": "A ",
   "main": "index.js",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/psdcode/museum-map-guide.git"
+    "url": "git+https://github.com/psdcode/museum-guide.git"
   },
   "keywords": [],
   "author": "Patrick Dorosz",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/psdcode/museum-map-guide/issues"
+    "url": "https://github.com/psdcode/museum-guide/issues"
   },
-  "homepage": "https://github.com/psdcode/museum-map-guide#readme",
+  "homepage": "https://github.com/psdcode/museum-guide#readme",
   "devDependencies": {
     "babel-core": "^6.26.0",
     "babel-plugin-external-helpers": "^6.22.0",
