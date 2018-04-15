@@ -7,9 +7,7 @@ import currentModel from '../model/model.json';
 
 // Initialization
 
-// Yelp service access token & cors server to use
-GoogleMapView.YELP_API_KEY = `n9BZFWy_zC3jyQyNV9u0Tdc6IhfkwyV8b4JBg2NYD9AaQuHaUx6II9\
-ukiEQp2Z03m7Cmycz29Lu2n4Gc5LPu1wDjVVCGyignkEoZn167yyq07sbPEN7gF5GzE20YWnYx`;
+// Cors server to use for Yelp API 3.0 Fusion calls
 // No '/' at the end of server address
 GoogleMapView.corsServer = 'https://museum-guide-server.herokuapp.com';
 

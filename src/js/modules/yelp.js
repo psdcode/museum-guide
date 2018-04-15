@@ -63,13 +63,10 @@ const yelp = (function () {
   }
 
   // Helper method for fetching Yelp info
-  function fetchYelp (fetchString, apiKey) {
+  function fetchYelp (fetchString) {
     return window.fetch(fetchString,
       {
-        method: 'GET'// ,
-        // headers: {
-        //   'authorization': `Bearer ${apiKey}`
-        // }
+        method: 'GET'
       })
       .catch(err => {
         // In case connection error to cors-anywhere.herokuapp.com
@@ -90,12 +87,12 @@ const yelp = (function () {
       .then((response) => (response.json()));
   }
 
-  function fetchYelpHours (yelpData, apiKey, corsServer) {
+  function fetchYelpHours (yelpData, corsServer) {
     // Since client-side requests to Yelp V3 API are not possible due to lack
     // of support for CORS and JSONP. A node server for handline cors requests is used as proxy.
     let fetchHoursString = `${corsServer}/https://api.yelp.com/v3/`;
     fetchHoursString += `businesses/${yelpData.id}`;
-    return fetchYelp(fetchHoursString, apiKey)
+    return fetchYelp(fetchHoursString)
       .then(function (responseJSON) {
         // Check if 'hours' property is present in returned object
         if (responseJSON.hours && responseJSON.hours[0] &&
@@ -110,17 +107,17 @@ const yelp = (function () {
       });
   }
 
-  function fetchYelpInfo (mapMarker, apiKey, corsServer) {
+  function fetchYelpInfo (mapMarker, corsServer) {
     // Since client-side requests to Yelp V3 API are not possible due to lack
     // of support for CORS and JSONP, 'cors-anywhere' app hack is employed as a proxy
     let fetchInfoString = `${corsServer}/https://api.yelp.com/v3/`;
     fetchInfoString += `businesses/search?term=${getSearchString(mapMarker.title)}&`;
     fetchInfoString += `latitude=${mapMarker.position.lat()}&longitude=`;
     fetchInfoString += `${mapMarker.position.lng()}`;
-    return fetchYelp(fetchInfoString, apiKey)
+    return fetchYelp(fetchInfoString)
       .then(function (responseJSON) {
         if (responseJSON.businesses[0] !== undefined) {
-          return fetchYelpHours(responseJSON.businesses[0], apiKey, corsServer);
+          return fetchYelpHours(responseJSON.businesses[0], corsServer);
         } else {
           return responseJSON.businesses[0];
         }

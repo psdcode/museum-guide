@@ -238,7 +238,7 @@ class GoogleMapView {
       applyArrowBtnsBindings();
 
       // Begin fetching data about current marker location from Yelp
-      yelp.fetchYelpInfo(marker, GoogleMapView.YELP_API_KEY, GoogleMapView.corsServer).then(function (yelpInfo) {
+      yelp.fetchYelpInfo(marker, GoogleMapView.corsServer).then(function (yelpInfo) {
         // Only enter here if no connection issues
 
         // Check if InfoWindow still on requested marker, else don't render
