@@ -92,8 +92,8 @@ const yelp = (function () {
 
   function fetchYelpHours (yelpData, token) {
     // Since client-side requests to Yelp V3 API are not possible due to lack
-    // of support for CORS and JSONP, 'cors-anywhere' app hack is employed as a proxy
-    let fetchHoursString = `https://cors-anywhere.herokuapp.com/https://api.yelp.com/v3/`;
+    // of support for CORS and JSONP. A node server for handline cors requests is used as proxy.
+    let fetchHoursString = `https://museum-guide-server.herokuapp.com/https://api.yelp.com/v3/`;
     fetchHoursString += `businesses/${yelpData.id}`;
     return fetchYelp(fetchHoursString, token)
       .then(function (responseJSON) {
