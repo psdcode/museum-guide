@@ -90,10 +90,10 @@ const yelp = (function () {
       .then((response) => (response.json()));
   }
 
-  function fetchYelpHours (yelpData, token) {
+  function fetchYelpHours (yelpData, token, corsServer) {
     // Since client-side requests to Yelp V3 API are not possible due to lack
     // of support for CORS and JSONP. A node server for handline cors requests is used as proxy.
-    let fetchHoursString = `https://museum-guide-server.herokuapp.com/https://api.yelp.com/v3/`;
+    let fetchHoursString = `${corsServer}/https://api.yelp.com/v3/`;
     fetchHoursString += `businesses/${yelpData.id}`;
     return fetchYelp(fetchHoursString, token)
       .then(function (responseJSON) {
@@ -110,17 +110,17 @@ const yelp = (function () {
       });
   }
 
-  function fetchYelpInfo (mapMarker, token) {
+  function fetchYelpInfo (mapMarker, token, corsServer) {
     // Since client-side requests to Yelp V3 API are not possible due to lack
     // of support for CORS and JSONP, 'cors-anywhere' app hack is employed as a proxy
-    let fetchInfoString = `https://cors-anywhere.herokuapp.com/https://api.yelp.com/v3/`;
+    let fetchInfoString = `${corsServer}/https://api.yelp.com/v3/`;
     fetchInfoString += `businesses/search?term=${getSearchString(mapMarker.title)}&`;
     fetchInfoString += `latitude=${mapMarker.position.lat()}&longitude=`;
     fetchInfoString += `${mapMarker.position.lng()}`;
     return fetchYelp(fetchInfoString, token)
       .then(function (responseJSON) {
         if (responseJSON.businesses[0] !== undefined) {
-          return fetchYelpHours(responseJSON.businesses[0], token);
+          return fetchYelpHours(responseJSON.businesses[0], token, corsServer);
         } else {
           return responseJSON.businesses[0];
         }
