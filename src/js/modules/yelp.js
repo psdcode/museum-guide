@@ -94,7 +94,7 @@ const yelp = (function () {
     fetchHoursString += `businesses/${yelpData.id}`;
     return fetchYelp(fetchHoursString)
       .then(function (responseJSON) {
-        // Check if 'hours' property is present in returned object
+        // Check if 'hours' array is present in returned object
         if (responseJSON.hours && responseJSON.hours[0] &&
           responseJSON.hours[0].hasOwnProperty('is_open_now')) {
           // 'is_open_now' property is present
