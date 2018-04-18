@@ -63,37 +63,34 @@ const yelp = (function () {
   }
 
   // Helper method for fetching Yelp info
-  function fetchYelp (fetchString) {
-    return window.fetch(fetchString,
-      {
-        method: 'GET'
-      })
-      .catch(err => {
-        // In case connection error to cors-anywhere.herokuapp.com
-        // window.alert(`Unable to retrieve this locations's Yelp data due to a \
-        // connection error. Please try again later.`); TODO
-        return Promise.reject(err);
-      })
-      .then(function (response) {
-        // Both cors-anywhere.herokuapp.com and api.yelp.com reachable
-        if (response.ok) {
-          return response;
-
-        // cors-anywhere.herokuapp.com ok, api.yelp.com fails
-        } else {
-          return Promise.reject(new Error('api.yelp.com connection error'));
-        }
-      })
-      .then((response) => (response.json()));
-  }
-
   function fetchYelpInfo (mapMarker, corsServer) {
     // Since client-side requests to Yelp V3 API are not possible due to lack
     // of support for CORS and JSONP, 'cors-anywhere' app hack is employed as a proxy
     let fetchInfoString = `${corsServer}/yelp-search?term=${getSearchString(mapMarker.title)}&`;
-    fetchInfoString += `lat=${mapMarker.position.lat()}&lng=`;
-    fetchInfoString += `${mapMarker.position.lng()}`;
-    return fetchYelp(fetchInfoString);
+    fetchInfoString += `lat=${mapMarker.position.lat()}&`;
+    fetchInfoString += `lng=${mapMarker.position.lng()}`;
+
+    return window.fetch(fetchInfoString,
+      {
+        method: 'GET'
+      })
+      .catch((err) =>
+        // In case connection error to cors server
+        (Promise.reject(err))
+      )
+      .then(function (response) {
+        // Both cors server and api.yelp.com reachable
+        if (response.ok) {
+          return response;
+
+        // cors server is ok
+        // api.yelp.com fails since response.ok is false
+        } else {
+          return Promise.reject(new Error('api.yelp.com connection error'));
+        }
+      })
+      // result is good, convert fetch response stream to json
+      .then((response) => (response.json()));
   }
 
   // return Yelp module

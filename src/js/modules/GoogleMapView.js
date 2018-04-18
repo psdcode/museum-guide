@@ -239,12 +239,12 @@ class GoogleMapView {
 
       // Begin fetching data about current marker location from Yelp
       yelp.fetchYelpInfo(marker, GoogleMapView.corsServer).then(function (yelpInfo) {
-        // Only enter here if no connection issues
-
+        // Only enter here if no connection issues encountered
         // Check if InfoWindow still on requested marker, else don't render
         if (GoogleMapView.mainInfoWindow.marker === marker) {
-          // Check if Yelp result exists
-          if (yelpInfo) {
+          // Check if Yelp result exists, ie yelpInfo !== {}
+          const yelpInfoIsEmptyObj = Object.keys(yelpInfo).length === 0;
+          if (!yelpInfoIsEmptyObj) {
             // Remove spinner by reassigning markerContent with Yelp info
             const yelpHtml = yelp.getYelpInfoHtml(yelpInfo, GoogleMapView.modelCityObj.country);
             markerContent = getInfoWindowMainHtml(yelpHtml, marker.title);
@@ -277,10 +277,11 @@ class GoogleMapView {
             markerContent = getInfoWindowMainHtml(errorHtml, 'Loading Error');
 
             GoogleMapView.mainInfoWindow.setContent(markerContent);
-            console.log(err); // TODO
+            // TODO
 
             // Apply ViewModel bindings to the arrow buttons
             applyArrowBtnsBindings();
+            return err;
           }
         });
     }
