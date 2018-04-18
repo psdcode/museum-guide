@@ -27,7 +27,6 @@ class GoogleMapView {
 
   // maps.googleapis.com script initial loading error callback
   static errorLoadMap () {
-    window.alert('Unable to load Google Map at this time. Check your internet connection or try again later.');
     if (DisplayViewModel.instance) {
       DisplayViewModel.instance.notifyMapLoadFail(true);
     }
@@ -47,41 +46,44 @@ class GoogleMapView {
 
   // googleapis.com initalization success callback
   static initMap () {
-    // Create new map
-    const mapElement = document.getElementsByClassName('map')[0];
-    GoogleMapView.map = new window.google.maps.Map(mapElement, {
-      // Center on default location
-      center: {
-        lat: GoogleMapView.defaultPosition.lat,
-        lng: GoogleMapView.defaultPosition.lng
-      },
-      zoom: 12,
-      styles: mapStyle
-    });
+    // Wait with map initalization until model loaded
+    GoogleMapView.initialLoadPromise.then(function () {
+      // Create new map
+      const mapElement = document.getElementsByClassName('map')[0];
+      GoogleMapView.map = new window.google.maps.Map(mapElement, {
+        // Center on default location
+        center: {
+          lat: GoogleMapView.defaultPosition.lat,
+          lng: GoogleMapView.defaultPosition.lng
+        },
+        zoom: 12,
+        styles: mapStyle
+      });
 
-    // Create Google Map places search service
-    GoogleMapView.placesSearch = new GoogleMapPlacesSearch(GoogleMapView.map, GoogleMapView);
+      // Create Google Map places search service
+      GoogleMapView.placesSearch = new GoogleMapPlacesSearch(GoogleMapView.map, GoogleMapView);
 
-    // Inject places search loading spinner HTML
-    const liveSearchLoadingDiv = document.getElementsByClassName('sidebar-list__live-search-loading')[0];
-    liveSearchLoadingDiv.insertAdjacentHTML('afterbegin', spinnerHtmlString);
+      // Inject places search loading spinner HTML
+      const liveSearchLoadingDiv = document.getElementsByClassName('sidebar-list__live-search-loading')[0];
+      liveSearchLoadingDiv.insertAdjacentHTML('afterbegin', spinnerHtmlString);
 
-    // Recenter map on window resize
-    window.onresize = GoogleMapView.onWindowResize;
+      // Recenter map on window resize
+      window.onresize = GoogleMapView.onWindowResize;
 
-    // Clicking on map while sidebar is open will hide it
-    mapElement.addEventListener('click', GoogleMapView.hideListView);
+      // Clicking on map while sidebar is open will hide it
+      mapElement.addEventListener('click', GoogleMapView.hideListView);
 
-    // Markers corresponding to data locations
-    GoogleMapView.markers = [];
+      // Markers corresponding to data locations
+      GoogleMapView.markers = [];
 
-    // InfoWindow configuration
-    GoogleMapView.mainInfoWindow = new window.google.maps.InfoWindow({
-      maxWidth: 250
-    });
-    GoogleMapView.mainInfoWindow.addListener('closeclick', function () {
-      GoogleMapView.mainInfoWindow.marker = undefined;
-      DisplayViewModel.instance.setSelectedMarker(undefined);
+      // InfoWindow configuration
+      GoogleMapView.mainInfoWindow = new window.google.maps.InfoWindow({
+        maxWidth: 250
+      });
+      GoogleMapView.mainInfoWindow.addListener('closeclick', function () {
+        GoogleMapView.mainInfoWindow.marker = undefined;
+        DisplayViewModel.instance.setSelectedMarker(undefined);
+      });
     });
   }
 
@@ -277,7 +279,6 @@ class GoogleMapView {
             markerContent = getInfoWindowMainHtml(errorHtml, 'Loading Error');
 
             GoogleMapView.mainInfoWindow.setContent(markerContent);
-            // TODO
 
             // Apply ViewModel bindings to the arrow buttons
             applyArrowBtnsBindings();
