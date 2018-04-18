@@ -29,6 +29,7 @@ GoogleMapView.initialLoadPromise = new Promise(function (resolve, reject) {
         DisplayViewModel.instance = new DisplayViewModel(currentModel);
         window.ko.applyBindings(DisplayViewModel.instance);
       }
+      // Allow map initialization
       resolve();
     })
     // Could not retrieve model, prevent map initialization
