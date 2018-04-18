@@ -267,7 +267,7 @@ class GoogleMapView {
           }
         }
       })
-      // In case of connection error to cors-anywhere.herokuapp.com or
+      // In case of connection error to cors server or
       // api.yelp.com
         .catch(function (err) {
           // Check if InfoWindow still on requested marker, else don't render

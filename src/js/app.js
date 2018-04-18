@@ -8,7 +8,7 @@ import currentModel from '../model/model.json';
 // Initialization
 
 // Cors server to use for Yelp API 3.0 Fusion calls
-// No '/' at the end of server address
+// (No '/' at the end of server address)
 GoogleMapView.corsServer = 'https://museum-guide-server.herokuapp.com';
 
 // Tell GoogleMapView initial map load position

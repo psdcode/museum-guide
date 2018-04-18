@@ -69,17 +69,17 @@ const yelp = (function () {
         method: 'GET'
       })
       .catch(err => {
-        // In case connection error to cors-anywhere.herokuapp.com
+        // In case connection error to cors server
         // window.alert(`Unable to retrieve this locations's Yelp data due to a \
         // connection error. Please try again later.`); TODO
         return Promise.reject(err);
       })
       .then(function (response) {
-        // Both cors-anywhere.herokuapp.com and api.yelp.com reachable
+        // Both cors server and api.yelp.com reachable
         if (response.ok) {
           return response;
 
-        // cors-anywhere.herokuapp.com ok, api.yelp.com fails
+        // cors server ok, api.yelp.com fails
         } else {
           return Promise.reject(new Error('api.yelp.com connection error'));
         }
@@ -109,17 +109,19 @@ const yelp = (function () {
 
   function fetchYelpInfo (mapMarker, corsServer) {
     // Since client-side requests to Yelp V3 API are not possible due to lack
-    // of support for CORS and JSONP, 'cors-anywhere' app hack is employed as a proxy
+    // of support for CORS and JSONP, dedicated 'cors-anywhere' server is employed as a proxy
     let fetchInfoString = `${corsServer}/https://api.yelp.com/v3/`;
     fetchInfoString += `businesses/search?term=${getSearchString(mapMarker.title)}&`;
     fetchInfoString += `latitude=${mapMarker.position.lat()}&longitude=`;
     fetchInfoString += `${mapMarker.position.lng()}`;
     return fetchYelp(fetchInfoString)
       .then(function (responseJSON) {
+        // Check if result for specific business exists
         if (responseJSON.businesses[0] !== undefined) {
+          // If yes, check if currently within opening hours
           return fetchYelpHours(responseJSON.businesses[0], corsServer);
         } else {
-          return responseJSON.businesses[0];
+          return responseJSON.businesses[0]; // === undefined;
         }
       });
   }
