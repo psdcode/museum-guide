@@ -87,41 +87,13 @@ const yelp = (function () {
       .then((response) => (response.json()));
   }
 
-  function fetchYelpHours (yelpData, corsServer) {
-    // Since client-side requests to Yelp V3 API are not possible due to lack
-    // of support for CORS and JSONP. A node server for handline cors requests is used as proxy.
-    let fetchHoursString = `${corsServer}/https://api.yelp.com/v3/`;
-    fetchHoursString += `businesses/${yelpData.id}`;
-    return fetchYelp(fetchHoursString)
-      .then(function (responseJSON) {
-        // Check if 'hours' array is present in returned object
-        if (responseJSON.hours && responseJSON.hours[0] &&
-          responseJSON.hours[0].hasOwnProperty('is_open_now')) {
-          // 'is_open_now' property is present
-          const yelpDataAndHours = Object.assign(yelpData, {is_open_now: responseJSON.hours[0].is_open_now});
-          return yelpDataAndHours;
-        } else {
-          // no 'hours' info present, so return yelpData unmodified
-          return yelpData;
-        }
-      });
-  }
-
   function fetchYelpInfo (mapMarker, corsServer) {
     // Since client-side requests to Yelp V3 API are not possible due to lack
     // of support for CORS and JSONP, 'cors-anywhere' app hack is employed as a proxy
-    let fetchInfoString = `${corsServer}/https://api.yelp.com/v3/`;
-    fetchInfoString += `businesses/search?term=${getSearchString(mapMarker.title)}&`;
-    fetchInfoString += `latitude=${mapMarker.position.lat()}&longitude=`;
+    let fetchInfoString = `${corsServer}/yelp-search?term=${getSearchString(mapMarker.title)}&`;
+    fetchInfoString += `lat=${mapMarker.position.lat()}&lng=`;
     fetchInfoString += `${mapMarker.position.lng()}`;
-    return fetchYelp(fetchInfoString)
-      .then(function (responseJSON) {
-        if (responseJSON.businesses[0] !== undefined) {
-          return fetchYelpHours(responseJSON.businesses[0], corsServer);
-        } else {
-          return responseJSON.businesses[0];
-        }
-      });
+    return fetchYelp(fetchInfoString);
   }
 
   // return Yelp module
