@@ -63,67 +63,34 @@ const yelp = (function () {
   }
 
   // Helper method for fetching Yelp info
-  function fetchYelp (fetchString) {
-    return window.fetch(fetchString,
+  function fetchYelpInfo (mapMarker, corsServer) {
+    // Since client-side requests to Yelp V3 API are not possible due to lack
+    // of support for CORS and JSONP, 'cors-anywhere' app hack is employed as a proxy
+    let fetchInfoString = `${corsServer}/yelp-search?term=${getSearchString(mapMarker.title)}&`;
+    fetchInfoString += `lat=${mapMarker.position.lat()}&`;
+    fetchInfoString += `lng=${mapMarker.position.lng()}`;
+
+    return window.fetch(fetchInfoString,
       {
         method: 'GET'
       })
-      .catch(err => {
+      .catch((err) =>
         // In case connection error to cors server
-        // window.alert(`Unable to retrieve this locations's Yelp data due to a \
-        // connection error. Please try again later.`); TODO
-        return Promise.reject(err);
-      })
+        (Promise.reject(err))
+      )
       .then(function (response) {
         // Both cors server and api.yelp.com reachable
         if (response.ok) {
           return response;
 
-        // cors server ok, api.yelp.com fails
+        // cors server is ok
+        // api.yelp.com fails since response.ok is false
         } else {
           return Promise.reject(new Error('api.yelp.com connection error'));
         }
       })
+      // result is good, convert fetch response stream to json
       .then((response) => (response.json()));
-  }
-
-  function fetchYelpHours (yelpData, corsServer) {
-    // Since client-side requests to Yelp V3 API are not possible due to lack
-    // of support for CORS and JSONP. A node server for handline cors requests is used as proxy.
-    let fetchHoursString = `${corsServer}/https://api.yelp.com/v3/`;
-    fetchHoursString += `businesses/${yelpData.id}`;
-    return fetchYelp(fetchHoursString)
-      .then(function (responseJSON) {
-        // Check if 'hours' array is present in returned object
-        if (responseJSON.hours && responseJSON.hours[0] &&
-          responseJSON.hours[0].hasOwnProperty('is_open_now')) {
-          // 'is_open_now' property is present
-          const yelpDataAndHours = Object.assign(yelpData, {is_open_now: responseJSON.hours[0].is_open_now});
-          return yelpDataAndHours;
-        } else {
-          // no 'hours' info present, so return yelpData unmodified
-          return yelpData;
-        }
-      });
-  }
-
-  function fetchYelpInfo (mapMarker, corsServer) {
-    // Since client-side requests to Yelp V3 API are not possible due to lack
-    // of support for CORS and JSONP, dedicated 'cors-anywhere' server is employed as a proxy
-    let fetchInfoString = `${corsServer}/https://api.yelp.com/v3/`;
-    fetchInfoString += `businesses/search?term=${getSearchString(mapMarker.title)}&`;
-    fetchInfoString += `latitude=${mapMarker.position.lat()}&longitude=`;
-    fetchInfoString += `${mapMarker.position.lng()}`;
-    return fetchYelp(fetchInfoString)
-      .then(function (responseJSON) {
-        // Check if result for specific business exists
-        if (responseJSON.businesses[0] !== undefined) {
-          // If yes, check if currently within opening hours
-          return fetchYelpHours(responseJSON.businesses[0], corsServer);
-        } else {
-          return responseJSON.businesses[0]; // === undefined;
-        }
-      });
   }
 
   // return Yelp module
