@@ -8,6 +8,7 @@
   --listElmntSelectedColor: var(--mainElmntBorderColor);
   --btnActive: var(--mainElmntBorderColor);
   --btnBorderColor: #5b5b5b;
+  --modalErrorMsgBackgroundColor: var(--mainElmntBorderColor);
   --modalBorderColor: var(--btnBorderColor);
   --hamburgerColor: var(--btnBorderColor);
   --hamburgerColorActive: var(--mainFontColor);
@@ -16,7 +17,8 @@
   --yelpReviewFontHover: var(--btnBorderColor);
   --headlineRedColor: #ad0101;
 
-  /* Button Variables */
+  /* Size Variables */
   --btnBorderWidth: 2px;
   --btnBorderRadius: 8px;
+  --generalBorderWidth: 1px;
 }
