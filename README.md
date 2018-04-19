@@ -8,7 +8,7 @@ This project is an expanded version of my [final project](https://github.com/psd
 
 ## Access
 
-The map may be accessed at [docs.github.io](docs.github.io)
+The map may be accessed at [psdcode.github.io/museum-guide/](https://psdcode.github.io/museum-guide/)
 
 ## Local Viewing & Build Instructions
 

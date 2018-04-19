@@ -6,6 +6,7 @@ import GoogleMapView from './modules/GoogleMapView';
 // Cors server to use for Yelp API 3.0 Fusion calls
 // (No '/' at the end of server address)
 GoogleMapView.corsServer = 'https://museum-guide-server.herokuapp.com';
+// GoogleMapView.corsServer = 'http://localhost:8080';
 
 // Retrieve data model from server and halt map initialization until complete
 GoogleMapView.initialLoadPromise = new Promise(function (resolve, reject) {
