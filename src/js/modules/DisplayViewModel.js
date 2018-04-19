@@ -33,7 +33,7 @@ class DisplayViewModel {
     self.query.subscribe(self.queryProcessInput, self);
     // Input Debounce delay setup for live search Input
     self.queryLiveSearch = window.ko.observable(self.query());
-    // Launch live search after debounce of 600ms of input query
+    // Launch live search after 750ms debounce of input query
     self.queryLiveSearchDelayed = window.ko.pureComputed(self.queryLiveSearch)
       .extend({
         rateLimit: {
