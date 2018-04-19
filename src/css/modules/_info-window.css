@@ -17,14 +17,30 @@
   &__arrows-next,
   &__arrows-prev {
     font-size: 1.875rem;
+    font-size: 1.775rem;
     font-family: monospace;
+    /* height: 39px; */
     padding: 0 10px;
     font-weight: 600;
     display: inline-block;
     line-height: normal;
+    height: 39px;
+    width: 39px;
   }
 
   &__arrows-next {
     float: right;
+    position: relative;
+    & .bof {
+      display: block;
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+    }
   }
+}
+
+.bof {
+  /* padding: 5px 0; */
+  /* display: ; */
 }
