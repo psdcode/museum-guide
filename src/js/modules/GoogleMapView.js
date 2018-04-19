@@ -27,9 +27,8 @@ class GoogleMapView {
 
   // maps.googleapis.com script initial loading error callback
   static errorLoadMap () {
-    console.log('inside errorLoadMap');
+    DisplayViewModel.openErrorLoadingScreen();
     if (DisplayViewModel.instance) {
-      console.log('inside errorLoadMap & DisplayViewModel.instance exists');
       DisplayViewModel.instance.notifyMapLoadFail(true);
     }
   }
@@ -86,8 +85,12 @@ class GoogleMapView {
         GoogleMapView.mainInfoWindow.marker = undefined;
         DisplayViewModel.instance.setSelectedMarker(undefined);
       });
+
+      // Close initial loading screen
+      DisplayViewModel.closeFormLoadingMode();
     })
-      .catch(console.log);
+      // Catch error in case fetching model from server fails
+      .catch((err) => (err));
   }
 
   static livePlacesSearch (cityName, latLng, searchTerm) {

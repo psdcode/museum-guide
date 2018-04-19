@@ -36,7 +36,7 @@
     }
 
     @media screen and (min-width: 1120px) {
-      font-size: 3.4375rem;
+      font-size: 3.3rem;
     }
   }
 
@@ -55,7 +55,7 @@
     top: 50%;
     transform: translateY(-50%);
     background-color: var(--mainBkgndColor);
-    border: 1px solid var(--modalBorderColor);
+    border: var(--generalBorderWidth) solid var(--modalBorderColor);
 
     /* Visible properties */
     opacity: 1;

@@ -10,13 +10,13 @@ GoogleMapView.corsServer = 'https://museum-guide-server.herokuapp.com';
 
 // Retrieve data model from server and halt map initialization until complete
 GoogleMapView.initialLoadPromise = new Promise(function (resolve, reject) {
+  // Launch initial load spinner
+  DisplayViewModel.openFormLoadingScreen();
   window.fetch(`${GoogleMapView.corsServer}/model`, {
     method: 'GET'
   })
     .then(response => response.json())
-    .then(function (modelReceived) {
-      const currentModel = modelReceived;
-
+    .then(function (currentModel) {
       // Tell GoogleMapView initial map load position
       GoogleMapView.defaultPosition = currentModel.defaultArea.position;
       GoogleMapView.defaultType = currentModel.defaultArea.type;
@@ -29,14 +29,14 @@ GoogleMapView.initialLoadPromise = new Promise(function (resolve, reject) {
         DisplayViewModel.instance = new DisplayViewModel(currentModel);
         window.ko.applyBindings(DisplayViewModel.instance);
       }
-      // Allow map initialization
+      // Allow map initialization by resolving promise in GoogleMapview.initMap
       resolve();
     })
-    // Could not retrieve model, prevent map initialization
+
+    // Catch fetch fail: could not retrieve model, prevent map initialization
     .catch(function (err) {
-      console.log('inside app.js catch');
       GoogleMapView.errorLoadMap();
-      reject(err);
+      reject(new Error(err.message));
     });
 });
 

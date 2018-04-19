@@ -6,14 +6,15 @@ class Modal {
     this.modalElement = document.getElementsByClassName('modal')[0];
     this.modalElementContent = document.getElementsByClassName('modal__content')[0];
     this.modalElementCloseBtn = document.getElementsByClassName('modal__close-btn')[0];
-    this.loadingFormElement = document.getElementsByClassName('form__load-screen')[0];
+    this.formLoadingScreen = document.getElementsByClassName('form__load-screen')[0];
+    this.formErrorLoadingScreen = document.getElementsByClassName('form__load-error-screen')[0];
 
     // Variables
     this.isInitialModal = true;
 
     // General Initialization
     // Inject spinner html into Modal load screen
-    this.loadingFormElement.insertAdjacentHTML('beforeend', spinnerHtmlString);
+    this.formLoadingScreen.insertAdjacentHTML('beforeend', spinnerHtmlString);
     // Delay & Animate initial modal appearance
     setTimeout(this.launchFirstModal.bind(this), 350);
 
@@ -39,11 +40,15 @@ class Modal {
     this.modalElement.classList.remove('modal--hidden');
   }
 
+  closeFormLoadingMode () {
+    this.formLoadingScreen.classList.remove('form__load-screen--visible');
+  }
+
   closeModal (thisModal) {
     // Hide entire modal
     thisModal.modalElement.classList.add('modal--hidden');
     // Hide load screen within modal
-    thisModal.loadingFormElement.classList.remove('form__load-screen--visible');
+    thisModal.formLoadingScreen.classList.remove('form__load-screen--visible');
   }
 
   keyPressHandler (event) {
@@ -53,8 +58,12 @@ class Modal {
     }
   }
 
-  openFormLoadScreen () {
-    this.loadingFormElement.classList.add('form__load-screen--visible');
+  openErrorLoadingScreen () {
+    this.formErrorLoadingScreen.classList.add('form__load-error-screen--visible');
+  }
+
+  openFormLoadingMode () {
+    this.formLoadingScreen.classList.add('form__load-screen--visible');
   }
 }
 

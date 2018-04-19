@@ -52,8 +52,8 @@
           <div class="form__load-screen">
             <div class="form__load-screen-inner"></div>
           </div>
-          <div class="form__load-error-screen" data-bind="visible: mapLoadFail">
-            <p class="form__load-error-text">Unable to load the app at this time.<br>Check your internet connection or try again later.</p>
+          <div class="form__load-error-screen" data-bind="css: {'form__load-error-screen--visible': mapLoadFail}">
+            <p class="form__load-error-text">Unable to load app at this time.<br>Check your internet connection<br>or try again later.</p>
           </div>
           <div class="form__radio form__radio--b-margin">
             <span class="form__text form__text--b-margin">Locations Display:</span>

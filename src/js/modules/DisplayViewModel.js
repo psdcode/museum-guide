@@ -300,11 +300,11 @@ class DisplayViewModel {
 
   // Submit modal form info
   submitModal () {
-    modal.openFormLoadScreen();
+    modal.openFormLoadingMode();
     this.loadFormData();
   }
 
-  // Shows/hides modal with hamburger <hiddenon>
+  // Shows/hides sidebar with hamburger button press
   toggleSidebar () {
     const sidebars = document.getElementsByClassName('sidebar');
     const hamburgerBars = document.getElementsByClassName('hamburger__bar');
@@ -329,6 +329,21 @@ class DisplayViewModel {
         hamburgerBar.classList.add('hamburger__bar--active');
       }
     }
+  }
+
+  // Static methods to allow calling before instance intantiation
+  // in case of initial conneciton error
+  static closeFormLoadingMode () {
+    modal.closeFormLoadingMode();
+  }
+
+  static openErrorLoadingScreen () {
+    modal.closeFormLoadingMode();
+    modal.openErrorLoadingScreen();
+  }
+
+  static openFormLoadingScreen () {
+    modal.openFormLoadingMode();
   }
 }
 
