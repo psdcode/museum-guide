@@ -34,6 +34,7 @@ GoogleMapView.initialLoadPromise = new Promise(function (resolve, reject) {
     })
     // Could not retrieve model, prevent map initialization
     .catch(function (err) {
+      console.log('inside app.js catch');
       GoogleMapView.errorLoadMap();
       reject(err);
     });
