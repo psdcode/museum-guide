@@ -26,12 +26,6 @@ class Modal {
     document.addEventListener('keyup', this.keyPressHandler.bind(this));
   }
 
-  // TODO may be unnecessary
-  // isModalHidden () {
-  //   const modalState = this.modalElement.classList.contains('modal--hidden');
-  //   return modalState;
-  // }
-
   launchFirstModal () {
     this.modalElementContent.classList.remove('modal__content--hidden');
   }
@@ -53,6 +47,7 @@ class Modal {
   }
 
   keyPressHandler (event) {
+    // Allow closing of modal with ESC key
     if (event.keyCode === 27 && this.isInitialModal === false) {
       this.closeModal(this);
     }
