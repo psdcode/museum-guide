@@ -15,6 +15,7 @@
     bottom: 0;
     opacity: 0;
     transition: all 0.3s ease-out;
+    z-index: 17;
 
     &--visible {
       opacity: 1;
@@ -48,14 +49,7 @@
     left: 0;
     bottom: 0;
     background-color: var(--mainBkgndColor);
-    opacity: 0;
-    transition: opacity 0.3s ease-out;
-    visibility: hidden;
-
-    &--visible {
-      visibility: visible;
-      opacity: 1;
-    }
+    z-index: 18;
   }
 
   &__load-error-text {

@@ -330,21 +330,6 @@ class DisplayViewModel {
       }
     }
   }
-
-  // Static methods to allow calling before instance intantiation
-  // in case of initial conneciton error
-  static closeFormLoadingMode () {
-    modal.closeFormLoadingMode();
-  }
-
-  static openErrorLoadingScreen () {
-    modal.closeFormLoadingMode();
-    modal.openErrorLoadingScreen();
-  }
-
-  static openFormLoadingScreen () {
-    modal.openFormLoadingMode();
-  }
 }
 
 export default DisplayViewModel;

@@ -7,7 +7,6 @@ class Modal {
     this.modalElementContent = document.getElementsByClassName('modal__content')[0];
     this.modalElementCloseBtn = document.getElementsByClassName('modal__close-btn')[0];
     this.formLoadingScreen = document.getElementsByClassName('form__load-screen')[0];
-    this.formErrorLoadingScreen = document.getElementsByClassName('form__load-error-screen')[0];
 
     // Variables
     this.isInitialModal = true;
@@ -31,6 +30,10 @@ class Modal {
     this.modalElementContent.classList.remove('modal__content--hidden');
   }
 
+  openFormLoadingMode () {
+    this.formLoadingScreen.classList.add('form__load-screen--visible');
+  }
+
   openModal () {
     // Make modal close button visible if first time modal is manually opened
     if (this.isInitialModal === true) {
@@ -38,10 +41,6 @@ class Modal {
       this.modalElementCloseBtn.classList.remove('modal__close-btn--hidden');
     }
     this.modalElement.classList.remove('modal--hidden');
-  }
-
-  closeFormLoadingMode () {
-    this.formLoadingScreen.classList.remove('form__load-screen--visible');
   }
 
   closeModal (thisModal) {
@@ -56,14 +55,6 @@ class Modal {
     if (event.keyCode === 27 && this.isInitialModal === false) {
       this.closeModal(this);
     }
-  }
-
-  openErrorLoadingScreen () {
-    this.formErrorLoadingScreen.classList.add('form__load-error-screen--visible');
-  }
-
-  openFormLoadingMode () {
-    this.formLoadingScreen.classList.add('form__load-screen--visible');
   }
 }
 

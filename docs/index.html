@@ -11,7 +11,7 @@
   <link href="https://fonts.googleapis.com/css?family=Spectral+SC:400,600" rel="stylesheet">
   <link rel="shortcut icon" href="img/favicon.ico" type="image/x-icon">
 	<link rel="icon" href="img/favicon.ico" type="image/x-icon">
-  <link rel="stylesheet" href="css/styles.min.8ae8b6ff.css">
+  <link rel="stylesheet" href="css/styles.min.782843f2.css">
 </head>
 <body>
   <div class="sidebar sidebar-top">
@@ -48,7 +48,7 @@
           <div class="form__load-screen">
             <div class="form__load-screen-inner"></div>
           </div>
-          <div class="form__load-error-screen" data-bind="css: {'form__load-error-screen--visible': mapLoadFail}">
+          <div class="form__load-error-screen" data-bind="visible: mapLoadFail">
             <p class="form__load-error-text">Unable to load app at this time.<br>Check your internet connection<br>or try again later.</p>
           </div>
           <div class="form__radio form__radio--b-margin">
@@ -65,7 +65,7 @@
             <select name="city" data-bind="value: form.selectedCityValue, options: form.optionsCities, optionsText: 'cityString', optionsValue: 'cityValue', disable: mapLoadFail">
             </select>
           </div>
-          <input type="submit" class="btn form__submit" data-bind="disable: mapLoadFail, css: { 'btn--disabled': mapLoadFail }" />
+          <input type="submit" class="btn form__submit" data-bind="disable: mapLoadFail" />
         </form>
       </div>
     </div>
@@ -75,5 +75,5 @@
     <li class="sidebar-list__item" data-bind="text: title, click: $root.clickLocationList, css: { 'sidebar-list__item--open': $root.listElementInfoWindowOpen($data) }"></li>
   </script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/knockout/3.4.2/knockout-min.js"></script>
-  <script src="js/app.min.1d44a884.js"></script></body>
+  <script src="js/app.min.63702296.js"></script></body>
 </html>

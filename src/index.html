@@ -52,7 +52,7 @@
           <div class="form__load-screen">
             <div class="form__load-screen-inner"></div>
           </div>
-          <div class="form__load-error-screen" data-bind="css: {'form__load-error-screen--visible': mapLoadFail}">
+          <div class="form__load-error-screen" data-bind="visible: mapLoadFail">
             <p class="form__load-error-text">Unable to load app at this time.<br>Check your internet connection<br>or try again later.</p>
           </div>
           <div class="form__radio form__radio--b-margin">
@@ -69,7 +69,7 @@
             <select name="city" data-bind="value: form.selectedCityValue, options: form.optionsCities, optionsText: 'cityString', optionsValue: 'cityValue', disable: mapLoadFail">
             </select>
           </div>
-          <input type="submit" class="btn form__submit" data-bind="disable: mapLoadFail, css: { 'btn--disabled': mapLoadFail }" />
+          <input type="submit" class="btn form__submit" data-bind="disable: mapLoadFail" />
         </form>
       </div>
     </div>
