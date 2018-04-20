@@ -311,11 +311,9 @@ class GoogleMapView {
       function getInfoWindowArrowsHtml () {
         let infoWindowArrows = `<div class="info-window__arrows">`;
         infoWindowArrows += `<a href="#" role="button" class="btn info-window__arrows-prev"`;
-        // infoWindowArrows += `>&lt;</a>`;
-        infoWindowArrows += `><span class="bof">&lt;</span></a>`;
+        infoWindowArrows += `><span class="info-window__arrows-text">&lt;</span></a>`;
         infoWindowArrows += `<a href="#" class="btn info-window__arrows-next" role="button"`;
-        // infoWindowArrows += `>&gt;</a>`;
-        infoWindowArrows += `><span class="bof">&gt;</span></a>`;
+        infoWindowArrows += `><span class="info-window__arrows-text">&gt;</span></a>`;
         infoWindowArrows += `</div>`;
         return infoWindowArrows;
       }
