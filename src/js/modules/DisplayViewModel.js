@@ -48,7 +48,14 @@ class DisplayViewModel {
     // Abnormal search result message
     self.queryLiveSearchResultText = window.ko.observable('');
 
-    // Current city display values
+    // Display values based on model
+    self.displayedCountryString = window.ko.computed(function () {
+      if (currentModel.defaultArea.localLang) {
+        return `${currentModel.defaultArea.country} - ${currentModel.defaultArea.localLang}`;
+      } else {
+        return currentModel.defaultArea.country;
+      }
+    });
     self.computedCityString = window.ko.observable();
     self.displayedCityString = window.ko.observable();
 
