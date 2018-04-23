@@ -31,7 +31,7 @@
   <header class="header">
     <div class="header__headlines">
       <h1 class="header__headline headline headline--no-t-margin-upto-lg headline--sm-l-margin-from-lg">Museum Map Guide</h1>
-      <h1 class="header__headline headline headline--red headline--fw-light headline--underline-black headline--no-b-margin headline--flex-xs-b-margin-upto-lg headline--sm-l-margin-from-lg" data-bind="text: displayedCityString"></h1>
+      <h1 class="header__headline header__headline-city headline headline--red headline--fw-light headline--underline-black headline--no-b-margin headline--flex-xs-b-margin-upto-lg headline--sm-l-margin-from-lg" data-bind="text: displayedCityString, css: {'header__headline-city--visible': displayedCityVisible}"></h1>
     </div>
     <a data-bind="click: toggleSidebar" role="button" href="#" class="header__hamburger hamburger">
       <span class="hamburger__bar">&nbsp;</span>

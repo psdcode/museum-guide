@@ -11,7 +11,7 @@
   <link href="https://fonts.googleapis.com/css?family=Spectral+SC:400,600" rel="stylesheet">
   <link rel="shortcut icon" href="img/favicon.ico" type="image/x-icon">
 	<link rel="icon" href="img/favicon.ico" type="image/x-icon">
-  <link rel="stylesheet" href="css/styles.min.ff2eb06d.css">
+  <link rel="stylesheet" href="css/styles.min.17d3c8f2.css">
 </head>
 <body>
   <div class="sidebar sidebar-top">
@@ -27,7 +27,7 @@
   <header class="header">
     <div class="header__headlines">
       <h1 class="header__headline headline headline--no-t-margin-upto-lg headline--sm-l-margin-from-lg">Museum Map Guide</h1>
-      <h1 class="header__headline headline headline--red headline--fw-light headline--underline-black headline--no-b-margin headline--flex-xs-b-margin-upto-lg headline--sm-l-margin-from-lg" data-bind="text: displayedCityString"></h1>
+      <h1 class="header__headline header__headline-city headline headline--red headline--fw-light headline--underline-black headline--no-b-margin headline--flex-xs-b-margin-upto-lg headline--sm-l-margin-from-lg" data-bind="text: displayedCityString, css: {'header__headline-city--visible': displayedCityVisible}"></h1>
     </div>
     <a data-bind="click: toggleSidebar" role="button" href="#" class="header__hamburger hamburger">
       <span class="hamburger__bar">&nbsp;</span>
@@ -75,5 +75,5 @@
     <li class="sidebar-list__item" data-bind="text: title, click: $root.clickLocationList, css: { 'sidebar-list__item--open': $root.listElementInfoWindowOpen($data) }"></li>
   </script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/knockout/3.4.2/knockout-min.js"></script>
-  <script src="js/app.min.ddd349c5.js"></script></body>
+  <script src="js/app.min.c0b558fc.js"></script></body>
 </html>

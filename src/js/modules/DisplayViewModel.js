@@ -58,6 +58,7 @@ class DisplayViewModel {
     });
     self.computedCityString = window.ko.observable();
     self.displayedCityString = window.ko.observable();
+    self.displayedCityVisible = window.ko.observable(false).extend({ notify: 'always' });
 
     // Form values
     self.form = {};
@@ -235,7 +236,19 @@ class DisplayViewModel {
     // Changes to apply to either mode
     this.query('');
     this.queryLiveSearchResultText('');
-    this.displayedCityString(this.computedCityString());
+    this.displayedCityVisible(false);
+
+    // Fade in loaded city name in header if change city
+    if (this.displayedCityString() !== this.computedCityString()) {
+      setTimeout(function () {
+        this.displayedCityVisible(true);
+        this.displayedCityString(this.computedCityString());
+      }.bind(this), 250);
+    // No change in city name
+    } else {
+      this.displayedCityVisible(true);
+    }
+
     // Close Modal
     modal.closeModal(modal);
   }

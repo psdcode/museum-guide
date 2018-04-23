@@ -1,9 +1,9 @@
 /* HEADER */
 
 .header {
-  /* background: url(../../../img/pic/Naha_Okinawa_Japan_Shuri-Castle-01_1x.jpg) top center no-repeat; */
+  /* background: url(../../../img/pic/Naha_Okinawa_Japan_Shuri-Castle-01_1x.jpg) top center no-repeat;
+  background-size: cover; */
 
-  /* background-size: cover; */
   position: fixed;
   text-align: center;
   height: 80px;
@@ -23,6 +23,9 @@
     height: 80px;
     width: auto;
     overflow: hidden;
+
+    /* background: url(../../../img/pic/Naha_Okinawa_Japan_Shuri-Castle-01_1x.jpg) top center no-repeat;
+    background-size: cover; */
 
     /* Extra small screen right padding adjust */
     padding: 5px 32px 5px 0;
@@ -88,6 +91,17 @@
       @mixin downToVeryVeryLarge {
         font-size: 2.7rem;
       }
+    }
+  }
+
+  &__headline-city {
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.25s ease-in;
+
+    &--visible {
+      visibility: visible;
+      opacity: 1;
     }
   }
 
