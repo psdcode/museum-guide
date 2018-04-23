@@ -1,3 +1,5 @@
+'use strict';
+
 import DisplayViewModel from './modules/DisplayViewModel';
 import GoogleMapView from './modules/GoogleMapView';
 
