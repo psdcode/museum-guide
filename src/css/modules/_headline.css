@@ -2,7 +2,6 @@
 
 .headline {
   font-weight: 600;
-  -webkit-text-stroke: 0.5px;
 
   &--no-t-margin-upto-lg {
     @mixin upToVeryLarge {
