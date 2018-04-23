@@ -2,13 +2,13 @@
 
 ## General Overview
 
-An interactive single-page [Knockout.JS](http://knockoutjs.com/) and [Google Maps](https://developers.google.com/maps/) based app guide to museums in major cities in Japan. Offers both a curated selection of ten museum locations for the three largest cities (Tokyo, Yokohama, Osaka), as well as a live search feature for all listed cities. Detailed information for each location is provided via Yelp's business directory.
+An interactive single-page [Knockout.JS](http://knockoutjs.com/) and [Google Maps](https://developers.google.com/maps/) based app guide to museums in major cities in Japan. Offers both a curated selection of ten museum locations for the three largest cities (Tokyo, Yokohama, Osaka), as well as a live search feature for all listed cities. Detailed information for each location is provided via Yelp's business directory. A dedicated cors-enabled Node server is used to make requests to Yelp's api. The app may be adapted to be used with any country and number of cities, given the appropriate model.json is provided.
 
 This project is an expanded version of my [final project](https://github.com/psdcode/fend-neighborhood-map) for Udacity's Front-End Web Developer Nanodegree.
 
 ## Access
 
-The map may be accessed at [psdcode.github.io/museum-guide/](https://psdcode.github.io/museum-guide/)
+The app may be accessed at [psdcode.github.io/museum-guide/](https://psdcode.github.io/museum-guide/).
 
 ## Local Viewing & Build Instructions
 
@@ -36,7 +36,6 @@ Alternatively, you may build the production code yourself from source.
 * [Knockout.js](http://knockoutjs.com/)
 * [Google Maps JavaScript API V3](https://developers.google.com/maps/)
 * [Yelp Fusion API 3.0](https://www.yelp.com/developers/documentation/v3)
-* [Google Fonts](https://fonts.google.com)
 * [Grunt Task Runner](https://gruntjs.com)
 * [Rollup.js](https://rollupjs.org)
 * [Babel](https://babeljs.io/)
