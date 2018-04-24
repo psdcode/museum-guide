@@ -15,16 +15,21 @@
     list-style: none;
     cursor: pointer;
     padding: 5px 3px;
-    border-bottom: 1px solid var(--listItemBorderBottom);
+    border-bottom: var(--generalBorderWidth) solid var(--listItemBorderBottomColor);
     line-height: 1.42;
-    transition: background-color 0.3s ease-out;
+    opacity: 0;
+    transition: background-color 0.3s ease-out, opacity 0.2s ease-out;
 
     &--open {
       background-color: var(--listElmntSelectedColor);
     }
 
     &:first-child {
-      border-top: 1px solid var(--listItemBorderBottom);
+      border-top: var(--generalBorderWidth) solid var(--listItemBorderBottomColor);
+    }
+
+    &--show {
+      opacity: 1;
     }
   }
 

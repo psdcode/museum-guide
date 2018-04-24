@@ -139,6 +139,10 @@ class GoogleMapView {
       });
       GoogleMapView.markers.push(newMarker);
       GoogleMapView.currentBounds.extend(newMarker.position);
+
+      // When show property will be set to true css animation to show list entry
+      // corresponding to marker will launch
+      newMarker.show = false;
     });
     // Notify current instance of DisplayViewModel that
     // google map and marker initialization is complete

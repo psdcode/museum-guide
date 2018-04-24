@@ -20,9 +20,15 @@ class DisplayViewModel {
       if (self.markersReady()) {
         self.markersObservable(GoogleMapView.markers);
         self.markersSort(self.markersObservable);
+        self.listElementsShow();
         return true;
       }
     }, self);
+    // Trigger called after a new marker is added to GoogleMapView.markers that
+    // launches visible list item CSS animation
+    self.listElementIsVisibleTrigger = window.ko.observable().extend({
+      notify: 'always'
+    });
 
     // Filter/Search query properties
     self.query = window.ko.observable('');
@@ -150,7 +156,7 @@ class DisplayViewModel {
     this.markersObservable([]);
   }
 
-  // Filter obsrvable location list and markers based on query
+  // Filter observable location list and markers based on query
   filterMarkerList (filterInput) {
     // Search query is a non-empty string
     if (filterInput !== '') {
@@ -219,6 +225,27 @@ class DisplayViewModel {
     return false;
   }
 
+  // Data-bound method to each list item, determines item visibility
+  listElementIsVisible (marker) {
+    // Trigger binding on each list element to check if to launch visible css transition
+    this.listElementIsVisibleTrigger();
+    return marker.show;
+  }
+
+  // Asynchronously trigger cascading appearance of each list
+  // item via CSS transition class
+  listElementsShow () {
+    const self = this;
+    GoogleMapView.markers.forEach(function (marker, index) {
+      window.setTimeout(function () {
+        marker.show = true;
+        // Trigger binding inside listElementIsVisible to
+        // check if to launch visible css transition
+        self.listElementIsVisibleTrigger(true);
+      }, (index + 1) * 50);
+    });
+  }
+
   loadFormData () {
     // Form radio 'Curated' mode selected
     if (this.form.selectedListMode() === 'curated') {
@@ -253,6 +280,7 @@ class DisplayViewModel {
     modal.closeModal(modal);
   }
 
+  // Initiates main app load error display
   notifyMapLoadFail (failState) {
     this.mapLoadFail(failState);
   }
@@ -264,6 +292,7 @@ class DisplayViewModel {
     });
   }
 
+  // Parse query for either filter or search mode
   queryProcessInput (queryInput) {
     queryInput = queryInput.trim();
     // Proceed with query processing only if a non-space character was added
@@ -286,6 +315,7 @@ class DisplayViewModel {
     GoogleMapView.resetMap();
   }
 
+  // Initiates manual places search
   searchPlaces (searchInput) {
     const self = this;
 
