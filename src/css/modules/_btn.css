@@ -25,7 +25,7 @@
 
   /* Do not change background color on disabled buttons when click/active */
   &:not(&--disabled):active {
-    background-color: var(--btnActive);
+    background-color: var(--btnActiveColor);
   }
 
   &--disabled {

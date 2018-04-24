@@ -6,15 +6,15 @@
   --mainBkgndColor: #f1f1f1;
   --mainElmntBorderColor: #d9d9d9;
   --listElmntSelectedColor: var(--mainElmntBorderColor);
-  --btnActive: var(--mainElmntBorderColor);
+  --btnActiveColor: var(--mainElmntBorderColor);
   --btnBorderColor: #5b5b5b;
   --modalErrorMsgBackgroundColor: var(--mainElmntBorderColor);
   --modalBorderColor: var(--btnBorderColor);
   --hamburgerColor: var(--btnBorderColor);
-  --hamburgerColorActive: var(--mainFontColor);
-  --listItemBorderBottom: var(--btnBorderColor);
+  --hamburgerActiveColor: var(--mainFontColor);
+  --listItemBorderBottomColor: var(--btnBorderColor);
   --yelpReviewFontColor: #ccc;
-  --yelpReviewFontHover: var(--btnBorderColor);
+  --yelpReviewFontHoverColor: var(--btnBorderColor);
   --headlineRedColor: #ad0101;
 
   /* Size Variables */
