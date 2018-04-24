@@ -43,8 +43,7 @@
   }
 
   .flexbox &--sm-l-margin-from-lg {
-    /* Necessary to counteract the rule
-    .flexbox .header__headline { margin: 0; } */
+    /* Necessary to counteract the rule '.flexbox .header__headline { margin: 0; }': */
     @mixin downToVeryLarge {
       margin-left: 20px;
     }
@@ -56,5 +55,9 @@
 
   &--underline-black {
     text-decoration: underline solid var(--mainFontColor);
+  }
+
+  &--opaque-bkgnd {
+    background-color: rgba(var(--mainBkgndColor), 0.7);
   }
 }
