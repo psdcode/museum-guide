@@ -30,10 +30,10 @@
   </div>
   <header class="header">
     <div class="header__headlines">
-      <h1 class="header__headline headline headline--no-t-margin-upto-lg headline--sm-l-margin-from-lg headline--opaque-bkgnd">Museum Map Guide</h1>
+      <h1 class="header__headline headline headline--no-t-margin-upto-lg headline--sm-l-margin-from-lg headline--opaque-bkgnd">Museum Map Guide</h1><br class="header__break">
       <h1 class="header__headline header__headline-city headline headline--red headline--fw-light headline--underline-black headline--no-b-margin headline--flex-xs-b-margin-upto-lg headline--sm-l-margin-from-lg headline--opaque-bkgnd" data-bind="text: displayedCityString, css: {'header__headline-city--visible': displayedCityVisible}"></h1>
     </div>
-    <a data-bind="click: toggleSidebar" role="button" href="#" class="header__hamburger hamburger">
+    <a data-bind="click: toggleSidebar" role="button" href="#" class="header__hamburger hamburger hamburger--opaque-bkgnd">
       <span class="hamburger__bar">&nbsp;</span>
       <span class="hamburger__bar">&nbsp;</span>
       <span class="hamburger__bar">&nbsp;</span>
@@ -64,7 +64,7 @@
               <input type="radio" name="locationsListType" value="liveSearch" data-bind="checked: form.selectedListMode" />Live Search<br>
             </div>
           </div>
-          <div class="form__select form__select--b-margin">
+          <div class="form__select form__select--b-margin" data-bind="visible: !mapLoadFail()">
             <span class="form__text form__text--b-margin">City:</span>
             <select name="city" data-bind="value: form.selectedCityValue, options: form.optionsCities, optionsText: 'cityString', optionsValue: 'cityValue', disable: mapLoadFail">
             </select>

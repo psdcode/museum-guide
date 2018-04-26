@@ -3,6 +3,10 @@
 .hamburger {
   text-decoration: none;
 
+  &--opaque-bkgnd {
+    background-color: rgba(var(--mainBkgndColor), 0.7);
+  }
+
   &__bar {
     background-color: var(--hamburgerColor);
     display: block;
