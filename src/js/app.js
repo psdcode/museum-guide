@@ -1,4 +1,4 @@
-'use strict';
+'use strict'; // jshint ignore:line
 
 import DisplayViewModel from './modules/DisplayViewModel';
 import GoogleMapView from './modules/GoogleMapView';
