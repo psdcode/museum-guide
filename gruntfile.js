@@ -61,6 +61,7 @@ module.exports = function (grunt) {
         globals: {
           jQuery: false
         },
+        browser: true,
         esversion: 6,
         forin: true
       },

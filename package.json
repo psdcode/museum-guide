@@ -59,5 +59,10 @@
     "postcss-import": "^11.0.0",
     "promise-polyfill": "7.1.0",
     "whatwg-fetch": "^2.0.3"
+  },
+  "eslintConfig": {
+    "env": {
+      "browser": true
+    }
   }
 }
