@@ -1,8 +1,8 @@
-// ViewModel class utilized in Knockout.js initialization and data management
 import GoogleMapView from './GoogleMapView';
 import modal from './Modal';
 
-class DisplayViewModel {
+// ViewModel class utilized in Knockout.js initialization and data management
+class KnockoutViewModel {
   constructor (currentModel) {
     const self = this;
 
@@ -62,8 +62,10 @@ class DisplayViewModel {
         return currentModel.defaultArea.country;
       }
     });
-    self.computedCityString = window.ko.observable();
-    self.displayedCityString = window.ko.observable();
+    self.computedCityString = window.ko.observable('');
+    self.displayedCityString = window.ko.observable('');
+    self.displayedCityTitleAttr = window.ko.observable('');
+    self.displayedCityBackgroundImg = window.ko.observable('none');
     self.displayedCityVisible = window.ko.observable(false).extend({ notify: 'always' });
 
     // Form values
@@ -126,7 +128,7 @@ class DisplayViewModel {
   clickLocationList (clickedListItemMarker) {
     // Hide sidebar if open to display InfoWindow
     if (window.matchMedia('(max-width: 767px)').matches) {
-      DisplayViewModel.instance.toggleSidebar();
+      KnockoutViewModel.instance.toggleSidebar();
     }
     GoogleMapView.popInfoWindow(clickedListItemMarker);
   }
@@ -265,12 +267,14 @@ class DisplayViewModel {
     this.queryLiveSearchResultText('');
     this.displayedCityVisible(false);
 
-    // Fade in loaded city name in header if change city
+    // Fade in loaded city name & image in header if change city
     if (this.displayedCityString() !== this.computedCityString()) {
       setTimeout(function () {
+        // displayedCityVisible affects both city text element and backgroung city image element
         this.displayedCityVisible(true);
         this.displayedCityString(this.computedCityString());
-      }.bind(this), 250);
+        this.setBackgroundImg(this.form.selectedCityObj().img);
+      }.bind(this), 300);
     // No change in city name
     } else {
       this.displayedCityVisible(true);
@@ -342,7 +346,14 @@ class DisplayViewModel {
     }
   }
 
-  // Allows GoogleMapView class to inform DisplayViewModel of openInfoWindow on
+  setBackgroundImg (cityObjImg) {
+    let headlinesBackgroundImage = `${cityObjImg.file}.${cityObjImg.ext}`;
+    this.displayedCityTitleAttr(cityObjImg.title);
+    // this.displayedCityBackgroundImg('url(../../img/pic/smalltop.png)');
+    this.displayedCityBackgroundImg(`url(img/model/${headlinesBackgroundImage})`);
+  }
+
+  // Allows GoogleMapView class to inform KnockoutViewModel of openInfoWindow on
   // marker
   setSelectedMarker (marker) {
     this.selectedMarker(marker);
@@ -382,4 +393,4 @@ class DisplayViewModel {
   }
 }
 
-export default DisplayViewModel;
+export default KnockoutViewModel;
