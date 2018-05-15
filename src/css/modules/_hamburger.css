@@ -18,7 +18,7 @@
     margin-bottom: 3px;
 
     /* Size setting for all other screens */
-    @mixin downToVerySmall {
+    @mixin downToVeryVerySmall {
       width: 21.7px;
       height: 5px;
       margin-bottom: 4px;
