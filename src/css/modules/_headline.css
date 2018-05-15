@@ -58,6 +58,6 @@
   }
 
   &--opaque-bkgnd {
-    background-color: rgba(var(--mainBkgndColor), 0.7);
+    background-color: rgba(var(--mainBkgndColor), 0.75);
   }
 }
