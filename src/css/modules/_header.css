@@ -1,23 +1,11 @@
 /* HEADER */
 
 .header {
-  /* background-image: linear-gradient(rgba(var(--mainBkgndColor), 0), rgba(var(--mainBkgndColor), 1)), url(../../../img/pic/smalltop.png);
-  background-position: top center;
-  background-repeat: no-repeat;
-  background-size: cover;
-
-  @mixin downToSidebarHide {
-    background-image: linear-gradient(90deg, rgba(var(--mainBkgndColor), 0), rgba(var(--mainBkgndColor), 1) 5%), url(../../../img/pic/smalltop.png);
-
-    background-position: top left;
-    background-repeat: no-repeat;
-  } */
-
   position: fixed;
   text-align: center;
   height: 80px;
   top: 0;
-  border-bottom: 1px solid var(--mainElmntBorderColor);
+  border-bottom: var(--generalBorderWidth) solid var(--mainElmntBorderColor);
   right: 0;
   left: 0;
   z-index: 2;
@@ -39,23 +27,12 @@
   }
 
   &__headlines {
+    position: relative;
     height: 80px;
     width: auto;
     max-width: 1140px;
     overflow: hidden;
-    background-image: url(../../../img/pic/smalltop.png);
-    background-position: top center;
-    background-repeat: no-repeat;
-    /* background-size: contain; */
-
-    @mixin downToSidebarHide {
-      background-image: url(../../../img/pic/smalltop.png);
-      background-position: top left;
-    }
-
-    @mixin downToVeryLarge {
-      background-image: linear-gradient(90deg, blue /*rgba(var(--mainBkgndColor), 0)*/, rgba(var(--mainBkgndColor), 1) 95%), url(../../../img/pic/smalltop.png);
-    }
+    border-bottom: var(--generalBorderWidth) solid var(--mainElmntBorderColor);
 
     /* Extra small screen right padding adjust */
     padding: 5px 32px 5px 0;
@@ -82,14 +59,53 @@
     }
   }
 
+  &__background-city {
+    position: absolute;
+    top: 0;
+    right: 0;
+    left: 0;
+    bottom: 0;
+    overflow: hidden;
+    background-position: bottom center;
+    background-repeat: no-repeat;
+    z-index: 9;
+    opacity: 0;
+    transition: opacity 0.3s ease-in;
+
+    &--visible {
+      opacity: 1;
+    }
+
+    @mixin downToSidebarHide {
+      /* background-image: linear-gradient(90deg, rgba(var(--mainBkgndColor), 1), rgba(var(--mainBkgndColor), 0), rgba(var(--mainBkgndColor), 0), rgba(var(--mainBkgndColor), 1)), url(../../../img/pic/smalltop.png); */
+    }
+
+    @mixin downToVeryLarge {
+      /* background-image: linear-gradient(90deg, rgba(var(--mainBkgndColor), 1), rgba(var(--mainBkgndColor), 0), rgba(var(--mainBkgndColor), 0), rgba(var(--mainBkgndColor), 1)), url(../../../img/pic/smalltop.png); */
+    }
+  }
+
+  &__background-gradient {
+    position: absolute;
+    top: 0;
+    right: 0;
+    left: 0;
+    bottom: 0;
+    z-index: 10;
+    background-position: bottom center;
+    background-repeat: no-repeat;
+    background-image: linear-gradient(90deg, rgba(var(--mainBkgndColor), 1), rgba(var(--mainBkgndColor), 1), rgba(var(--mainBkgndColor), 0.9), rgba(var(--mainBkgndColor), 0.2), rgba(var(--mainBkgndColor), 0), rgba(var(--mainBkgndColor), 0), rgba(var(--mainBkgndColor), 0), rgba(var(--mainBkgndColor), 0), rgba(var(--mainBkgndColor), 0), rgba(var(--mainBkgndColor), 0), rgba(var(--mainBkgndColor), 0), rgba(var(--mainBkgndColor), 0), rgba(var(--mainBkgndColor), 0.2), rgba(var(--mainBkgndColor), 0.9), rgba(var(--mainBkgndColor), 1), rgba(var(--mainBkgndColor), 1)), linear-gradient(0deg, rgba(var(--mainBkgndColor), 1), rgba(var(--mainBkgndColor), 0.5), rgba(var(--mainBkgndColor), 0) 16%), linear-gradient(0deg, rgba(var(--mainBkgndColor), 0), rgba(var(--mainBkgndColor), 0.3) 87%, rgba(var(--mainBkgndColor), 1));
+  }
+
   &__headline {
     display: inline-block;
-    font-size: 1.595rem;
     margin: 3px 0 0;
     padding: 0.1em 0.1em 0.045em;
+    z-index: 12;
+    font-size: 1.595rem;
     line-height: 1.08;
 
-    @media screen and (min-width: 440px) {
+    @media screen and (min-width: 470px) {
       font-size: 2rem;
       line-height: 0.98;
     }
@@ -134,7 +150,7 @@
   &__headline-city {
     opacity: 0;
     visibility: hidden;
-    transition: all 0.25s ease-in;
+    transition: all 0.3s ease-in;
 
     &--visible {
       visibility: visible;
@@ -151,7 +167,7 @@
     padding: 5px 2px;
 
     /* Offset for very small screens */
-    @mixin downToVerySmall {
+    @mixin downToVeryVerySmall {
       right: 0;
       padding: 5px;
     }
