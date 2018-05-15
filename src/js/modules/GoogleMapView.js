@@ -1,5 +1,5 @@
 import {mapStyle} from './mapStyle';
-import DisplayViewModel from './DisplayViewModel';
+import KnockoutViewModel from './KnockoutViewModel';
 import GoogleMapPlacesSearch from './GoogleMapPlacesSearch';
 import yelp from './yelp';
 import spinnerHtmlString from './spinner';
@@ -10,7 +10,7 @@ class GoogleMapView {
   static closeInfoWindow () {
     GoogleMapView.mainInfoWindow.close();
     GoogleMapView.mainInfoWindow.marker = undefined;
-    DisplayViewModel.instance.setSelectedMarker(undefined);
+    KnockoutViewModel.instance.setSelectedMarker(undefined);
   }
 
   static deleteMarkers () {
@@ -19,7 +19,7 @@ class GoogleMapView {
       marker.setMap(undefined);
     });
     GoogleMapView.markers = [];
-    DisplayViewModel.instance.clearMarkersObservable();
+    KnockoutViewModel.instance.clearMarkersObservable();
 
     // Reset bounds
     GoogleMapView.currentBounds = new window.google.maps.LatLngBounds();
@@ -27,8 +27,8 @@ class GoogleMapView {
 
   // maps.googleapis.com script initial loading error callback
   static errorLoadMap () {
-    if (DisplayViewModel.instance) {
-      DisplayViewModel.instance.notifyMapLoadFail(true);
+    if (KnockoutViewModel.instance) {
+      KnockoutViewModel.instance.notifyMapLoadFail(true);
     }
   }
 
@@ -80,7 +80,7 @@ class GoogleMapView {
     });
     GoogleMapView.mainInfoWindow.addListener('closeclick', function () {
       GoogleMapView.mainInfoWindow.marker = undefined;
-      DisplayViewModel.instance.setSelectedMarker(undefined);
+      KnockoutViewModel.instance.setSelectedMarker(undefined);
     });
   }
 
@@ -114,6 +114,8 @@ class GoogleMapView {
       if (newMode === 'curated') {
         // Create array of Markers from provided location info
         GoogleMapView.loadMarkers(modelCityObj.locations);
+        // Hide list view if open
+        GoogleMapView.hideListView();
       }
     }
 
@@ -144,10 +146,10 @@ class GoogleMapView {
       // corresponding to marker will launch
       newMarker.show = false;
     });
-    // Notify current instance of DisplayViewModel that
+    // Notify current instance of KnockoutViewModel that
     // google map and marker initialization is complete
-    DisplayViewModel.instance.markersReady('');
-    DisplayViewModel.instance.markersReady(GoogleMapView.modelCityObj.cityName);
+    KnockoutViewModel.instance.markersReady('');
+    KnockoutViewModel.instance.markersReady(GoogleMapView.modelCityObj.cityName);
   }
 
   static loadPlacesSearchResults (results, searchHash) {
@@ -155,27 +157,27 @@ class GoogleMapView {
     if (searchHash === GoogleMapView.currentSearchSessionHash) {
       // Search error: display generic error message
       if (results instanceof Error) {
-        DisplayViewModel.instance.searchPlacesCompleted('error');
+        KnockoutViewModel.instance.searchPlacesCompleted('error');
 
       // No results
       } else if (results.length === 0) {
-        DisplayViewModel.instance.searchPlacesCompleted('noresults');
+        KnockoutViewModel.instance.searchPlacesCompleted('noresults');
 
       // At least one successful returned result
       } else {
         GoogleMapView.deleteMarkers();
         GoogleMapView.loadMarkers(results);
         GoogleMapView.map.fitBounds(GoogleMapView.currentBounds);
-        // Signal DisplayViewModel search is successful and complete
-        DisplayViewModel.instance.searchPlacesCompleted('success');
+        // Signal KnockoutViewModel search is successful and complete
+        KnockoutViewModel.instance.searchPlacesCompleted('success');
       }
     }
   }
 
   static onWindowResize () {
-    if (DisplayViewModel.instance) {
+    if (KnockoutViewModel.instance) {
       // Get list of current visible markers
-      const visibleMarkers = DisplayViewModel.instance.getVisibleMarkers();
+      const visibleMarkers = KnockoutViewModel.instance.getVisibleMarkers();
 
       // If > 1 marker fit bounds based on all of them
       if (visibleMarkers.length > 1) {
@@ -222,8 +224,8 @@ class GoogleMapView {
     if (GoogleMapView.mainInfoWindow.marker !== marker) {
       GoogleMapView.mainInfoWindow.marker = marker;
 
-      // Let DisplayViewModel know that marker has been selected
-      DisplayViewModel.instance.setSelectedMarker(marker);
+      // Let KnockoutViewModel know that marker has been selected
+      KnockoutViewModel.instance.setSelectedMarker(marker);
 
       // Center on marker & move up map to allow for info window display
       GoogleMapView.map.panTo(marker.position);
@@ -297,7 +299,7 @@ class GoogleMapView {
           .setAttribute('data-bind', 'click: clickPrevArrow, ' + dataBindStyle);
         arrowBtnsDiv.children[1]
           .setAttribute('data-bind', 'click: clickNextArrow, ' + dataBindStyle);
-        window.ko.applyBindings(DisplayViewModel.instance, arrowBtnsDiv);
+        window.ko.applyBindings(KnockoutViewModel.instance, arrowBtnsDiv);
       }
     }
 
@@ -360,8 +362,8 @@ class GoogleMapView {
     }
     GoogleMapView.mainInfoWindow.marker = undefined;
     GoogleMapView.mainInfoWindow.close();
-    // Let DisplayViewModel know to unselect list-item
-    DisplayViewModel.instance.setSelectedMarker(undefined);
+    // Let KnockoutViewModel know to unselect list-item
+    KnockoutViewModel.instance.setSelectedMarker(undefined);
   }
 
   // Main publically accessible module

@@ -1,6 +1,6 @@
 'use strict'; // jshint ignore:line
 
-import DisplayViewModel from './modules/DisplayViewModel';
+import KnockoutViewModel from './modules/KnockoutViewModel';
 import GoogleMapView from './modules/GoogleMapView';
 
 // Import locally stored model
@@ -26,13 +26,13 @@ window.fetch(`${GoogleMapView.corsServer}/wakeup`, {
 GoogleMapView.defaultPosition = currentModel.defaultArea.position;
 GoogleMapView.defaultType = currentModel.defaultArea.type;
 
-// Knockout.js DisplayViewModel initialization with model
+// Knockout.js KnockoutViewModel initialization with model
 if (window.ko) {
   // Defer Updates turns on asynchronous updating to avoid
   // redundant intermediate updates of observables.
   window.ko.options.deferUpdates = true;
-  DisplayViewModel.instance = new DisplayViewModel(currentModel);
-  window.ko.applyBindings(DisplayViewModel.instance);
+  KnockoutViewModel.instance = new KnockoutViewModel(currentModel);
+  window.ko.applyBindings(KnockoutViewModel.instance);
 }
 
 // GruntReplacePosition
