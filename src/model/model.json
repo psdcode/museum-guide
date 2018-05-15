@@ -16,6 +16,11 @@
       "country": "Japan",
       "countrycode": "jp",
       "localLang": "東京都",
+      "img": {
+        "file": "Tokyo_Diet_of_Japan_Kokkai_2009",
+        "ext": "jpg",
+        "title": "National Diet Building of Japan by Wiiii, CC-SA 3.0, https://commons.wikimedia.org/wiki/File:Diet_of_Japan_Kokkai_2009.jpg"
+      },
       "position": {
         "lat": 35.683333,
         "lng": 139.683333
@@ -107,6 +112,11 @@
       "country": "Japan",
       "countrycode": "jp",
       "localLang": "横浜市",
+      "img": {
+        "file": "Yokohama_Kanagawa_Prefectural_Office",
+        "ext": "jpg",
+        "title": "Kanagawa Prefectural Office by Wiiii, CC-SA 3.0, https://en.wikipedia.org/wiki/File:Kanagawa_Prefectural_Office.jpg"
+      },
       "position": {
         "lat": 35.444167,
         "lng": 139.638056
@@ -198,6 +208,11 @@
       "country": "Japan",
       "countrycode": "jp",
       "localLang": "大阪市",
+      "img": {
+        "file": "Osaka_jo_Castle",
+        "ext": "jpg",
+        "title": "Osaka jo Castle by Martinp1, CC BY-SA 3.0, https://en.wikipedia.org/wiki/File:Osaka_jo_Castle.jpg"
+      },
       "position": {
         "lat": 34.693889,
         "lng": 135.502222
@@ -289,6 +304,11 @@
       "country": "Japan",
       "countrycode": "jp",
       "localLang": "名古屋市",
+      "img": {
+        "file": "Nagoya_Castle_with_Cherry_blossoms_31_Mar,_2016_-_panoramio",
+        "ext": "jpg",
+        "title": "桜と名古屋城(Nagoya Castle with Cherry blossoms) 31 Mar, 2016 by Hiroaki Kaneko, CC BY-SA 3.0, https://en.wikipedia.org/wiki/File:%E6%A1%9C%E3%81%A8%E5%90%8D%E5%8F%A4%E5%B1%8B%E5%9F%8E(Nagoya_Castle_with_Cherry_blossoms)_31_Mar,_2016_-_panoramio.jpg"
+      },
       "position": {
         "lat": 35.183333,
         "lng": 136.9
@@ -300,6 +320,11 @@
       "country": "Japan",
       "countrycode": "jp",
       "localLang": "札幌市",
+      "img": {
+        "file": "Sapporo_Hokkaido_Prefectural_Office02s5s4272",
+        "ext": "jpg",
+        "title": "Hokkaido Prefectural Office by 663highland, CC BY-SA 3.0, https://en.wikipedia.org/wiki/File:Hokkaido_Prefectural_Office02s5s4272.jpg"
+      },
       "position": {
         "lat": 43.066667,
         "lng": 141.35
@@ -311,6 +336,11 @@
       "country": "Japan",
       "countrycode": "jp",
       "localLang": "神戸市",
+      "img": {
+        "file": "Kobe_port_tower11s3200",
+        "ext": "jpg",
+        "title": "Kobe Port Tower in the Kobe harbor by 663highland, CC BY-SA 3.0, https://en.wikipedia.org/wiki/File:Kobe_port_tower11s3200.jpg"
+      },
       "position": {
         "lat": 34.69,
         "lng": 135.195556
@@ -322,6 +352,11 @@
       "country": "Japan",
       "countrycode": "jp",
       "localLang": "京都市",
+      "img": {
+        "file": "Kyoto_Temple_of_the_Golden_Pavilion",
+        "ext": "jpg",
+        "title": "Temple of the Golden Pavilion by Fg2, https://en.wikipedia.org/wiki/File:Kinkaku3402CBcropped.jpg"
+      },
       "position": {
         "lat": 35.011667,
         "lng": 135.768333
@@ -333,6 +368,11 @@
       "country": "Japan",
       "countrycode": "jp",
       "localLang": "福岡市",
+      "img": {
+        "file": "Fukuoka_Hakata_gion_yamakasa_2006_02",
+        "ext": "jpg",
+        "title": "Kakiyama, Hakata Gion Yamakasa by Pontafon, CC BY-SA 3.0, https://en.wikipedia.org/wiki/File:Hakata_gion_yamakasa_2006_02.jpg"
+      },
       "position": {
         "lat": 33.583333,
         "lng": 130.4
@@ -344,6 +384,11 @@
       "country": "Japan",
       "countrycode": "jp",
       "localLang": "川崎市",
+      "img": {
+        "file": "Kawasaki_Daishi_Main_Hall",
+        "ext": "jpg",
+        "title": "The Main Hall of Heiken-ji (Kawasaki Daishi) temple by ペン太, CC BY-SA 3.0, https://commons.wikimedia.org/wiki/File:Kawasaki_Daishi_Main_Hall.jpg"
+      },
       "position": {
         "lat": 35.516667,
         "lng": 139.7
@@ -355,6 +400,11 @@
       "country": "Japan",
       "countrycode": "jp",
       "localLang": "さいたま市",
+      "img": {
+        "file": "Saitama_Front_shrine_of_the_Hikawa_shrine",
+        "ext": "jpg",
+        "title": "Front of the Hikawa shrineby Ocdp, CC BY-SA 3.0, https://commons.wikimedia.org/wiki/File:Front_shrine_of_the_Hikawa_shrine.jpg"
+      },
       "position": {
         "lat": 35.861389,
         "lng": 139.645556
@@ -366,6 +416,11 @@
       "country": "Japan",
       "countrycode": "jp",
       "localLang": "広島市",
+      "img": {
+        "file": "Hiroshima_Peace_Memorial_2008_02",
+        "ext": "jpg",
+        "title": "Hiroshima Peace Memorial by GFDL,CC BY-SA-2.1-JP, https://commons.wikimedia.org/wiki/File:Hiroshima_Peace_Memorial_2008_02.JPG"
+      },
       "position": {
         "lat": 34.385278,
         "lng": 132.455278
@@ -377,6 +432,11 @@
       "country": "Japan",
       "countrycode": "jp",
       "localLang": "仙台市",
+      "img": {
+        "file": "Sendai_Zuiho-den",
+        "ext": "jpg",
+        "title": "Zuiho-den in Sendai by 663highland, CC BY-SA 3.0, https://en.wikipedia.org/wiki/File:Zuiho-den17s3872.jpg"
+      },
       "position": {
         "lat": 38.268222,
         "lng": 140.869417
@@ -388,6 +448,11 @@
       "country": "Japan",
       "countrycode": "jp",
       "localLang": "北九州市",
+      "img": {
+        "file": "Kitakyushu_Mojiko_Station_02",
+        "ext": "jpg",
+        "title": "Mojiko Station by Hide-sp, CC BY-SA 3.0, https://commons.wikimedia.org/wiki/File:Mojiko_Station_02.JPG"
+      },
       "position": {
         "lat": 33.883333,
         "lng": 130.883333
@@ -399,6 +464,11 @@
       "country": "Japan",
       "countrycode": "jp",
       "localLang": "千葉市",
+      "img": {
+        "file": "Chiba_Makuhari_Oka1",
+        "ext": "jpg",
+        "title": "Downtown of Chiba Makuhari by Okajun, CC BY-SA 3.0, https://commons.wikimedia.org/wiki/File:Chiba_Makuhari_Oka1.jpg"
+      },
       "position": {
         "lat": 35.607278,
         "lng": 140.106361
