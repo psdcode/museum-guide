@@ -4,6 +4,7 @@ class Modal {
   constructor () {
     // Elements
     this.modalElement = document.getElementsByClassName('modal')[0];
+    this.modalElementHeadlines = document.getElementsByClassName('modal__headlines')[0];
     this.modalElementContent = document.getElementsByClassName('modal__content')[0];
     this.modalElementCloseBtn = document.getElementsByClassName('modal__close-btn')[0];
     this.formLoadingScreen = document.getElementsByClassName('form__load-screen')[0];
@@ -28,6 +29,7 @@ class Modal {
 
   launchFirstModal () {
     this.modalElementContent.classList.remove('modal__content--hidden');
+    this.modalElementHeadlines.classList.add('modal__headlines--visible-background');
   }
 
   openFormLoadingMode () {
