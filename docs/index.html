@@ -7,11 +7,11 @@
   <meta name="description" content="Museum Map Guide">
   <title>Museum Map Guide</title>
   <script defer src="https://maps.googleapis.com/maps/api/js?libraries=places&key=AIzaSyCc5fWtTXIZ1Xoa3A6waJR-lLHNhXNfzBk&v=3&callback=museumMapApp.initMap" onerror="museumMapApp.errorLoadMap()"></script>
-  <script src="js/vendor.min.0dcd5a68.js"></script>
+  <script src="js/vendor.min.28e83618.js"></script>
   <link href="https://fonts.googleapis.com/css?family=Spectral+SC:400,600" rel="stylesheet">
   <link rel="shortcut icon" href="img/favicon.ico" type="image/x-icon">
 	<link rel="icon" href="img/favicon.ico" type="image/x-icon">
-  <link rel="stylesheet" href="css/styles.min.d1f74b6e.css">
+  <link rel="stylesheet" href="css/styles.min.70896bd3.css">
 </head>
 <body>
   <div class="sidebar sidebar-top">
@@ -25,9 +25,12 @@
     <p class="sidebar-list__live-search-status" data-bind="visible: queryLiveSearchResultText, text: queryLiveSearchResultText"></p>
   </div>
   <header class="header">
+
     <div class="header__headlines">
+      <div class="header__background-city" data-bind="css: { 'header__background-city--visible': displayedCityVisible }, style: { backgroundImage: displayedCityBackgroundImg }"></div>
+      <div class="header__background-gradient" data-bind="attr: { title: displayedCityTitleAttr }"></div>
       <h1 class="header__headline headline headline--no-t-margin-upto-lg headline--sm-l-margin-from-lg headline--opaque-bkgnd">Museum Map Guide</h1><br class="header__break">
-      <h1 class="header__headline header__headline-city headline headline--red headline--fw-light headline--underline-black headline--no-b-margin headline--flex-xs-b-margin-upto-lg headline--sm-l-margin-from-lg headline--opaque-bkgnd" data-bind="text: displayedCityString, css: {'header__headline-city--visible': displayedCityVisible}"></h1>
+      <h1 class="header__headline header__headline-city headline headline--red headline--fw-light headline--underline-black headline--no-b-margin headline--flex-xs-b-margin-upto-lg headline--sm-l-margin-from-lg headline--opaque-bkgnd" data-bind="text: displayedCityString, css: { 'header__headline-city--visible': displayedCityVisible }"></h1>
     </div>
     <a data-bind="click: toggleSidebar" role="button" href="#" class="header__hamburger hamburger hamburger--opaque-bkgnd">
       <span class="hamburger__bar">&nbsp;</span>
@@ -40,9 +43,10 @@
     <div class="wrapper wrapper--w-80">
       <div class="modal__content modal__content--hidden">
         <a href="#" class="modal__close-btn modal__close-btn--hidden btn" data-bind="click: closeModal" role="button"><span class="modal__close-btn-x">X</span></a>
-        <div class="modal__headlines">
-          <h1 class="modal__headline headline headline--no-b-margin headline--sm-t-margin">Museum Map Guide</h1>
-          <h1 class="modal__headline headline headline--no-t-margin headline--red headline--sm-b-margin headline--underline-black" data-bind="text: displayedCountryString"></h1>
+        <div class="modal__headlines" title="Palace building of Shuri Castle, Photo by CEphoto, Uwe Aranas, https://en.wikipedia.org/wiki/File:Naha_Okinawa_Japan_Shuri-Castle-01.jpg">
+          <h1 class="modal__headline headline headline--no-b-margin headline--sm-t-margin headline--opaque-bkgnd">Museum Map Guide</h1>
+          <br>
+          <h1 class="modal__headline headline headline--no-t-margin headline--red headline--sm-b-margin headline--underline-black headline--opaque-bkgnd" data-bind="text: displayedCountryString"></h1>
         </div>
         <form class="modal__form form" data-bind="submit: submitModal">
           <div class="form__load-screen">
@@ -75,5 +79,5 @@
     <li class="sidebar-list__item" data-bind="text: title, click: $root.clickLocationList, css: { 'sidebar-list__item--open': $root.listElementInfoWindowOpen($data), 'sidebar-list__item--show': $root.listElementIsVisible($data) }"></li>
   </script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/knockout/3.4.2/knockout-min.js"></script>
-  <script src="js/app.min.e1ea0189.js"></script></body>
+  <script src="js/app.min.c91babaf.js"></script></body>
 </html>

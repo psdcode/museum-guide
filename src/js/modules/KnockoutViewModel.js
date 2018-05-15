@@ -347,7 +347,7 @@ class KnockoutViewModel {
   }
 
   setBackgroundImg (cityObjImg) {
-    let headlinesBackgroundImage = `${cityObjImg.file}.${cityObjImg.ext}`;
+    let headlinesBackgroundImage = `${cityObjImg.file + '-lg_1x'}.${cityObjImg.ext}`;
     this.displayedCityTitleAttr(cityObjImg.title);
     // this.displayedCityBackgroundImg('url(../../img/pic/smalltop.png)');
     this.displayedCityBackgroundImg(`url(img/model/${headlinesBackgroundImage})`);
