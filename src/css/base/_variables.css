@@ -21,4 +21,7 @@
   --btnBorderWidth: 2px;
   --btnBorderRadius: 8px;
   --generalBorderWidth: 1px;
+
+  /* Misc Variables */
+  --modalLinGradient: linear-gradient(90deg, rgba(var(--mainBkgndColor), 1), rgba(var(--mainBkgndColor), 0.2), rgba(var(--mainBkgndColor), 0), rgba(var(--mainBkgndColor), 0), rgba(var(--mainBkgndColor), 0.2), rgba(var(--mainBkgndColor), 1)), linear-gradient(0deg, rgba(var(--mainBkgndColor), 1), rgba(var(--mainBkgndColor), 0.5), rgba(var(--mainBkgndColor), 0) 16%), linear-gradient(0deg, rgba(var(--mainBkgndColor), 0), rgba(var(--mainBkgndColor), 0.4) 75%, rgba(var(--mainBkgndColor), 1));
 }
