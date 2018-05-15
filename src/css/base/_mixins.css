@@ -1,7 +1,13 @@
 /* MIXINS */
 
-@define-mixin downToVerySmall {
+@define-mixin downToVeryVerySmall {
   @media (min-width: 330px) {
+    @mixin-content;
+  }
+}
+
+@define-mixin downToVerySmall {
+  @media (min-width: 386px) {
     @mixin-content;
   }
 }
@@ -19,19 +25,19 @@
 }
 
 @define-mixin downToVeryLarge {
-  @media (min-width: 1168px) {
+  @media (min-width: 1200px) {
     @mixin-content;
   }
 }
 
 @define-mixin upToVeryLarge {
-  @media (max-width: 1167px) {
+  @media (max-width: 1199px) {
     @mixin-content;
   }
 }
 
 @define-mixin downToVeryVeryLarge {
-  @media (min-width: 1280px) {
+  @media (min-width: 1300px) {
     @mixin-content;
   }
 }
