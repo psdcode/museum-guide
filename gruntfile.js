@@ -16,19 +16,27 @@ module.exports = function (grunt) {
     },
 
     copy: {
-      build: {
+      prod: {
         files: [{
           expand: true,
           cwd: paths.srcDir,
-          src: ['img/**'],
+          src: ['img/**/*', '!img/model/**/*'],
           dest: paths.prodDir
+        }]
+      },
+      tempImg: {
+        files: [{
+          expand: true,
+          flatten: true,
+          src: ['temp/img/model/d_im/*.jpg'],
+          dest: paths.prodDir + 'img/model/'
         }]
       },
       dev: {
         files: [{
           expand: true,
           cwd: paths.srcDir,
-          src: ['img/**/*', 'model/**/*', 'index.html'],
+          src: ['img/**/*', '!img/model/**/*', 'model/**/*', 'index.html'],
           dest: paths.prodDir
         }]
       }
@@ -40,6 +48,9 @@ module.exports = function (grunt) {
       },
       postuglify: {
         src: [paths.prodDirJs + 'app.js', paths.prodDirJs + 'vendor.js']
+      },
+      preImgModelProcess: {
+        src: ['temp/img']
       }
     },
 
@@ -50,6 +61,17 @@ module.exports = function (grunt) {
             paths.prodDirJs + '*.js',
             paths.prodDirCss + '*.css'
           ]
+        }]
+      }
+    },
+
+    imagemin: {
+      dynamic: {
+        files: [{
+          expand: true,
+          flatten: true,
+          src: 'temp/img/model/c_retina/*.jpg',
+          dest: 'temp/img/model/d_im/'
         }]
       }
     },
@@ -72,10 +94,10 @@ module.exports = function (grunt) {
       dist: {
         crawl: true,
         files: {
-          src: [paths.prodDirJs + '**/*.js', paths.prodDirCss + '**/*.css']
+          src: [paths.prodDirJs + 'app.js', paths.prodDirCss + '**/*.css']
         },
         customTests: [],
-        dest: paths.srcDir + '/temp/modernizr.js',
+        dest: 'temp/modernizr.js',
         options: [
           'setClasses'
         ],
@@ -152,6 +174,58 @@ module.exports = function (grunt) {
             dest: paths.prodDirJs
           }
         ]
+      }
+    },
+
+    responsive_images: {
+      options: {
+        engine: 'im'
+      },
+      retina: {
+        options: {
+          rename: false,
+          sizes: [{
+            width: '50%',
+            suffix: '_1x'
+          },
+          {
+            width: '100%',
+            suffix: '_x2'
+          }]
+        },
+        files: [{
+          expand: true,
+          flatten: true,
+          src: 'temp/img/model/b_crop/*.jpg',
+          dest: 'temp/img/model/c_retina/'
+        }]
+      },
+      crop: {
+        options: {
+          sizes: [{
+            aspectRatio: false,
+            height: 160,
+            width: 1534,
+            name: 'md'
+          },
+          {
+            height: '100%',
+            width: '100%',
+            name: 'lg'
+          },
+          {
+            aspectRatio: false,
+            height: 160,
+            width: 1000,
+            name: 'sm'
+          }]
+        },
+        files: [{
+          expand: true,
+          flatten: true,
+          src: paths.srcDir + 'img/model/*.jpg',
+          dest: 'temp/img/model/b_crop/'
+        }]
       }
     },
 
@@ -246,24 +320,34 @@ module.exports = function (grunt) {
     'jshint',
     'stylelint',
     'clean:prebuild',
-    'copy:build',
-    'rollup',
+    'copy:prod',
+    'copy:tempImg',
+    'rollup:app',
     'replace',
+    'postcss:prod',
+    'modernizr',
+    'rollup:vendor',
     'uglify',
     'clean:postuglify',
     'processhtml',
-    'postcss:prod',
     'filerev',
-    'usemin',
-    'modernizr'
+    'usemin'
   ]);
 
   grunt.registerTask('dev', [
     'clean:prebuild',
     'copy:dev',
+    'copy:tempImg',
     'rollup',
     'replace',
     'postcss:dev'
+  ]);
+
+  grunt.registerTask('modelImgProcess', [
+    'clean:preImgModelProcess',
+    'responsive_images:crop',
+    'responsive_images:retina',
+    'imagemin'
   ]);
 
   grunt.registerTask('watchAll', [
