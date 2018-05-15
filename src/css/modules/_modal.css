@@ -23,9 +23,73 @@
     transform: scale(1.125);
   }
 
-  &__headline {
-    font-size: 1.875rem;
+  &__headlines {
+    overflow: hidden;
     text-align: center;
+    background-position: bottom center;
+    background-repeat: no-repeat;
+    background-image: var(--modalLinGradient);
+    transition: opacity 0.35s ease-out;
+    opacity: 0;
+
+    &--visible-background {
+      opacity: 1;
+      background-image: var(--modalLinGradient), url('../img/naha_okinawa_japan_shuri-castle-sm_1x.jpg');
+    }
+
+    @mixin downToSmall {
+      &--visible-background {
+        opacity: 1;
+        background-image: var(--modalLinGradient), url('../img/naha_okinawa_japan_shuri-castle-md_1x.jpg');
+      }
+    }
+
+    @mixin downToSidebarHide {
+      &--visible-background {
+        opacity: 1;
+        background-image: var(--modalLinGradient), url('../img/naha_okinawa_japan_shuri-castle-lg_1x.jpg');
+      }
+    }
+
+    @media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+      &--visible-background {
+        opacity: 1;
+        background-image: var(--modalLinGradient), url('../img/naha_okinawa_japan_shuri-castle-sm_2x.jpg');
+      }
+
+      @mixin downToSmall {
+        &--visible-background {
+          opacity: 1;
+          background-image: var(--modalLinGradient), url('../img/naha_okinawa_japan_shuri-castle-md_2x.jpg');
+        }
+      }
+
+      @mixin downToSidebarHide {
+        &--visible-background {
+          opacity: 1;
+          background-image: var(--modalLinGradient), url('../img/naha_okinawa_japan_shuri-castle-lg_2x.jpg');
+        }
+      }
+    }
+  }
+
+  &__headline {
+    display: inline-block;
+    padding: 0 0.125em;
+    text-align: center;
+    font-size: 1.4rem;
+
+    @mixin downToVeryVerySmall {
+      font-size: 1.5rem;
+    }
+
+    @mixin downToVerySmall {
+      font-size: 1.6rem;
+    }
+
+    @media (min-width: 465px) {
+      font-size: 1.8rem;
+    }
 
     @mixin downToSmall {
       font-size: 2.5rem;
@@ -34,21 +98,9 @@
     @mixin downToSidebarHide {
       font-size: 3.125rem;
     }
-
-    @media screen and (min-width: 1120px) {
-      font-size: 3.3rem;
-    }
   }
 
   &__content {
-    /* "Photo by CEphoto, Uwe Aranas" */
-
-    /* background: url(../../../img/pic/Naha_Okinawa_Japan_Shuri-Castle-01_1x.jpg) top center no-repeat; */
-
-    /* background-image: -webkit-image-set(url(../../../img/pic/Naha_Okinawa_Japan_Shuri-Castle-01_1x.jpg) 1x, url(../../../img/pic/Naha_Okinawa_Japan_Shuri-Castle-01_2x.jpg) 2x); */
-
-    /* background-size: cover; */
-
     /* always cover containing div */
     position: absolute;
     width: 100%;
