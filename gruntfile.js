@@ -332,7 +332,7 @@ module.exports = function (grunt) {
 
   require('load-grunt-tasks')(grunt);
 
-  grunt.registerTask('prod', [
+  grunt.registerTask('prodnoimg', [
     'jshint',
     'stylelint',
     'clean:prebuild',
@@ -367,9 +367,9 @@ module.exports = function (grunt) {
     'clean:postImgModelProcess'
   ]);
 
-  grunt.registerTask('fullProd', [
+  grunt.registerTask('prod', [
     'modelImgProcess',
-    'prod'
+    'prodnoimg'
   ]);
 
   grunt.registerTask('watchAll', [
