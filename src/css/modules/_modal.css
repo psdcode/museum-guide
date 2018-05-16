@@ -24,30 +24,32 @@
   }
 
   &__headlines {
+    z-index: 15;
+    position: relative;
     overflow: hidden;
     text-align: center;
+    border-bottom: 1px solid var(--mainBkgndColor);
     background-position: bottom center;
     background-repeat: no-repeat;
-    background-image: var(--modalLinGradient);
     transition: opacity 0.35s ease-out;
     opacity: 0;
 
     &--visible-background {
       opacity: 1;
-      background-image: var(--modalLinGradient), url('../img/naha_okinawa_japan_shuri-castle-sm_1x.jpg');
+      background-image: url('../img/naha_okinawa_japan_shuri-castle-sm_1x.jpg');
     }
 
     @mixin downToSmall {
       &--visible-background {
         opacity: 1;
-        background-image: var(--modalLinGradient), url('../img/naha_okinawa_japan_shuri-castle-md_1x.jpg');
+        background-image: url('../img/naha_okinawa_japan_shuri-castle-md_1x.jpg');
       }
     }
 
     @mixin downToSidebarHide {
       &--visible-background {
         opacity: 1;
-        background-image: var(--modalLinGradient), url('../img/naha_okinawa_japan_shuri-castle-lg_1x.jpg');
+        background-image: url('../img/naha_okinawa_japan_shuri-castle-lg_1x.jpg');
       }
     }
 
@@ -55,14 +57,14 @@
       &--visible-background {
         opacity: 1;
         background-size: 430px 78px;
-        background-image: var(--modalLinGradient), url('../img/naha_okinawa_japan_shuri-castle-sm_2x.jpg');
+        background-image: url('../img/naha_okinawa_japan_shuri-castle-sm_2x.jpg');
       }
 
       @mixin downToSmall {
         &--visible-background {
           opacity: 1;
           background-size: 615px 108px;
-          background-image: var(--modalLinGradient), url('../img/naha_okinawa_japan_shuri-castle-md_2x.jpg');
+          background-image: url('../img/naha_okinawa_japan_shuri-castle-md_2x.jpg');
         }
       }
 
@@ -70,10 +72,22 @@
         &--visible-background {
           opacity: 1;
           background-size: 903px 132px;
-          background-image: var(--modalLinGradient), url('../img/naha_okinawa_japan_shuri-castle-lg_2x.jpg');
+          background-image: url('../img/naha_okinawa_japan_shuri-castle-lg_2x.jpg');
         }
       }
     }
+  }
+
+  &__linear-gradient {
+    position: absolute;
+    z-index: -1;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: -1px;
+    background-position: bottom center;
+    background-repeat: no-repeat;
+    background-image: var(--modalLinGradient);
   }
 
   &__headline {
