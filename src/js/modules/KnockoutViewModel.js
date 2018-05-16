@@ -358,32 +358,32 @@ class KnockoutViewModel {
       dpi = '_1x';
     }
 
-    // get & set inline style element
+    // get & dynamically set inline style element for header background-image
     const inlineHeaderBackgroundStyle = document.getElementById('header__background-city--style');
-    const newHeaderStyle = `.header__background-city {
+    const newHeaderStyle = `.header__background-city {${dpi === '_2x' ? `\nbackground-size: 500px 80px;` : ''}
       background-image: url(img/model/${cityObjImg.file}-sm${dpi}.${cityObjImg.ext});
     }
 
     @media (min-width: 501px) {
-      .header__background-city {
+      .header__background-city {${dpi === '_2x' ? `\nbackground-size: 767px 80px;` : ''}
         background-image: url(img/model/${cityObjImg.file}-md${dpi}.${cityObjImg.ext});
       }
     }
 
     @media (min-width: 768px) {
-      .header__background-city {
+      .header__background-city {${dpi === '_2x' ? `\nbackground-size: 500px 80px;` : ''}
         background-image: url(img/model/${cityObjImg.file}-sm${dpi}.${cityObjImg.ext});
       }
     }
 
     @media (min-width: 816px) {
-      .header__background-city {
+      .header__background-city {${dpi === '_2x' ? `\nbackground-size: 767px 80px;` : ''}
         background-image: url(img/model/${cityObjImg.file}-md${dpi}.${cityObjImg.ext});
       }
     }
 
     @media (min-width: 1083px) {
-      .header__background-city {
+      .header__background-city {${dpi === '_2x' ? `\nbackground-size: 1000px 80px;` : ''}
         background-image: url(img/model/${cityObjImg.file}-lg${dpi}.${cityObjImg.ext});
       }
     }`;
