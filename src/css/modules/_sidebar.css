@@ -9,7 +9,7 @@
   width: 300px;
   position: fixed;
   right: auto;
-  z-index: 3;
+  z-index: 6;
   overflow-y: auto;
   border-right: 1px solid var(--mainElmntBorderColor);
   transform: translateX(-100%);
