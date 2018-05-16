@@ -54,12 +54,14 @@
     @media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
       &--visible-background {
         opacity: 1;
+        background-size: 430px 78px;
         background-image: var(--modalLinGradient), url('../img/naha_okinawa_japan_shuri-castle-sm_2x.jpg');
       }
 
       @mixin downToSmall {
         &--visible-background {
           opacity: 1;
+          background-size: 615px 108px;
           background-image: var(--modalLinGradient), url('../img/naha_okinawa_japan_shuri-castle-md_2x.jpg');
         }
       }
@@ -67,6 +69,7 @@
       @mixin downToSidebarHide {
         &--visible-background {
           opacity: 1;
+          background-size: 903px 132px;
           background-image: var(--modalLinGradient), url('../img/naha_okinawa_japan_shuri-castle-lg_2x.jpg');
         }
       }
