@@ -35,13 +35,13 @@ const yelp = (function () {
     yelpContent += `<img class="yelp__image" src=${getSmallerImageUrl(yelpInfo.image_url)} alt="Museum">`;
     // Rating & Info
     yelpContent += `<div class="yelp__info">`;
-    yelpContent += `<a class="yelp__rating" href="${yelpInfo.url}" target="_blank">`;
+    yelpContent += `<a class="yelp__rating" href="${yelpInfo.url}" target="_blank" rel="noopener">`;
     yelpContent += `${getRatingImg(yelpInfo.rating)}</a>`;
-    yelpContent += `<a target="_blank" href="${yelpInfo.url}">`;
+    yelpContent += `<a target="_blank" href="${yelpInfo.url}" rel="noopener">`;
     yelpContent += `<img class="yelp__logo" src="img/yelp_trademark_rgb_outline.png" `;
     yelpContent += `srcset="img/yelp_trademark_rgb_outline_2x.png 2x" alt="Yelp Logo">`;
     yelpContent += `</a>`;
-    yelpContent += `<a class="yelp__reviews" href="${yelpInfo.url}" target="_blank">Based `;
+    yelpContent += `<a class="yelp__reviews" href="${yelpInfo.url}" target="_blank" rel="noopener">Based `;
     yelpContent += `on <strong>${yelpInfo.review_count}</strong> review`;
     yelpContent += `${yelpInfo.review_count > 1 ? 's' : ''}</a>`;
     yelpContent += `<address class="yelp__address">${getYelpAddressHtml(yelpInfo.location.display_address, country)}`;
