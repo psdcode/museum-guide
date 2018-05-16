@@ -20,7 +20,7 @@ module.exports = function (grunt) {
         files: [{
           expand: true,
           cwd: paths.srcDir,
-          src: ['img/**/*', '!img/model/**/*'],
+          src: ['img/**/*', '!img/model/**/*', '!img/*.{jpg,png}'],
           dest: paths.prodDir
         }]
       },
@@ -30,6 +30,11 @@ module.exports = function (grunt) {
           flatten: true,
           src: ['temp/img/model/d_im/*.jpg'],
           dest: paths.prodDir + 'img/model/'
+        }, {
+          expand: true,
+          flatten: true,
+          src: ['temp/img/*.{jpg,png}'],
+          dest: paths.prodDir + 'img/'
         }]
       },
       dev: {
@@ -66,12 +71,20 @@ module.exports = function (grunt) {
     },
 
     imagemin: {
-      dynamic: {
+      model: {
         files: [{
           expand: true,
           flatten: true,
           src: 'temp/img/model/c_retina/*.jpg',
           dest: 'temp/img/model/d_im/'
+        }]
+      },
+      modal: {
+        files: [{
+          expand: true,
+          flatten: true,
+          src: 'src/img/*.{jpg,png}',
+          dest: 'temp/img/'
         }]
       }
     },
