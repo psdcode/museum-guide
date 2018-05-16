@@ -190,7 +190,7 @@ module.exports = function (grunt) {
           },
           {
             width: '100%',
-            suffix: '_x2'
+            suffix: '_2x'
           }]
         },
         files: [{

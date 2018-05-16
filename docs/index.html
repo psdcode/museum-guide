@@ -11,7 +11,8 @@
   <link href="https://fonts.googleapis.com/css?family=Spectral+SC:400,600" rel="stylesheet">
   <link rel="shortcut icon" href="img/favicon.ico" type="image/x-icon">
 	<link rel="icon" href="img/favicon.ico" type="image/x-icon">
-  <link rel="stylesheet" href="css/styles.min.57a8a119.css">
+  <link rel="stylesheet" href="css/styles.min.299fb76c.css">
+  <style type="text/css" id="header__background-city--style"></style>
 </head>
 <body>
   <div class="sidebar sidebar-top">
@@ -25,9 +26,8 @@
     <p class="sidebar-list__live-search-status" data-bind="visible: queryLiveSearchResultText, text: queryLiveSearchResultText"></p>
   </div>
   <header class="header">
-
     <div class="header__headlines">
-      <div class="header__background-city" data-bind="css: { 'header__background-city--visible': displayedCityVisible }, style: { backgroundImage: displayedCityBackgroundImg }"></div>
+      <div class="header__background-city" data-bind="css: { 'header__background-city--visible': displayedCityVisible }"></div>
       <div class="header__background-gradient" data-bind="attr: { title: displayedCityTitleAttr }"></div>
       <h1 class="header__headline headline headline--no-t-margin-upto-lg headline--sm-l-margin-from-lg headline--opaque-bkgnd">Museum Map Guide</h1><br class="header__break">
       <h1 class="header__headline header__headline-city headline headline--red headline--fw-light headline--underline-black headline--no-b-margin headline--flex-xs-b-margin-upto-lg headline--sm-l-margin-from-lg headline--opaque-bkgnd" data-bind="text: displayedCityString, css: { 'header__headline-city--visible': displayedCityVisible }"></h1>
@@ -79,5 +79,5 @@
     <li class="sidebar-list__item" data-bind="text: title, click: $root.clickLocationList, css: { 'sidebar-list__item--open': $root.listElementInfoWindowOpen($data), 'sidebar-list__item--show': $root.listElementIsVisible($data) }"></li>
   </script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/knockout/3.4.2/knockout-min.js"></script>
-  <script src="js/app.min.c91babaf.js"></script></body>
+  <script src="js/app.min.bfec0a4e.js"></script></body>
 </html>

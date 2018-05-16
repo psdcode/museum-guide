@@ -65,7 +65,6 @@ class KnockoutViewModel {
     self.computedCityString = window.ko.observable('');
     self.displayedCityString = window.ko.observable('');
     self.displayedCityTitleAttr = window.ko.observable('');
-    self.displayedCityBackgroundImg = window.ko.observable('none');
     self.displayedCityVisible = window.ko.observable(false).extend({ notify: 'always' });
 
     // Form values
@@ -346,11 +345,49 @@ class KnockoutViewModel {
     }
   }
 
+  // Set appropriate background-image
   setBackgroundImg (cityObjImg) {
-    let headlinesBackgroundImage = `${cityObjImg.file + '-lg_1x'}.${cityObjImg.ext}`;
+    // Set title property
     this.displayedCityTitleAttr(cityObjImg.title);
-    // this.displayedCityBackgroundImg('url(../../img/pic/smalltop.png)');
-    this.displayedCityBackgroundImg(`url(img/model/${headlinesBackgroundImage})`);
+
+    // Get dpi
+    let dpi;
+    if (window.matchMedia('(-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi)').matches) {
+      dpi = '_2x';
+    } else {
+      dpi = '_1x';
+    }
+
+    // get & set inline style element
+    const inlineHeaderBackgroundStyle = document.getElementById('header__background-city--style');
+    const newHeaderStyle = `.header__background-city {
+      background-image: url(img/model/${cityObjImg.file}-sm${dpi}.${cityObjImg.ext});
+    }
+
+    @media (min-width: 501px) {
+      .header__background-city {
+        background-image: url(img/model/${cityObjImg.file}-md${dpi}.${cityObjImg.ext});
+      }
+    }
+
+    @media (min-width: 768px) {
+      .header__background-city {
+        background-image: url(img/model/${cityObjImg.file}-sm${dpi}.${cityObjImg.ext});
+      }
+    }
+
+    @media (min-width: 816px) {
+      .header__background-city {
+        background-image: url(img/model/${cityObjImg.file}-md${dpi}.${cityObjImg.ext});
+      }
+    }
+
+    @media (min-width: 1083px) {
+      .header__background-city {
+        background-image: url(img/model/${cityObjImg.file}-lg${dpi}.${cityObjImg.ext});
+      }
+    }`;
+    inlineHeaderBackgroundStyle.textContent = newHeaderStyle;
   }
 
   // Allows GoogleMapView class to inform KnockoutViewModel of openInfoWindow on
