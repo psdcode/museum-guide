@@ -56,6 +56,9 @@ module.exports = function (grunt) {
       },
       preImgModelProcess: {
         src: ['temp/img']
+      },
+      postImgModelProcess: {
+        src: ['temp/img/model/b_crop', 'temp/img/model/c_retina']
       }
     },
 
@@ -360,7 +363,13 @@ module.exports = function (grunt) {
     'clean:preImgModelProcess',
     'responsive_images:crop',
     'responsive_images:retina',
-    'imagemin'
+    'imagemin',
+    'clean:postImgModelProcess'
+  ]);
+
+  grunt.registerTask('fullProd', [
+    'modelImgProcess',
+    'prod'
   ]);
 
   grunt.registerTask('watchAll', [
