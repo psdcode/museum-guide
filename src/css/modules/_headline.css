@@ -60,4 +60,8 @@
   &--opaque-bkgnd {
     background-color: rgba(var(--mainBkgndColor), 0.75);
   }
+
+  &--b-radius {
+    border-radius: 4px;
+  }
 }
