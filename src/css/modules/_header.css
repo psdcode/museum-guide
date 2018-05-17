@@ -94,11 +94,11 @@
     margin: 3px 0 0;
     padding: 0.1em 0.1em 0.045em;
     z-index: 12;
-    font-size: 1.595rem;
+    font-size: 1.53rem;
     line-height: 1.08;
 
     @media screen and (min-width: 470px) {
-      font-size: 2rem;
+      font-size: 1.89rem;
       line-height: 0.98;
     }
 
