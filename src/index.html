@@ -4,8 +4,9 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
-  <meta name="description" content="Museum Map Guide">
   <title>Museum Map Guide</title>
+  <meta name="keywords" content="museums, google map, guide, japan, tourist guide, single-page app, yelp">
+  <meta name="description" content="A straightforward map guide to museums in Japan's major cities.">
   <script defer src="https://maps.googleapis.com/maps/api/js?libraries=places&key=AIzaSyCc5fWtTXIZ1Xoa3A6waJR-lLHNhXNfzBk&v=3&callback=museumMapApp.initMap" onerror="museumMapApp.errorLoadMap()"></script>
   <!-- build:js js/vendor.min.js -->
   <script src="js/vendor.js"></script>
@@ -33,8 +34,8 @@
     <div class="header__headlines">
       <div class="header__background-city" data-bind="css: { 'header__background-city--visible': displayedCityVisible }"></div>
       <div class="header__background-gradient" data-bind="attr: { title: displayedCityTitleAttr }"></div>
-      <h1 class="header__headline headline headline--no-t-margin-upto-lg headline--sm-l-margin-from-lg headline--opaque-bkgnd">Museum Map Guide</h1><br class="header__break">
-      <h1 class="header__headline header__headline-city headline headline--red headline--fw-light headline--underline-black headline--no-b-margin headline--flex-xs-b-margin-upto-lg headline--sm-l-margin-from-lg headline--opaque-bkgnd" data-bind="text: displayedCityString, css: { 'header__headline-city--visible': displayedCityVisible }"></h1>
+      <h1 class="header__headline headline headline--b-radius headline--no-t-margin-upto-lg headline--sm-l-margin-from-lg headline--opaque-bkgnd">Museum Map Guide</h1><br class="header__break">
+      <h1 class="header__headline header__headline-city headline headline--b-radius headline--red headline--fw-light headline--underline-black headline--no-b-margin headline--flex-xs-b-margin-upto-lg headline--sm-l-margin-from-lg headline--opaque-bkgnd" data-bind="text: displayedCityString, css: { 'header__headline-city--visible': displayedCityVisible }"></h1>
     </div>
     <a data-bind="click: toggleSidebar" role="button" href="#" class="header__hamburger hamburger hamburger--opaque-bkgnd">
       <span class="hamburger__bar">&nbsp;</span>
@@ -50,9 +51,9 @@
 
         <div class="modal__headlines" title="Palace building of Shuri Castle, Photo by CEphoto, Uwe Aranas, https://en.wikipedia.org/wiki/File:Naha_Okinawa_Japan_Shuri-Castle-01.jpg">
           <div class="modal__linear-gradient"></div>
-          <h1 class="modal__headline headline headline--no-b-margin headline--sm-t-margin headline--opaque-bkgnd">Museum Map Guide</h1>
+          <h1 class="modal__headline headline headline--b-radius headline--no-b-margin headline--sm-t-margin headline--opaque-bkgnd">Museum Map Guide</h1>
           <br>
-          <h1 class="modal__headline headline headline--no-t-margin headline--red headline--sm-b-margin headline--underline-black headline--opaque-bkgnd" data-bind="text: displayedCountryString"></h1>
+          <h1 class="modal__headline headline headline--b-radius headline--no-t-margin headline--red headline--sm-b-margin headline--underline-black headline--opaque-bkgnd" data-bind="text: displayedCountryString"></h1>
         </div>
         <form class="modal__form form" data-bind="submit: submitModal">
           <div class="form__load-screen">
