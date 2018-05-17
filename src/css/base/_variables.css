@@ -9,16 +9,16 @@
   --btnActiveColor: var(--mainElmntBorderColor);
   --btnBorderColor: #5b5b5b;
   --modalErrorMsgBackgroundColor: var(--mainElmntBorderColor);
-  --modalBorderColor: var(--btnBorderColor);
+  --modalBorderColor: var(--mainElmntBorderColor);
   --hamburgerColor: var(--btnBorderColor);
   --hamburgerActiveColor: var(--mainFontColor);
   --listItemBorderBottomColor: var(--btnBorderColor);
   --yelpReviewFontColor: #ccc;
   --yelpReviewFontHoverColor: var(--btnBorderColor);
-  --headlineRedColor: #ad0101;
+  --headlineRedColor: #bf0505;
 
   /* Size Variables */
-  --btnBorderWidth: 2px;
+  --btnBorderWidth: 1px;
   --btnBorderRadius: 8px;
   --generalBorderWidth: 1px;
 
